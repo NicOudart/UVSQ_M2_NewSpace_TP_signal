@@ -27,9 +27,15 @@ Cette information est liée au diamètre et à la phase des hydrométéores, per
 * Le temps entre 2 émissions d'impulsions, le nombre d'impulsions d'affilée, ainsi que la longueur d'onde du radar définiront la résolution en vitesses et la **vitesse ambigue** (vitesse maximale mesurable) du radar.
 Nous détaillerons comment dans la suite.
 
-Les données d'un radar impulsionnel Doppler comme ROXI ressemblent donc à 
+Les données d'un radar impulsionnel Doppler comme ROXI ressemblent donc à une matrice 2D :
 
+![](img/.png)
 
+* Chaque élément de la matrice est un **nombre complexe** I+Q (In-phase / Quadrature-phase) contenant les informations d'**amplitude** et de **phase** des échos reçus pour un temps de retard et un sondage vertical donné.
+
+* L'axe vertical correspond aux temps de retard des échos pour un sondage, aussi appelé "**fast-time**".
+
+* L'axe horizotal correspond aux temps entre les sondages (répétitions d'impulsion), aussi appelé "**slow-time**".
 
 Pour chaque niveau d'élévation, nous pouvons obtenir un  
 
