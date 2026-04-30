@@ -37,9 +37,32 @@ Les données d'un radar impulsionnel Doppler comme ROXI ressemblent donc à une 
 
 * L'axe horizotal correspond aux temps entre les sondages (répétitions d'impulsion), aussi appelé "**slow-time**".
 
-Pour chaque niveau d'élévation, nous pouvons obtenir un  
+Pour chaque niveau d'élévation, nous pouvons obtenir une présentation de la puissance reçue par le radar en fonction de la vitesse Doppler mesurée, appelée **spectre Doppler**.
+
+Ces spectres peuvent ensuite être concaténés verticalement afin d'obtenir une représentation sous la forme d'une image appelée **spectrogramme Doppler**.
+
+![](img/.png)
+
+On peut voir chaque spectre Doppler comme la distribution des puissances reçues par le radar par rapport à la vitesse des hydrométéores au sein d'un volume sondé.
+Il est courant d'essayer de modéliser cette distribution par un modèle Gaussien, afin d'en tirer 2 caractéristiques des précipitations : leur réfléctivité moyenne **Z**, et leur vitesse moyenne **VDop**.
+
+De ces caractéristiques pourrons être inférées des **grandeurs météorologiques** d'intérêt : le régime de précipitation, sa phase, son intensité, etc.
 
 ## Objectifs
+
+Lors de ce tutoriel, nous allons programmer une **chaîne de traitement des données de ROXI** sous la forme d'un **projet Python**, que nous utiliserons pour obtenir une **interprétation météorologique** classique.
+
+Ce projet Python devra contenir des fonctions pour :
+
+* Importer des données ROXI à partir d'un fichier HDF5 tel que celui qui vous sera fourni.
+
+* Appliquer un filtre "anti-clutter" aux données brutes I+Q.
+
+* Convertir en spectres Doppler les données I+Q acquises par le radar.
+
+* Réaliser une intégration incohérente des spectres obtenus pour réduire le bruit.
+
+* 
 
 ## Importation des données
 
