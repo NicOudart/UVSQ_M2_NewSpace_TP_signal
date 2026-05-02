@@ -62,11 +62,25 @@ Ce projet Python devra contenir des fonctions pour :
 
 * Réaliser une intégration incohérente des spectres obtenus pour réduire le bruit.
 
-* 
+* Ajuster un modèle Gaussien aux spectres Doppler pour en déduire Z et VDop.
+
+**Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.**
 
 ## Importation des données
 
+### Le format HDF5
+
+### Exemple de données ROXI
+
+### Lecture du fichier
+
 ## Analyse spectrale
+
+### Nature des données
+
+### FFT avec Numpy
+
+### FFTshift
 
 ## Réduction du bruit
 
