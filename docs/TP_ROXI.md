@@ -74,19 +74,108 @@ Ce projet Python devra contenir des fonctions pour :
 
 ### Lecture du fichier
 
+~~~
+import h5py
+import numpy as np
+~~~
+
+~~~
+hf = h5py.File(".../ROXI_20200811_161206.h5",'r')
+~~~
+
+~~~
+mat_iq = np.array(hf.get('I+Q'))
+frequency_axis = np.array(hf.get('frequency_axis'))
+x_position_axis = np.array(hf.get('x_position_axis'))
+y_position_axis = np.array(hf.get('y_position_axis'))
+~~~
+
 ## Analyse spectrale
 
 ### Nature des données
 
+~~~
+plt.figure()
+plt.plot(slow_time_axis,np.real(mat_iq[0][10]),'r-')
+plt.plot(slow_time_axis,np.imag(mat_iq[0][10]),'g-')
+plt.xlabel('Slow-time (s)')
+plt.ylabel('Amplitude (V)')
+plt.title('I+Q - acquisition 0 - fast-time level 10')
+plt.grid()
+plt.show()
+~~~
+
+![Exemple de données I+Q](img/ROXI_I+Q_example.png)
+
+![Zoom sur les données I+Q](img/ROXI_I+Q_example_zoomed.png)
+
 ### FFT avec Numpy
 
-### FFTshift
+~~~
+import numpy as np
+~~~
+
+~~~
+slow_time_dt = slow_time_axis[1]-slow_time_axis[0]
+frequency_axis = np.fft.fftfreq(len(slow_time_axis),d=slow_time_dt)
+~~~
+
+~~~
+spectrum_0_10 = np.abs(np.fft.fft(mat_iq[0][10]))/len(slow_time_axis)
+~~~
+
+~~~
+spectrum_0_10_watts = (spectrum_0_10**2)/50
+~~~
+
+~~~
+plt.figure()
+plt.plot(frequency_axis,spectrum_0_10_watts,'r-')
+plt.xlabel('Doppler frequency (Hz)')
+plt.ylabel('Power (W)')
+plt.title('Doppler spectrum - acquisition 0 - fast-time level 10')
+plt.grid()
+plt.show()
+~~~
+
+### FFTshift et dB
+
+~~~
+spectrum_0_10_watts = np.fft.fftshift(spectrum_0_10_watts)
+frequency_axis = np.fft.fftshift(frequency_axis)
+~~~
+
+~~~
+spectrum_0_10_db = 10*np.log10(spectrum_0_10_watts)
+~~~
+
+~~~
+plt.figure()
+plt.plot(frequency_axis,spectrum_0_10_db,'r-')
+plt.xlabel('Doppler frequency (Hz)')
+plt.ylabel('Power (dB)')
+plt.title('Doppler spectrum - acquisition 0 - fast-time level 10')
+plt.grid()
+plt.show()
+~~~
 
 ## Réduction du bruit
 
+### Bruit et SNR
+
+### Intégration incohérente
+
 ## Filtrage
 
+### Clutter et filtre coupe-bande
+
+### Filtre de Butterworth avec Scipy
+
+## Spectrogramme
+
 ## Interprétation météorologique
+
+### Conversion en vitesses
 
 ### Compensation de l'altitude
 
