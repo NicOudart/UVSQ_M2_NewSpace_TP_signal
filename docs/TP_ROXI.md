@@ -161,11 +161,28 @@ plt.show()
 
 ## Filtrage
 
-### Clutter et filtre coupe-bande
+### Clutter et filtre passe-haut
+
+![Exemple de spectre avant filtrage du clutter](img/ROXI_spectrum_before_filtering_example.png)
 
 ### Filtre de Butterworth avec Scipy
 
+~~~
+b,a = butter(1,50,fs=1/slow_time_dt,btype='highpass')
+iq = lfilter(b,a,iq)
+~~~
+
+![Exemple de spectre après filtrage du clutter](img/ROXI_spectrum_after_filtering_example.png)
+
 ## Spectrogramme
+
+~~~
+plt.figure()   
+plt.pcolormesh(frequency_axis,fast_time_axis,mat_spectrum)
+plt.xlabel('Doppler frequency (Hz)')
+plt.ylabel('Fast-time (s)')
+plt.colorbar(label='Power (dB)')
+~~~
 
 ## Interprétation météorologique
 
