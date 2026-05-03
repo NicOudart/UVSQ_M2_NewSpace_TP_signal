@@ -125,17 +125,7 @@ spectrum_0_10 = np.abs(np.fft.fft(mat_iq[0][10]))/len(slow_time_axis)
 ~~~
 
 ~~~
-spectrum_0_10_watts = (spectrum_0_10**2)/50
-~~~
-
-~~~
-plt.figure()
-plt.plot(frequency_axis,spectrum_0_10_watts,'r-')
-plt.xlabel('Doppler frequency (Hz)')
-plt.ylabel('Power (W)')
-plt.title('Doppler spectrum - acquisition 0 - fast-time level 10')
-plt.grid()
-plt.show()
+spectrum_0_10_watts = ((spectrum_0_10/np.sqrt(2))**2)/50
 ~~~
 
 ### FFTshift et dB
@@ -159,11 +149,15 @@ plt.grid()
 plt.show()
 ~~~
 
+![Exemple de spectre Doppler brut](img/ROXI_spectrum_raw_example.png)
+
 ## Réduction du bruit
 
 ### Bruit et SNR
 
 ### Intégration incohérente
+
+![Exemple de spectre Doppler intégré](img/ROXI_spectrum_integrated_example.png)
 
 ## Filtrage
 
