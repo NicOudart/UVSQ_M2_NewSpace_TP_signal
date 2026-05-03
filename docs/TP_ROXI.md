@@ -182,13 +182,19 @@ plt.pcolormesh(frequency_axis,fast_time_axis,mat_spectrum)
 plt.xlabel('Doppler frequency (Hz)')
 plt.ylabel('Fast-time (s)')
 plt.colorbar(label='Power (dB)')
+plt.title('Doppler spectrogram - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
+plt.show()
 ~~~
+
+![Exemple de spectrogramme Doppler](img/ROXI_spectrogram_example.png)
 
 ## Interprétation météorologique
 
 ### Conversion en vitesses
 
 ### Compensation de l'altitude
+
+### Constante radar et étalonnage
 
 ### Modélisation Gaussienne
 
