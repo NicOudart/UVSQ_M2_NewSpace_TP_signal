@@ -20,11 +20,13 @@ L'objectif est qu'à la fin de ce cours vous soyez capables d'implémenter une c
 
 - Affichage graphique et exportation.
 
-Ce cours sera divisé en 3 temps :
+Ce cours sera divisé en 4 temps :
 
 - Un 1er **tutoriel**  sur les données du radar météorologique ROXI, que vous trouverez sur ce site web.
 
-- Un 2nd **tutoriel** sur les données du radar à pénétration de sol RIMFAX, que vous trouverez également sur ce site web.
+- Un 2nd **tutoriel** sur les données du radar à pénétration de sol martien RIMFAX, que vous trouverez également sur ce site web.
+
+- Un 3ème **tutoriel** sur les données du sismomètre martien SEIS, que vous trouverez également sur ce site web.
 
 - Un **projet évalué** lors duquel vous mettrez en application ce que vous avez appris, sur un nouvel exemple.
 

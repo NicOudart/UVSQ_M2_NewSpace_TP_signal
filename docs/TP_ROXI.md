@@ -161,16 +161,11 @@ plt.show()
 
 ## Filtrage
 
-### Clutter et filtre passe-haut
+### Ground clutter
 
 ![Exemple de spectre avant filtrage du clutter](img/ROXI_spectrum_before_filtering_example.png)
 
-### Filtre de Butterworth avec Scipy
-
-~~~
-b,a = butter(1,50,fs=1/slow_time_dt,btype='highpass')
-iq = lfilter(b,a,iq)
-~~~
+### Filtre médian
 
 ![Exemple de spectre après filtrage du clutter](img/ROXI_spectrum_after_filtering_example.png)
 
@@ -190,9 +185,13 @@ plt.show()
 
 ## Interprétation météorologique
 
-### Conversion en vitesses
+### Conversion en vitesses et élévations
 
-### Compensation de l'altitude
+![Exemple de spectrogramme Doppler avec des axes météorologiques](img/ROXI_spectrogram_meteo_axis_example.png)
+
+### Compensation de la distance
+
+![Exemple de spectrogramme Doppler avec compensation de la distance](img/ROXI_spectrogram_distance_correction_example.png)
 
 ### Constante radar et étalonnage
 
