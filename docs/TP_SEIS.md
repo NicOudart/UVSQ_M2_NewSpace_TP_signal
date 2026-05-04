@@ -2,7 +2,7 @@
 
 ## Contexte scientifique
 
-![Illustration SEIS](img/.png)
+![Illustration SEIS](img/SEIS_illustration.png)
 
 ## Objectifs
 

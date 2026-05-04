@@ -95,6 +95,10 @@ y_position_axis = np.array(hf.get('y_position_axis'))
 ### Nature des données
 
 ~~~
+import matplotlib.pyplot as plt
+~~~
+
+~~~
 plt.figure()
 plt.plot(slow_time_axis,np.real(mat_iq[0][10]),'r-')
 plt.plot(slow_time_axis,np.imag(mat_iq[0][10]),'g-')
@@ -167,12 +171,20 @@ plt.show()
 
 ### Filtre médian
 
+~~~
+from scipy.signal import medfilt
+~~~
+
+~~~
+spectrum_0_2_watts = medfilt(spectrum_0_2_watts,kernel_size=7)
+~~~
+
 ![Exemple de spectre après filtrage du clutter](img/ROXI_spectrum_after_filtering_example.png)
 
 ## Spectrogramme
 
 ~~~
-plt.figure()   
+plt.figure()
 plt.pcolormesh(frequency_axis,fast_time_axis,mat_spectrum)
 plt.xlabel('Doppler frequency (Hz)')
 plt.ylabel('Fast-time (s)')
@@ -189,13 +201,40 @@ plt.show()
 
 ![Exemple de spectrogramme Doppler avec des axes météorologiques](img/ROXI_spectrogram_meteo_axis_example.png)
 
+### Modélisation Gaussienne
+
+~~~
+from scipy.optimize import curve_fit
+~~~
+
+~~~
+def gaussian_model(x,ampli,vdop,std):
+
+    return 10*np.log10(ampli*np.exp(-(x-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))+1)-149
+~~~
+
+~~~
+params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum_db[10],p0=[1e3,0,1],bounds=([1,-12,0],[1e6,12,2]))
+ampli,vdop,std = params
+~~~
+
+~~~
+plt.figure()
+plt.plot(vdop_axis,mat_spectrum_db[10],'r-')
+plt.plot(vdop_axis,gaussian_model(vdop_axis,ampli,vdop,std),'b--')
+plt.xlabel('Doppler velocity (m/s)')
+plt.ylabel('Power (dB)')
+plt.title('Doppler spectrum modelling - 4 integrated acquisitions - fast-time level 10')
+plt.legend(['observation','model'])
+plt.grid()
+plt.show()
+~~~
+
+![Exemple de modélisation Gaussienne de spectre Doppler](img/ROXI_spectrum_modelling_example.png)
+
 ### Compensation de la distance
 
-![Exemple de spectrogramme Doppler avec compensation de la distance](img/ROXI_spectrogram_distance_correction_example.png)
-
 ### Constante radar et étalonnage
-
-### Modélisation Gaussienne
 
 ### Estimation de Z et VDop
 
