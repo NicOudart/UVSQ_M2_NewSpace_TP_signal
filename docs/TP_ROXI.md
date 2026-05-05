@@ -221,7 +221,7 @@ def gaussian_model(x,ampli,vdop,std):
 ~~~
 
 ~~~
-params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum_db[10],p0=[1e3,0,1],bounds=([0,-12,0],[1e6,12,2]))
+params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum_db[10],p0=[1e3,0,1],bounds=([0,-12,0],[1e6,12,3]))
 ampli,vdop,std = params
 ~~~
 
