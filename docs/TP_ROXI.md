@@ -48,6 +48,11 @@ Il est courant d'essayer de modéliser cette distribution par un modèle Gaussie
 
 De ces caractéristiques pourrons être inférées des **grandeurs météorologiques** d'intérêt : le régime de précipitation, sa phase, son intensité, etc.
 
+|Nota Bene|
+|:-|
+|Il est à noter que notre exemple ici a été grandement simplifié pour les besoins de ce TP.|
+|En particulier, l'estimation de Z, qui nécessite normalement une réelle calibration du radar.|
+
 ## Objectifs
 
 Lors de ce tutoriel, nous allons programmer une **chaîne de traitement des données de ROXI** sous la forme d'un **projet Python**, que nous utiliserons pour obtenir une **interprétation météorologique** classique.
@@ -231,10 +236,6 @@ plt.show()
 ~~~
 
 ![Exemple de modélisation Gaussienne de spectre Doppler](img/ROXI_spectrum_modelling_example.png)
-
-### Compensation de la distance
-
-### Constante radar et étalonnage
 
 ### Estimation de Z et VDop
 
