@@ -108,7 +108,7 @@ plt.figure()
 plt.plot(slow_time_axis,np.real(mat_iq[0][10]),'r-')
 plt.plot(slow_time_axis,np.imag(mat_iq[0][10]),'g-')
 plt.xlabel('Slow-time (s)')
-plt.ylabel('Amplitude (V)')
+plt.ylabel('Unicalibrated voltage (V)')
 plt.title('I+Q - acquisition 0 - fast-time level 10')
 plt.grid()
 plt.show()
@@ -130,29 +130,25 @@ frequency_axis = np.fft.fftfreq(len(slow_time_axis),d=slow_time_dt)
 ~~~
 
 ~~~
-spectrum_0_10 = np.abs(np.fft.fft(mat_iq[0][10]))/len(slow_time_axis)
-~~~
-
-~~~
-spectrum_0_10_watts = ((spectrum_0_10/np.sqrt(2))**2)/50
+spectrum_0_10 = np.abs(np.fft.fft(mat_iq[0][10]))**2
 ~~~
 
 ### FFTshift et dB
 
 ~~~
-spectrum_0_10_watts = np.fft.fftshift(spectrum_0_10_watts)
+spectrum_0_10 = np.fft.fftshift(spectrum_0_10)
 frequency_axis = np.fft.fftshift(frequency_axis)
 ~~~
 
 ~~~
-spectrum_0_10_db = 10*np.log10(spectrum_0_10_watts)
+spectrum_0_10_db = 10*np.log10(spectrum_0_10)
 ~~~
 
 ~~~
 plt.figure()
 plt.plot(frequency_axis,spectrum_0_10_db,'r-')
 plt.xlabel('Doppler frequency (Hz)')
-plt.ylabel('Power (dB)')
+plt.ylabel('Uncalibrated power (dB)')
 plt.title('Doppler spectrum - acquisition 0 - fast-time level 10')
 plt.grid()
 plt.show()
@@ -181,7 +177,7 @@ from scipy.signal import medfilt
 ~~~
 
 ~~~
-spectrum_0_2_watts = medfilt(spectrum_0_2_watts,kernel_size=7)
+spectrum_0_2_db = medfilt(spectrum_0_2_db,kernel_size=7)
 ~~~
 
 ![Exemple de spectre après filtrage du clutter](img/ROXI_spectrum_after_filtering_example.png)
@@ -189,11 +185,17 @@ spectrum_0_2_watts = medfilt(spectrum_0_2_watts,kernel_size=7)
 ## Spectrogramme
 
 ~~~
+len_fast_time = len(fast_time_axis)
+len_slow_time = len(slow_time_axis)
+mat_spectrum = np.zeros((len_fast_time,len_slow_time))
+~~~
+
+~~~
 plt.figure()
 plt.pcolormesh(frequency_axis,fast_time_axis,mat_spectrum)
 plt.xlabel('Doppler frequency (Hz)')
 plt.ylabel('Fast-time (s)')
-plt.colorbar(label='Power (dB)')
+plt.colorbar(label='Uncalibrated power (dB)')
 plt.title('Doppler spectrogram - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
 plt.show()
 ~~~
@@ -214,12 +216,12 @@ from scipy.optimize import curve_fit
 
 ~~~
 def gaussian_model(x,ampli,vdop,std):
-
-    return 10*np.log10(ampli*np.exp(-(x-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))+1)-149
+    
+	return 10*np.log10(ampli*np.exp(-(x-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))+1)-57
 ~~~
 
 ~~~
-params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum_db[10],p0=[1e3,0,1],bounds=([1,-12,0],[1e6,12,2]))
+params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum_db[10],p0=[1e3,0,1],bounds=([0,-12,0],[1e6,12,2]))
 ampli,vdop,std = params
 ~~~
 
@@ -228,7 +230,7 @@ plt.figure()
 plt.plot(vdop_axis,mat_spectrum_db[10],'r-')
 plt.plot(vdop_axis,gaussian_model(vdop_axis,ampli,vdop,std),'b--')
 plt.xlabel('Doppler velocity (m/s)')
-plt.ylabel('Power (dB)')
+plt.ylabel('Uncalibrated power (dB)')
 plt.title('Doppler spectrum modelling - 4 integrated acquisitions - fast-time level 10')
 plt.legend(['observation','model'])
 plt.grid()
