@@ -216,8 +216,10 @@ from scipy.optimize import curve_fit
 
 ~~~
 def gaussian_model(x,ampli,vdop,std):
-    
-	return 10*np.log10(ampli*np.exp(-(x-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))+1)-57
+	
+    signal = ampli*np.exp(-(x-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))
+	
+    return 10*np.log10(signal+10**(-57/10))
 ~~~
 
 ~~~
