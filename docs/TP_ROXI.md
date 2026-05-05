@@ -243,4 +243,6 @@ plt.show()
 
 ### Estimation de Z et VDop
 
+![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
+
 ### Exportation du résultat
