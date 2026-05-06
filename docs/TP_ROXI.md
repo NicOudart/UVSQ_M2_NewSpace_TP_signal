@@ -245,4 +245,11 @@ plt.show()
 
 ![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
 
+![Estimations de VDop pour l'orage complet](img/ROXI_VDop_orage_example.png)
+
+![Exemple d'estimations de Z](img/ROXI_Z_estimations_example.png)
+
+![Estimations de Z pour l'orage complet](img/ROXI_Z_orage_example.png)
+
 ### Exportation du résultat
+
