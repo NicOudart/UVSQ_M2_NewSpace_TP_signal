@@ -1,5 +1,12 @@
 # ROXI : radar météorologique pour l'étude de la pluie
 
+![En-tête TP ROXI](img/Header_TP_ROXI.png)
+
+_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them._
+**Douglas Adams, So Long and Thanks for All the Fish**
+
+---
+
 ## Contexte scientifique
 
 **ROXI** est un **radar météorologique** en développement au LATMOS depuis 2016.
@@ -26,6 +33,8 @@ Cette information est liée au diamètre et à la phase des hydrométéores, per
 
 * Le temps entre 2 émissions d'impulsions, le nombre d'impulsions d'affilée, ainsi que la longueur d'onde du radar définiront la résolution en vitesses et la **vitesse ambigue** (vitesse maximale mesurable) du radar.
 Nous détaillerons comment dans la suite.
+
+![Animation ROXI](img/ROXI_animation.gif)
 
 Les données d'un profil de radar impulsionnel Doppler comme ROXI ressemblent donc à une matrice 2D :
 
