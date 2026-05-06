@@ -7,7 +7,7 @@ Fonctionnant en bande X (à une fréquence de 9,42 GHz), il est conçu pour l'**
 
 ![Illustration ROXI](img/ROXI_illustration.png)
 
-ROXI est à **visée zénithale** : son antenne est orientée vers le zénith, dans le but d'acquérir des **profils verticaux** des propriétés des précipitations en fonction de l'élévation.
+ROXI est à **visée zénithale** : son antenne est orientée vers le zénith, dans le but d'acquérir des "**profils verticaux**" des propriétés des précipitations en fonction de l'élévation.
 Ces profils sont acquis à intervalles de temps réguliers, afin de suivre l'évolution temporelle d'un évènement de précipitations.
 
 Il s'agit d'un radar **impulsionnel** : il émet une impulsion électromagnétique vers le zénith, et réceptionne les échos provenant des gouttes de pluie ou des cristaux de glace rencontrés par l'impulsion.
@@ -18,8 +18,8 @@ Il s'agit d'un radar **impulsionnel** : il émet une impulsion électromagnétiq
 
 * La puissance des échos reçus comparée à la puissance de l'impulsion émise permettra d'estimer la **réflectivité** des hydrométéores, une information utile pour déterminer la **phase** (liquide ou solide) et l'**intensité** (taux de pluie) des précipitations.
 
-Il s'agit également d'un radar **Doppler** : en réalité il réalise des milliers de sondages verticaux en quelques secondes, afin d'estimer la vitesse des cibles par **effet Doppler**.
-En effet, la différence entre les signaux acquis pour une même élévation à des instants différents est liée au mouvement des hydrométéores, et permet donc de discriminer leurs différentes **vitesses de chute**. 
+Il s'agit également d'un radar **Doppler** : en réalité il réalise des milliers d'émissions d'impulsion en quelques secondes, afin d'estimer la vitesse des cibles par **effet Doppler**.
+En effet, la différence entre les signaux acquis pour une même élévation mais pour des émissions d'impulsion différentes, est liée au mouvement des hydrométéores, et permet donc de discriminer leurs différentes **vitesses de chute**. 
 Cette information est liée au diamètre et à la phase des hydrométéores, permettant ainsi la caractérisation de la **microphysique** des précipitations.
 
 * Le taux de répétition entre 2 émissions d'impulsion définira la **portée maximale** de l'instrument (l'élévation maximale mesurable).
@@ -27,31 +27,30 @@ Cette information est liée au diamètre et à la phase des hydrométéores, per
 * Le temps entre 2 émissions d'impulsions, le nombre d'impulsions d'affilée, ainsi que la longueur d'onde du radar définiront la résolution en vitesses et la **vitesse ambigue** (vitesse maximale mesurable) du radar.
 Nous détaillerons comment dans la suite.
 
-Les données d'un radar impulsionnel Doppler comme ROXI ressemblent donc à une matrice 2D :
+Les données d'un profil de radar impulsionnel Doppler comme ROXI ressemblent donc à une matrice 2D :
 
-![](img/.png)
+![Données d'un radar Doppler](img/Doppler_radar_data.png)
 
-* Chaque élément de la matrice est un **nombre complexe** I+Q (In-phase / Quadrature-phase) contenant les informations d'**amplitude** et de **phase** des échos reçus pour un temps de retard et un sondage vertical donné.
+* Chaque élément de la matrice est un **nombre complexe** I+Q (In-phase / Quadrature-phase) contenant les informations d'**amplitude** et de **phase** des échos reçus pour un temps de retard et une émission d'impulsion donnée.
 
-* L'axe vertical correspond aux temps de retard des échos pour un sondage, aussi appelé "**fast-time**".
+* L'axe vertical correspond aux temps de retard des échos pour une émission d'impulsion donnée, aussi appelé "**fast-time**".
 
-* L'axe horizotal correspond aux temps entre les sondages (répétitions d'impulsion), aussi appelé "**slow-time**".
+* L'axe horizotal correspond aux temps entre 2 répétitions d'impulsion, aussi appelé "**slow-time**".
 
-Pour chaque niveau d'élévation, nous pouvons obtenir une présentation de la puissance reçue par le radar en fonction de la vitesse Doppler mesurée, appelée **spectre Doppler**.
+Pour chaque niveau d'élévation, nous pouvons obtenir par analyse spectrale une présentation de la puissance reçue par le radar en fonction de la vitesse Doppler mesurée, appelée **spectre Doppler**.
 
 Ces spectres peuvent ensuite être concaténés verticalement afin d'obtenir une représentation sous la forme d'une image appelée **spectrogramme Doppler**.
 
-![](img/.png)
+![Analyse spectrale Doppler](img/Doppler_spectral_analysis.png)
 
 On peut voir chaque spectre Doppler comme la distribution des puissances reçues par le radar par rapport à la vitesse des hydrométéores au sein d'un volume sondé.
 Il est courant d'essayer de modéliser cette distribution par un modèle Gaussien, afin d'en tirer 2 caractéristiques des précipitations : leur réfléctivité moyenne **Z**, et leur vitesse moyenne **VDop**.
 
 De ces caractéristiques pourrons être inférées des **grandeurs météorologiques** d'intérêt : le régime de précipitation, sa phase, son intensité, etc.
 
-|Nota Bene|
-|:-|
-|Il est à noter que notre exemple ici a été grandement simplifié pour les besoins de ce TP.|
-|En particulier, l'estimation de Z, qui nécessite normalement une réelle calibration du radar.|
+Voici les caractéristiques du radar ROXI :
+
+
 
 ## Objectifs
 
@@ -70,6 +69,11 @@ Ce projet Python devra contenir des fonctions pour :
 * Ajuster un modèle Gaussien aux spectres Doppler pour en déduire Z et VDop.
 
 **Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.**
+
+|Nota Bene|
+|:-|
+|Il est à noter que notre exemple ici a été grandement simplifié pour les besoins de ce TP.|
+|En particulier, l'estimation de Z, qui nécessite normalement une réelle calibration du radar pour compenser tous les effets instrumentaux.|
 
 ## Importation des données
 
