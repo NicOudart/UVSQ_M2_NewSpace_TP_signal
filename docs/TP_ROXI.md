@@ -2,8 +2,8 @@
 
 ![En-tête TP ROXI](img/Header_TP_ROXI.png)
 
-_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them._
-**Douglas Adams, So Long and Thanks for All the Fish**
+_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them."_
+**Douglas Adams, So Long and Thanks for All the Fish (1984)**
 
 ---
 
