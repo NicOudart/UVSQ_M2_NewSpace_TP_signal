@@ -4,6 +4,8 @@
 
 _Cours conçu pour les étudiants du M2 "NewSpace" de l'Université de Versailles Saint-Quentin (UVSQ), dans le cadre de l'UE "Traitement et analyse de données instrumentales"_
 
+---
+
 ## Objectifs du cours
 
 Ce cours portera sur **la mise en place d'une chaîne de traitement de données avec Python**.

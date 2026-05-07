@@ -59,7 +59,15 @@ De ces caractéristiques pourrons être inférées des **grandeurs météorologi
 
 Voici les caractéristiques du radar ROXI :
 
-
+|Caractéristique                  |Valeur   |
+|:-------------------------------:|:-------:|
+|Fréquence d'émission             |9.42 GHz |
+|Puissance d'émission             |70 W     |
+|Durée de l'impulsion             |666.67 ns|
+|Période de répétition d'impulsion|682.67 µs|
+|Nombre d'impulsions par profil   |4096     |
+|Distance ambiguë                 |12.8 km  |
+|Vitesse ambiguë                  |11.66 m/s|
 
 ## Objectifs
 
