@@ -64,6 +64,7 @@ Voici les caractéristiques du radar ROXI :
 |:-------------------------------:|:-------:|
 |Fréquence d'émission             |9.42 GHz |
 |Puissance d'émission             |70 W     |
+|Gain de l'antenne                |41 dB    |
 |Durée de l'impulsion             |666.67 ns|
 |Période de répétition d'impulsion|682.67 µs|
 |Nombre d'impulsions par profil   |4096     |
