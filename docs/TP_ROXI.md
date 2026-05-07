@@ -3,6 +3,7 @@
 ![En-tête TP ROXI](img/Header_TP_ROXI.png)
 
 _"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them."_
+
 **Douglas Adams, So Long and Thanks for All the Fish (1984)**
 
 ---
@@ -77,13 +78,15 @@ Ce projet Python devra contenir des fonctions pour :
 
 * Importer des données ROXI à partir d'un fichier HDF5 tel que celui qui vous sera fourni.
 
-* Appliquer un filtre "anti-clutter" aux données brutes I+Q.
-
 * Convertir en spectres Doppler les données I+Q acquises par le radar.
 
 * Réaliser une intégration incohérente des spectres obtenus pour réduire le bruit.
 
+* Appliquer un filtre "anti-clutter" aux spectres intégrés.
+
 * Ajuster un modèle Gaussien aux spectres Doppler pour en déduire Z et VDop.
+
+* Exporter les estimations de Z et VDop obtenues sous la forme d'un fichier HDF5.
 
 **Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.**
 
