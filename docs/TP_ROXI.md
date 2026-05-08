@@ -89,6 +89,8 @@ Ce projet Python devra contenir des fonctions pour :
 
 * Exporter les estimations de Z et VDop obtenues sous la forme d'un fichier HDF5.
 
+Créez le dossier de votre projet, et structurez-le avec des sous-dossiers et des fichiers vides pour l'instant.
+
 **Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.**
 
 |Nota Bene|
@@ -100,7 +102,26 @@ Ce projet Python devra contenir des fonctions pour :
 
 ### Le format HDF5
 
+Lors de ce TP, nous partirons du principe que les données ROXI sont mises sous la forme de fichiers **HDF5**.
+
+Le "Hierarchical Data Format" est un format de fichiers utilisé pour stocker de grandes quantités d'informations de manière organisée et accessible efficacement.
+C'est pourquoi il est très classique en analyse de données.
+
+Comme son nom l'indique, les données sont stockées hiérarchiquement, à la manière de l'arborescence d'un dossier sur votre ordinateur.
+L'équivalent d'un dossier dans un fichier HDF5 est ce que l'on appelle un "**Group**".
+On peut alors ranger les données dans des Groups, voir même dans des sous-Groups d'un Group.
+
+Les données stockées sont enregistrées sous la forme de tableaux, que l'on appelle des "**datasets**".
+
+On peut également stocker des métadonnées, sous la forme "d'**attributs**".
+
+Nous verrons comment lire un fichier HDF5 avec Python, puis comment exporter des données dans ce format, grâce à la bibliothèque `h5py`.
+
 ### Exemple de données ROXI
+
+Vous trouverez un fichier de données ROXI au format HDF5 [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
+
+
 
 ### Lecture du fichier
 
