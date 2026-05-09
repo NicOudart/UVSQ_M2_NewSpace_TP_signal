@@ -41,7 +41,7 @@ Les données d'un profil de radar impulsionnel Doppler comme ROXI ressemblent do
 
 ![Données d'un radar Doppler](img/Doppler_radar_data.png)
 
-* Chaque élément de la matrice est un **nombre complexe** I+Q (In-phase / Quadrature-phase) contenant les informations d'**amplitude** et de **phase** des échos reçus pour un temps de retard et une émission d'impulsion donnée.
+* Chaque élément de la matrice est un **nombre complexe** I/Q (In-phase / Quadrature-phase) contenant les informations d'**amplitude** et de **phase** des échos reçus pour un temps de retard et une émission d'impulsion donnée.
 
 * L'axe vertical correspond aux temps de retard des échos pour une émission d'impulsion donnée, aussi appelé "**fast-time**".
 
@@ -111,16 +111,33 @@ Comme son nom l'indique, les données sont stockées hiérarchiquement, à la ma
 L'équivalent d'un dossier dans un fichier HDF5 est ce que l'on appelle un "**Group**".
 On peut alors ranger les données dans des Groups, voir même dans des sous-Groups d'un Group.
 
-Les données stockées sont enregistrées sous la forme de tableaux, que l'on appelle des "**datasets**".
+Les données stockées sont enregistrées sous la forme de tableaux, que l'on appelle des "**Datasets**".
 
-On peut également stocker des métadonnées, sous la forme "d'**attributs**".
+On peut également stocker des métadonnées, sous la forme "d'**Attributes**".
 
 Nous verrons comment lire un fichier HDF5 avec Python, puis comment exporter des données dans ce format, grâce à la bibliothèque `h5py`.
 
 ### Exemple de données ROXI
 
-Vous trouverez un fichier de données ROXI au format HDF5 [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
+Vous trouverez un exemple de fichier de données ROXI au format HDF5 [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
 
+Un fichier de données ROXI contient toujours les 4 "Datasets" suivants :
+
+* `I+Q` : une matrice de dimensions 4x128x4096, correspondant à 4 profils acquis d'affilée, contenant chacun 128 échantillons fast-time pour 4096 échantillons slow-time.
+Chaque élément de la matrice est donc un nombre complexe I/Q mesuré par le radar.
+Ces 4 profils étant acquis sur un lapse de temps très court, on peut considérer qu'il s'agit de 4 répétitions d'un même profil.
+
+* `fast_time_axis` : un vecteur de dimension 128, contenant les temps de retard des échos, correspondants aux 128 échantillons fast-time.
+
+* `slow_time_axis` : un vecteur de dimension 4096, contenant les temps d'émission des impulsions, correspondants aux 4096 échantillons slow-time.
+
+Ces données ont été acquises le 11/08/2020 à 16:12:06 UTC sur le site de l'Observatoire de Versailles Saint-Quentin (OVSQ), à Guyancourt.
+
+Il s'agit d'une observation d'un orage multicellulaire survenu à la fin de la canicule d'août 2020.
+Une vague chaleur atteignant les 38°C, ainsi qu'une forte humidité dans les basses couches ont favorisé la formation de cet évènement convectif, qui a duré de 12:30 à 18:00 UTC, avec des hydrométéores détectés jusqu'à 12 km d'élévation.
+Si son intensité est restée relativement modérée au-dessus de Guyancourt, de violentes averses ont été enregistrées localement en région parisienne, notamment en Essonne.
+
+Ces fichier nous servira d'exemple pour construire notre chaîne de traitement des données ROXI.
 
 ### Lecture du fichier
 
