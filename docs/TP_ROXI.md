@@ -122,7 +122,6 @@ Nous verrons comment lire un fichier HDF5 avec Python, puis comment exporter des
 Vous trouverez un fichier de données ROXI au format HDF5 [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
 
 
-
 ### Lecture du fichier
 
 ~~~
