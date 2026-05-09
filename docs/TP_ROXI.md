@@ -137,7 +137,7 @@ Il s'agit d'une observation d'un orage multicellulaire survenu à la fin de la c
 Une vague chaleur atteignant les 38°C, ainsi qu'une forte humidité dans les basses couches ont favorisé la formation de cet évènement convectif, qui a duré de 12:30 à 18:00 UTC, avec des hydrométéores détectés jusqu'à 12 km d'élévation.
 Si son intensité est restée relativement modérée au-dessus de Guyancourt, de violentes averses ont été enregistrées localement en région parisienne, notamment en Essonne.
 
-Ces fichier nous servira d'exemple pour construire notre chaîne de traitement des données ROXI.
+Ce fichier nous servira d'exemple pour construire notre chaîne de traitement des données ROXI.
 
 ### Lecture du fichier
 
