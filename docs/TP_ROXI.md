@@ -137,6 +137,10 @@ Il s'agit d'une observation d'un **orage multicellulaire** survenu à la fin de 
 Une vague chaleur atteignant les 38°C, ainsi qu'une forte humidité dans les basses couches atmosphériques ont favorisé la formation de cet évènement convectif, qui a duré de 12:30 à 18:00 UTC, avec des hydrométéores détectés jusqu'à 12 km d'élévation.
 Si son intensité est restée relativement modérée au-dessus de Guyancourt, de violentes averses ont été enregistrées localement en région parisienne, notamment en Essonne.
 
+Voici une animation Météo-France de l'évènement, avec les taux de précipitations estimés en mm/h :
+
+![Animation orage Météo-France](img/Thunderstorm_meteofrance_animation.gif)
+
 Ce fichier nous servira d'exemple pour construire notre **chaîne de traitement des données ROXI**.
 
 |Nota Bene|
@@ -147,10 +151,11 @@ Ce fichier nous servira d'exemple pour construire notre **chaîne de traitement 
 
 ### Lecture du fichier
 
-La 1ère étape de notre de chaîne traitement est d'importer les données ROXI d'un fichier HDF5.
+La 1ère étape de notre de chaîne traitement sera d'importer les données ROXI d'un fichier HDF5.
 
 |Ajoutez à votre projet Python une fonction `read`|
 |:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
 |- Elle prendra en entrée le chemin d'un fichier HDF5.|
 |- Elle retournera 3 matrices `numpy`, correspondants aux 3 "Datasets" contenus dans le fichier.|
 
@@ -184,19 +189,35 @@ fast_time_axis = np.array(hf.get('fast_time_axis'))
 slow_time_axis = np.array(hf.get('slow_time_axis'))
 ~~~
 
-**Complétez votre fonction `read` en vous basant sur ces éléments**.
+**Vous pouvez à présent compléter votre fonction `read`**.
 
 Appliquez votre fonction à notre fichier exemple.
 
-Les dimensions de chacune des matrices récupérées sont-elles celles attendues ?
+_Les dimensions des matrices récupérées sont-elles bien celles attendues ? Le type des données également ?_
 
 ## Analyse spectrale
 
+La 2nde étape de notre de chaîne traitement sera de générer un spectre à partir des données ROXI récupérées.
+
+|Ajoutez à votre projet Python une fonction `FFT`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Elle prendra en entrée 3 matrices `numpy` telles que retournées par la fonction `read`.|
+|- Elle retournera 2 matrices `numpy` : un spectrogramme Doppler, et l'axe des fréquences correspondant.|
+
 ### Nature des données
+
+Avant toute chose, nous allons nous intéresser à la nature des données dont nous disposons.
+
+Importez la bibliothèque `matplotlib`, qui va nous servir à faire des affichages graphiques :
 
 ~~~
 import matplotlib.pyplot as plt
 ~~~
+
+Essayons tout d'abord d'afficher une série temporelle "slow-time" issue de nos données.
+
+Prenons le 1er profil, 
 
 ~~~
 plt.figure()
@@ -340,11 +361,11 @@ plt.show()
 
 ![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
 
-![Estimations de VDop pour l'orage complet](img/ROXI_VDop_orage_example.png)
+![Estimations de VDop pour l'orage complet](img/ROXI_VDop_thunderstorm_example.png)
 
 ![Exemple d'estimations de Z](img/ROXI_Z_estimations_example.png)
 
-![Estimations de Z pour l'orage complet](img/ROXI_Z_orage_example.png)
+![Estimations de Z pour l'orage complet](img/ROXI_Z_thunderstorm_example.png)
 
 ### Exportation du résultat
 
