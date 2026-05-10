@@ -104,7 +104,7 @@ Créez le dossier de votre projet, et structurez-le avec des sous-dossiers et de
 
 Lors de ce TP, nous partirons du principe que les données ROXI sont mises sous la forme de fichiers **HDF5**.
 
-Le "Hierarchical Data Format" est un format de fichiers utilisé pour stocker de grandes quantités d'informations de manière organisée et accessible efficacement.
+Le "Hierarchical Data Format" est un format de fichiers utilisé pour **stocker de grandes quantités d'informations** de manière organisée et accessible efficacement.
 C'est pourquoi il est très classique en analyse de données.
 
 Comme son nom l'indique, les données sont stockées hiérarchiquement, à la manière de l'arborescence d'un dossier sur votre ordinateur.
@@ -119,43 +119,76 @@ Nous verrons comment lire un fichier HDF5 avec Python, puis comment exporter des
 
 ### Exemple de données ROXI
 
-Vous trouverez un exemple de fichier de données ROXI au format HDF5 [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
+Vous trouverez un exemple de fichier de **données ROXI** au format **HDF5** [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
 
 Un fichier de données ROXI contient toujours les 4 "Datasets" suivants :
 
-* `I+Q` : une matrice de dimensions 4x128x4096, correspondant à 4 profils acquis d'affilée, contenant chacun 128 échantillons fast-time pour 4096 échantillons slow-time.
-Chaque élément de la matrice est donc un nombre complexe I/Q mesuré par le radar.
+* `I+Q` : une matrice de dimensions 4x128x4096, correspondant à **4 profils** acquis d'affilée, contenant chacun **128 échantillons fast-time** pour **4096 échantillons slow-time**.
+Chaque élément de la matrice est donc un nombre complexe I/Q mesuré par le radar (homogène à des volts).
 Ces 4 profils étant acquis sur un lapse de temps très court, on peut considérer qu'il s'agit de 4 répétitions d'un même profil.
 
-* `fast_time_axis` : un vecteur de dimension 128, contenant les temps de retard des échos, correspondants aux 128 échantillons fast-time.
+* `fast_time_axis` : un vecteur de dimension 128, contenant les temps de retard des échos (s), correspondants aux **128 échantillons fast-time**.
 
-* `slow_time_axis` : un vecteur de dimension 4096, contenant les temps d'émission des impulsions, correspondants aux 4096 échantillons slow-time.
+* `slow_time_axis` : un vecteur de dimension 4096, contenant les temps d'émission des impulsions (s), correspondants aux **4096 échantillons slow-time**.
 
-Ces données ont été acquises le 11/08/2020 à 16:12:06 UTC sur le site de l'Observatoire de Versailles Saint-Quentin (OVSQ), à Guyancourt.
+Ces données ont été acquises le **11/08/2020** à **16:12:06 UTC** sur le site de l'**Observatoire de Versailles Saint-Quentin** (OVSQ), à Guyancourt.
 
-Il s'agit d'une observation d'un orage multicellulaire survenu à la fin de la canicule d'août 2020.
-Une vague chaleur atteignant les 38°C, ainsi qu'une forte humidité dans les basses couches ont favorisé la formation de cet évènement convectif, qui a duré de 12:30 à 18:00 UTC, avec des hydrométéores détectés jusqu'à 12 km d'élévation.
+Il s'agit d'une observation d'un **orage multicellulaire** survenu à la fin de la canicule d'août 2020.
+Une vague chaleur atteignant les 38°C, ainsi qu'une forte humidité dans les basses couches atmosphériques ont favorisé la formation de cet évènement convectif, qui a duré de 12:30 à 18:00 UTC, avec des hydrométéores détectés jusqu'à 12 km d'élévation.
 Si son intensité est restée relativement modérée au-dessus de Guyancourt, de violentes averses ont été enregistrées localement en région parisienne, notamment en Essonne.
 
-Ce fichier nous servira d'exemple pour construire notre chaîne de traitement des données ROXI.
+Ce fichier nous servira d'exemple pour construire notre **chaîne de traitement des données ROXI**.
+
+|Nota Bene|
+|:-|
+|En réalité, les données ROXI n'étant pas très lourdes, elles sont enregistrées dans des fichiers binaires qui ne sont pas au format HDF5.|
+|Un fichier ROXI contient également des métadonnées qui ne vous sont pas fournies ici.|
+|Pour les besoins de ce TP, nous avons donc fait en sorte de vous faire découvrir un format utile, et simplifié le contenu des données ROXI.|
 
 ### Lecture du fichier
+
+La 1ère étape de notre de chaîne traitement est d'importer les données ROXI d'un fichier HDF5.
+
+|Ajoutez à votre projet Python une fonction `read`|
+|:-|
+|- Elle prendra en entrée le chemin d'un fichier HDF5.|
+|- Elle retournera 3 matrices `numpy`, correspondants aux 3 "Datasets" contenus dans le fichier.|
+
+Pour lire et écrire un fichier HDF5, nous utiliserons la bibliothèque Python `h5py`.
+
+Nous convertirons les "Datasets" contenus dans un fichier en matrices `numpy`.
+
+N'oubliez donc pas d'importer ces 2 bibliothèques avec les commandes suivantes :
 
 ~~~
 import h5py
 import numpy as np
 ~~~
 
+Pour importer un fichier HDF5 avec `h5py`, on crée un objet `File`.
+
+Voici ce que cela donnerait sur notre exemple :
+
 ~~~
 hf = h5py.File(".../ROXI_20200811_161206.h5",'r')
 ~~~
 
+On peut alors récupérer les différents "Datasets" contenus dans le fichier avec la méthode `get` et leurs noms.
+On oubliera pas de convertir en matrices `numpy` les "Datasets" récupérés.
+
+Voici ce que pourrait donner la récupération des 3 "Datasets" d'un fichier ROXI :
+
 ~~~
 mat_iq = np.array(hf.get('I+Q'))
-frequency_axis = np.array(hf.get('frequency_axis'))
-x_position_axis = np.array(hf.get('x_position_axis'))
-y_position_axis = np.array(hf.get('y_position_axis'))
+fast_time_axis = np.array(hf.get('fast_time_axis'))
+slow_time_axis = np.array(hf.get('slow_time_axis'))
 ~~~
+
+**Complétez votre fonction `read` en vous basant sur ces éléments**.
+
+Appliquez votre fonction à notre fichier exemple.
+
+Les dimensions de chacune des matrices récupérées sont-elles celles attendues ?
 
 ## Analyse spectrale
 
