@@ -121,7 +121,7 @@ Nous verrons comment lire un fichier HDF5 avec Python, puis comment exporter des
 
 Vous trouverez un exemple de fichier de **données ROXI** au format **HDF5** [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5).
 
-Un fichier de données ROXI contient toujours les 4 "Datasets" suivants :
+On considérera qu'un fichier de données ROXI contient toujours les 3 "Datasets" suivants, directement à la racine :
 
 * `I+Q` : une matrice de dimensions 4x128x4096, correspondant à **4 profils** acquis d'affilée, contenant chacun **128 échantillons fast-time** pour **4096 échantillons slow-time**.
 Chaque élément de la matrice est donc un nombre complexe I/Q mesuré par le radar (homogène à des volts).

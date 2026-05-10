@@ -1,5 +1,7 @@
 # WISDOM : radar à pénétration de sol pour l'étude du sous-sol martien
 
+![En-tête TP WISDOM](img/Header_TP_WISDOM.png)
+
 ## Contexte scientifique
 
 ![Illustration WISDOM](img/WISDOM_illustration.png)
