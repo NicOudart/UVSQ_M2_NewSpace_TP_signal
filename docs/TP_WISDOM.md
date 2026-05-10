@@ -1,8 +1,8 @@
-# RIMFAX : radar à pénétration de sol pour l'étude du sous-sol martien
+# WISDOM : radar à pénétration de sol pour l'étude du sous-sol martien
 
 ## Contexte scientifique
 
-![Illustration RIMFAX](img/RIMFAX_illustration.png)
+![Illustration WISDOM](img/WISDOM_illustration.png)
 
 ## Objectifs
 

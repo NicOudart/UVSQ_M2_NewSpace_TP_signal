@@ -26,7 +26,7 @@ Ce cours sera divisé en 3 temps :
 
 - Un 1er **tutoriel**  sur les données du radar météorologique ROXI, que vous trouverez sur ce site web.
 
-- Un 2nd **tutoriel** sur les données du radar à pénétration de sol martien RIMFAX, que vous trouverez également sur ce site web.
+- Un 2nd **tutoriel** sur les données du radar à pénétration de sol martien WISDOM, que vous trouverez également sur ce site web.
 
 - Un **projet évalué** lors duquel vous mettrez en application ce que vous avez appris, sur un nouvel exemple.
 
