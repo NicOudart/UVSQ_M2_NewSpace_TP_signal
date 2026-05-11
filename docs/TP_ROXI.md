@@ -317,6 +317,7 @@ frequency_axis = np.fft.fftshift(frequency_axis)
 ~~~
 
 _D'un point de vue physique, que signifie avoir un décalage de fréquence Doppler positif ou négatif ?_
+_Que se passera-t-il si les mouvements des cibles provoquent des décalages Doppler de fréquences supérieures à la limite de ROXI ?_
 
 Les puissances reçues par un radar météorologique peuvent varier sur 6 ou 7 ordres de grandeur.
 C'est pourquoi on converti en général les spectres Doppler en **décibels**.
@@ -369,7 +370,7 @@ L'étape suivante de notre chaîne de traitement sera donc logiquement d'implém
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
 |- Elle prendra en entrée une matrice `numpy` contenant 4 spectrogrammes tels que retournée par `FFT`.|
-|- Elle retournera une matrices `numpy` : une contenant le spectrogramme intégré à partir des 4 profils.|
+|- Elle retournera une matrice `numpy` contenant le spectrogramme intégré à partir des 4 profils.|
 
 ### Intégration cohérente
 
@@ -399,6 +400,11 @@ _Quel est environ le niveau du bruit pour les différents spectres obtenus ? Est
 
 _Quel est environ le SNR pour le spectre obtenu plus tôt avec le 11ème échantillon "fast-time" du 1er profil ?_
 
+Petite question bonus :
+
+Plus on augmente le nombre d'intégration cohérentes, plus l'intervalle entre 2 échantillons "slow-time" est grand.
+_Quelle performance du radar est donc impactée lorsque l'on augmente le nombre d'intégrations cohérentes ?_
+
 ### Intégration incohérente
 
 Nous implémenterons ici l'**intégration incohérente** (ou "non-cohérente").
@@ -424,15 +430,57 @@ _Observez-vous bien le résultat attendu ? D'après-vous, quel sera l'intérêt 
 
 ## Filtrage
 
+La prochaine étape de notre chaîne de traitement sera d'appliquer un **filtre médian** à nos spectres Doppler.
+
+Ce filtrage dans le domaine fréquentiel aura 2 objectifs :
+
+* **Lisser encore plus les spectres**, afin de faciliter leur interprétation.
+
+* Réduire l'effet des **échos de sol** aussi appelés "ground clutter" en anglais.
+
+|Ajoutez à votre projet Python une fonction `filter`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Elle prendra en entrée une matrice `numpy` contenant le spectrogramme intégré tel que retournée par `integrate`.|
+|- Elle retournera une matrice `numpy` contenant le spectrogramme filtré.|
+
 ### Ground clutter
+
+Avant d'implémenter le filtrage médian, voyons un peu les effets du "**ground clutter**".
+
+Si vous affichez le spectre intégré obtenu pour le 3ème échantillon "fast-time", vous obtiendrez :
 
 ![Exemple de spectre avant filtrage du clutter](img/ROXI_spectrum_before_filtering_example.png)
 
+On voit nettement un pic très fin autour de **0 Hz**.
+Il correspond aux échos de cibles situées **au sol**.
+
+En effet, bien que le lobe principal de l'antenne de ROXI soit très étroit, il peut recevoir des échos provenant du sol (bâtiments, arbres, etc.).
+Ces cibles n'étant pas en mouvement par rapport au radar, elle produisent des échos de **décalage Doppler nul**.
+
+Comme les cibles au sol sont proches du radar, on voit particulièrement ces échos parasites dans les premiers échantillons "fast-time".
+
+Regardez le spectre correspondant au dernier échantillon "fast-time".
+Vous devriez observer un pic correspondant à du "ground clutter".
+
+_Comment expliquez-vous ceci ?_
+
 ### Filtre médian
+
+Le **filtre médian** est couramment utilisé pour le "despiking", ou filtrage de **bruit impulsionnel**.
+
+Lorsqu'un signal contient des **pics abérrants**, le filtrage médian permet de réduire ces parasites sans trop déformer le signal.
+
+Il s'agit simplement d'une **fenêtre glissante**, qui vient remplacer la valeur centrale de la fenêtre par **la médiane** des valeurs dans la fenêtre.
+
+On pourra s'appuyer sur l'implémentation de la bibliothèque Python `scipy.signal`, la méthode `medfilt`.
+N'oubliez donc pas de l'importer :
 
 ~~~
 from scipy.signal import medfilt
 ~~~
+
+
 
 ~~~
 spectrum_0_2_db = medfilt(spectrum_0_2_db,kernel_size=7)

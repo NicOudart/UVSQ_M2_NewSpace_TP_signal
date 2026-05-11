@@ -8,3 +8,10 @@ nav:
   - Accueil: index.md
   - TP ROXI: TP_ROXI.md
   - TP WISDOM: TP_WISDOM.md
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - attr_list
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
