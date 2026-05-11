@@ -2,7 +2,7 @@
 
 ![En-tête TP ROXI](img/Header_TP_ROXI.png)
 
-_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them."_
+_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them. Since he had left Denmark the previous afternoon, he had been through types 33 (light pricking drizzle which made the roads slippery), 39 (heavy spotting), 47 to 51 (vertical light drizzle through to sharply slanting light to moderate drizzle freshening), 87 and 88 (two finely distinguished varieties of vertical torrential downpour), 100 (post-downpour squalling, cold), all the seastorm types between 192 and 213 at once, 123, 124, 126, 127 (mild and intermediate cold gusting, regular and syncopated cab-drumming), 11 (breezy droplets), and now his least favourite of all, 17."_
 
 **Douglas Adams, So Long and Thanks for All the Fish (1984)**
 
@@ -207,7 +207,7 @@ La 2nde étape de notre de chaîne traitement sera de générer un spectre à pa
 
 ### Nature des données
 
-Avant toute chose, nous allons nous intéresser à la nature des données dont nous disposons.
+Dans un 1er temps, nous allons nous intéresser à la nature des données dont nous disposons.
 
 Importez la bibliothèque `matplotlib`, qui va nous servir à faire des affichages graphiques :
 
@@ -217,7 +217,8 @@ import matplotlib.pyplot as plt
 
 Essayons tout d'abord d'afficher une série temporelle "slow-time" issue de nos données.
 
-Prenons le 1er profil, 
+Prenons le 1er profil, et regardons la série temporelle "slow-time" pour le niveau du 11ème échantillon "fast-time".
+Affichons les parties réelle et imaginaire du signal avec des commandes Python de ce type :
 
 ~~~
 plt.figure()
@@ -230,9 +231,24 @@ plt.grid()
 plt.show()
 ~~~
 
+On obtient alors la courbe suivante :
+
 ![Exemple de données I+Q](img/ROXI_I+Q_example.png)
 
+Si on fait un zoom sur une partie de la courbe, on voit qu'il s'agit d'un **signal périodique** :
+
 ![Zoom sur les données I+Q](img/ROXI_I+Q_example_zoomed.png)
+
+Ces oscillations correspondent aux décalages de fréquence par effet Doppler, liés aux mouvements verticaux des hydrométéores dans le volume sondé (au niveau du 11ème échantillon "fast-time").
+Tous les hydrométéores n'ayant pas la même vitesse verticale, et la même réfléctivé radar, ce signal est une **somme de sinusoïdes complexes**, dont la fréquence est d'autant plus grande que la vitesse est élevée.
+
+D'où l'intérêt de vouloir réaliser une **analyse spectrale** de ce signal, afin de séparer les différents décalages de fréquence Doppler, et la puissance associée à chacun.
+
+Avant de réaliser cette analyse, posez-vous les questions suivantes :
+
+* _Quelle fréquence Doppler maximale peut mesurer ROXI ?_
+
+Répondez-y en analysant les 
 
 ### FFT avec Numpy
 
