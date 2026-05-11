@@ -2,7 +2,7 @@
 
 ![En-tête TP ROXI](img/Header_TP_ROXI.png)
 
-_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them. Since he had left Denmark the previous afternoon, he had been through types 33 (light pricking drizzle which made the roads slippery), 39 (heavy spotting), 47 to 51 (vertical light drizzle through to sharply slanting light to moderate drizzle freshening), 87 and 88 (two finely distinguished varieties of vertical torrential downpour), 100 (post-downpour squalling, cold), all the seastorm types between 192 and 213 at once, 123, 124, 126, 127 (mild and intermediate cold gusting, regular and syncopated cab-drumming), 11 (breezy droplets), and now his least favourite of all, 17."_
+_"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them. [...] Since he had left Denmark the previous afternoon, he had been through types 33 (light pricking drizzle which made the roads slippery), 39 (heavy spotting), 47 to 51 (vertical light drizzle through to sharply slanting light to moderate drizzle freshening), 87 and 88 (two finely distinguished varieties of vertical torrential downpour), 100 (post-downpour squalling, cold), all the seastorm types between 192 and 213 at once, 123, 124, 126, 127 (mild and intermediate cold gusting, regular and syncopated cab-drumming), 11 (breezy droplets), and now his least favourite of all, 17."_
 
 **Douglas Adams, So Long and Thanks for All the Fish (1984)**
 
@@ -203,7 +203,7 @@ La 2nde étape de notre de chaîne traitement sera de générer un spectre à pa
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
 |- Elle prendra en entrée 3 matrices `numpy` telles que retournées par la fonction `read`.|
-|- Elle retournera 2 matrices `numpy` : un spectrogramme Doppler, et l'axe des fréquences correspondant.|
+|- Elle retournera 2 matrices `numpy` : une contenant les 4 spectrogrammes Doppler correspondant aux 4 profils, et l'autre l'axe des fréquences correspondant à ces spectrogrammes.|
 
 ### Nature des données
 
@@ -248,33 +248,86 @@ Avant de réaliser cette analyse, posez-vous les questions suivantes :
 
 * _Quelle fréquence Doppler maximale peut mesurer ROXI ?_
 
-Répondez-y en analysant les 
+* _Quelle est la résolution en fréquence de ROXI ?_
+
+* _Retrouvez-vous bien la durée de d'une impulsion et la période de répétition d'impulsion de ROXI ?_
+
+Répondez-y en vous appuyant sur les axes "fast-time" et "slow-time" que vous avez récupérés.
 
 ### FFT avec Numpy
+
+Pour réaliser l'analyse spectrale des séries temporelles "slow-time" de ROXI, nous allons utiliser la "**Fast Fourier Transform**".
+Il s'agit d'un algorithme calculant la transformée de Fourier discrète de manière significativement plus rapide que la méthode naïve.
+
+La bibliothèque `numpy` contient une implémentation de la FFT.
+
+N'oubliez donc pas d'importer cette bibliothèque :
 
 ~~~
 import numpy as np
 ~~~
+
+Pour déterminer l'axe des fréquences qui ira avec nos spectres Doppler, on peut utiliser la méthode `fft.fftfreq` de `numpy`.
+Cette méthode prend en entrée la longueur de l'axe temporel du signal à analyser, et le pas temporel correspondant.
+
+On pourra donc utiliser des commandes Python de ce genre :
 
 ~~~
 slow_time_dt = slow_time_axis[1]-slow_time_axis[0]
 frequency_axis = np.fft.fftfreq(len(slow_time_axis),d=slow_time_dt)
 ~~~
 
+La sortie d'une transformée de Fourier est une série de **nombres complexes**, contenant les informations d'**amplitude** et de **phase** du spectre.
+
+L'information de phase n'est généralement pas exploitée, car elle ne contient pas d'information physique intéressante.
+L'amplitude en revanche permet d'estimer la puissance reçue pour chaque décalage de fréquence Doppler.
+
+L'amplitude du spectre en sortie de la FFT sera homogène à une tension.
+Pour obtenir une grandeur homogène à une **puissance**, nous prendrons son module, et nous le mettrons au carré.
+
+On utilisera la méthode `fft.fft` de `numpy`, avec une commande similaire à celle-ci :
+
 ~~~
 spectrum_0_10 = np.abs(np.fft.fft(mat_iq[0][10]))**2
 ~~~
 
+|Nota Bene|
+|:-|
+|Les puissances obtenues ici ne sont pas calibrées.|
+|En effet, les tensions ne sont pas calibrées, et nous n'avons pas divisé par une impédance.|
+|Il y a donc un offset avec la vraie puissance reçue pour chaque fréquence en dB.|
+
+Essayez sur le 11ème échantillon "fast-time" du 1er profil.
+
+_Observez-vous des composantes fréquentielles ressortir ?_
+_Dans quelle ordre méthode `fft.fft` sort-elle les fréquences du spectre ?_
+
 ### FFTshift et dB
+
+Vous l'avez compris, l'implémentation `numpy` de la FFT sort les fréquences dans un ordre un peu contre-intuitif.
+La raison de cet ordre est purement algorithmique.
+
+Pour **ordonner** les sorties de la fréquence négative la plus faible à la fréquence positive la plus élevée, avec le 0 au milieu, on pourra utiliser la méthode `fft.fftshift` de `numpy`.
+
+Voici un exemple de commandes pour l'axe fréquentiel et le spectre renvoyé par la FFT :
 
 ~~~
 spectrum_0_10 = np.fft.fftshift(spectrum_0_10)
 frequency_axis = np.fft.fftshift(frequency_axis)
 ~~~
 
+_D'un point de vue physique, que signifie avoir un décalage de fréquence Doppler positif ou négatif ?_
+
+Les puissances reçues par un radar météorologique peuvent varier sur 6 ou 7 ordres de grandeur.
+C'est pourquoi on converti en général les spectres Doppler en **décibels**.
+
+Ceci peut facilement être fait avec une commande Python de ce genre : 
+
 ~~~
 spectrum_0_10_db = 10*np.log10(spectrum_0_10)
 ~~~
+
+Pour voir à quoi ressemble un spectre Doppler ROXI après ces 2 traitements, vous pouvez utiliser des commandes Python similaires à celles-ci :
 
 ~~~
 plt.figure()
@@ -286,15 +339,88 @@ plt.grid()
 plt.show()
 ~~~
 
+Voici à quoi ressemble le spectre pour le 11ème échantillon "fast-time" du 1er profil :
+
 ![Exemple de spectre Doppler brut](img/ROXI_spectrum_raw_example.png)
+
+On observe une distribution quasi-gaussienne, avec un pic aux alentours de 400 Hz de décalage Doppler.
+Cette forme est assez classique pour un signal météorologique.
+Un **modèle gaussien** sera d'ailleurs souvent utilisé lors de l'interprétation des spectres Doppler d'un radar météorologique.
+
+**Vous pouvez à présent compléter votre fonction `FFT`**.
+
+Appliquez votre fonction à notre exemple.
+Regardez différents spectres pour différents profils et différents échantillons "fast-time".
+
+_Le spectre est-il toujours gaussien ?_
+_La fréquence du pic est-elle toujours la même ?_
+_Voyez-vous des pics ayant l'air d'avoir une autre origine que les précipitations ?_
 
 ## Réduction du bruit
 
-### Bruit et SNR
+Vous l'avez sûrement remarqué, les spectres Doppler ROXI sont bruités.
+
+Extraire le signal utile du bruit est un des grands enjeux du traitement du signal.
+Dans le cas de ROXI, nous pouvons tirer profit du fait que nous disposons de 4 répétitions du même profil, pour diminuer le bruit en les intégrant.
+
+L'étape suivante de notre chaîne de traitement sera donc logiquement d'implémenter une "**intégration incohérente**" (définirons ce terme dans la suite) pour réduire le bruit dans les spectres Doppler.
+
+|Ajoutez à votre projet Python une fonction `integrate`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Elle prendra en entrée une matrice `numpy` contenant 4 spectrogrammes tels que retournée par `FFT`.|
+|- Elle retournera une matrices `numpy` : une contenant le spectrogramme intégré à partir des 4 profils.|
+
+### Intégration cohérente
+
+Un **bruit blanc** dans une série temporelle donnera un spectre plat.
+Le spectre d'un signal bruité contiendra donc un offset, dont le niveau correspondra au **niveau du bruit**.
+
+Si on trace un spectre en décibels, la différence entre le pic du signal utile et le niveau du bruit donnera le ratio signal/bruit ou **SNR**.
+
+On comprend intuitivement que plus le pic dépasse du niveau de bruit (donc plus le SNR est élevé), meilleure sera la détection puis la caractérisation du signal utile.
+
+Mettons que l'on dispose de plusieurs répétitions d'une même série temporelle, et que l'on fait l'hypothèse que la **phase du signal** reste **cohérente** entre 2 répétitions, et que le **bruit** est **aléatoire**.
+**Moyenner** les différentes répétitions permettra d'obtenir une série temporelle de **SNR plus élevé**, et donc un spectre au **niveau de bruit plus bas**.
+
+Cette méthode reposant sur l'hypothèse de cohérence de la phase du signal entre 2 répétitions, on l'appelle "**intégration cohérente**".
+
+Nous ne l'implémenterons pas ici, mais elle est faite par ROXI de manière cachée : en réalité, un profil ROXI est issu de **8 intégrations cohérentes**.
+Ce qui explique pourquoi la période de répétition d'impulsion de ROXI n'est pas égale à 128 fois la durée de son impulsion, mais 128x8.
+
+|Nota Bene|
+|:-|
+|Par linéairité de la transformée de Fourier, il est équivalent d'appliquer l'intégration à la série temporelle ou à son spectre.|
+|On pourrait donc tout aussi bien l'appliquer avant FFT.|
+
+Bien entendu, l'intégration cohérente à des limites : **plus on intègre longtemps**, plus les cibles auront bougé, et donc **moins l'hypothèse de cohérence de la phase sera vérifiée**.
+
+_Quel est environ le niveau du bruit pour les différents spectres obtenus ? Est-il le même pour tous les spectres ? Comment expliquez-vous ceci ?_
+
+_Quel est environ le SNR pour le spectre obtenu plus tôt avec le 11ème échantillon "fast-time" du 1er profil ?_
 
 ### Intégration incohérente
 
+Nous implémenterons ici l'**intégration incohérente** (ou "non-cohérente").
+
+Par opposition avec l'intégration cohérente, l'intégration incohérente **moyenne les puissances des spectres** obtenus après FFT et module au carré pour les différentes répétitions d'une même série temporelle, **en excluant l'information de phase**.
+
+Le résultat est que le niveau de bruit du spectre ne varie pas, mais le spectre obtenu est **plus "lisse"**.
+
+|Nota Bene|
+|:-|
+|L'opération "module" n'étant pas linéaire, contrairement à l'intégration cohérente, l'intégration incohérente doit être effectuée après FFT.|
+
+Tout comme l'intégration cohérente, l'intégration incohérente a des limites : la forme des spectres évolue au fur et à mesure que les cibles se déplacent ou changent, et au bout d'un certain temps intégrer les spectres n'a plus aucun sens.
+En météorologie radar, on ne dépasse généralement pas quelques secondes.
+
+**Vous pouvez à présent compléter votre fonction `integrate`** : elle fera la moyenne des 4 spectrogrammes en puissances obtenus à partir des 4 profils contenus dans un fichier de données ROXI.
+
+Si vous appliquez votre fonction à notre exemple, et que vous affichez le spectre obtenu pour le 11ème échantillon "fast-time", vous devriez obtenir ceci :
+
 ![Exemple de spectre Doppler intégré](img/ROXI_spectrum_integrated_example.png)
+
+_Observez-vous bien le résultat attendu ? D'après-vous, quel sera l'intérêt de lisser ainsi les spectres Doppler de ROXI ?_
 
 ## Filtrage
 
