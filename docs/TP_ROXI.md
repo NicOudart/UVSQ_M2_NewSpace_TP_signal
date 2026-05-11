@@ -441,7 +441,7 @@ Ce filtrage dans le domaine fréquentiel aura 2 objectifs :
 |Ajoutez à votre projet Python une fonction `filter`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Elle prendra en entrée une matrice `numpy` contenant le spectrogramme intégré tel que retournée par `integrate`.|
+|- Elle prendra en entrée une matrice `numpy` contenant un spectrogramme intégré tel que retournée par `integrate`.|
 |- Elle retournera une matrice `numpy` contenant le spectrogramme filtré.|
 
 ### Ground clutter
@@ -480,21 +480,45 @@ N'oubliez donc pas de l'importer :
 from scipy.signal import medfilt
 ~~~
 
+On peut spécifier à la méthode **les dimensions de la fenêtre** avec l'argument `kernel_size`.
 
+Il s'agit forcément d'un **nombre impair**.
+Pour le "despiking", on choisit en général 3, 5 ou 7 maximum.
+
+Voici un exemple de commande appliquant `medfilt` pour un fenêtre de dimension 7 :
 
 ~~~
 spectrum_0_2_db = medfilt(spectrum_0_2_db,kernel_size=7)
 ~~~
 
+Si vous appliquez cette méthode au spectre correspondant au 3ème échantillon "fast-time", vous obtiendrez ceci :
+
 ![Exemple de spectre après filtrage du clutter](img/ROXI_spectrum_after_filtering_example.png)
+
+On voit que le pic correspondant au "ground clutter" a été réduit de 40 dB !
+Le spectre est plus lisse, sans avoir été trop déformé.
+
+Vous pouvez essayer d'autres valeurs de `kernel_size` :
+
+_Que se passe-t-il si vous diminuez ou augmentez cette valeur ?_
+
+**Vous pouvez à présent compléter votre fonction `filter`**.
+
+Appliquez-là à notre exemple, et confirmez la réduction du "ground clutter" pour les différents spectres.
+
+|Nota Bene|
+|:-|
+|En météorologie radar, il existe d'autres techniques classiques pour réduire le "ground clutter" :|
+|- Soustraire une mesure d'air clair à chaque série temporelle I/Q avant FFT.|
+|- Appliquer à chaque série temporelle I/Q un filtre coupe-bande très étroit, type "notch", avant FFT.|
+|- Soustraire 2 à 2 les échantillons des séries temporelles I/Q avant FFT.|
 
 ## Spectrogramme
 
-~~~
-len_fast_time = len(fast_time_axis)
-len_slow_time = len(slow_time_axis)
-mat_spectrum = np.zeros((len_fast_time,len_slow_time))
-~~~
+Notre chaîne de traitement des données ROXI est à présent assez avancée pour pouvoir afficher un **spectrogramme Doppler** interprétable.
+
+Mettons que nous ayons récupéré en sortie de notre chaîne actuelle une matrice `numpy` 2D du nom de `mat_spectrum`, contenant notre spectrogramme (en dB).
+Nous pouvons facilement l'afficher avec les commandes `matplotlib` suivantes :
 
 ~~~
 plt.figure()
@@ -506,37 +530,144 @@ plt.title('Doppler spectrogram - 4 integrated acquisitions - 2020/08/11 16:12:06
 plt.show()
 ~~~
 
+Voici le spectrogramme que vous devriez obtenir pour notre exemple :
+
 ![Exemple de spectrogramme Doppler](img/ROXI_spectrogram_example.png)
+
+On observe clairement 2 grands types d'échos : 
+
+* En-dessous de 25 ms de "fast-time", les décalages en fréquence Doppler sont plus élevés, avec des distributions plus larges.
+
+* Au-dessus de 25 ms de "fast-time", les décalages en fréquence Doppler sont plus faibles, avec des distributions plus étroites.
+
+Pour pouvoir interpréter ces 2 populations d'hydrométéores, il va nous falloir convertir les axes de "fast-time" et de fréquences Doppler en **élévations** et **vitesses verticales**.
+
+Ensuite, nous devrons extraire des variables météorologiques utiles de chaque spectre : **réflectivité Z** et **vitesse verticale moyenne VDop**.
 
 ## Interprétation météorologique
 
-### Conversion en vitesses et élévations
+L'étape suivante de notre chaîne de traitement sera donc une fonction pour l'interprétation météorologique des spectres Doppler ROXI.
+
+|Ajoutez à votre projet Python une fonction `interpret`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Elle prendra en entrée 3 matrices `numpy` : un spectrogramme intégré et filtré, un axe de "fast-time", un axe de fréquences Doppler.|
+|- Elle retournera 3 matrices `numpy` : un profil d'estimations de Z, un profil d'estimations de VDop, et un axe d'élévations correspondant.|
+
+Cette fonction suivra les grandes étapes suivantes :
+
+* Convertir les axes de "fast-time" et de fréquences Doppler en **élévation** et **vitesses verticales**.
+
+* Ajuster un modèle gaussien à chaque spectre Doppler, pour récupérer de estimations de **puissance reçue** et **VDop**.
+
+* Convertir la puissance reçue en **réflectivité Z** (non calibrée) avec une correction de l'élévation.
+
+### Conversion en élévations et vitesses verticales
+
+Pour commencer, il nous faut pouvoir convertir l'axe de "fast-time" en **élévations**.
+
+Les ondes éléctromagnétiques se propageant à environ **la vitesse de la lumière** dans l'atmosphère terrestre, cette conversion est très simple.
+Il faut juste faire attention au fait que l'impulsion radar fait un **aller-retour** entre l'antenne et une cible.
+
+Si on note $h$ l'élévation, $dt$ le temps de retard des échos, et $c$ la vitesse de la lumière, on a :
+
+$h = \frac{c dt}{2}$
+
+Ensuite, il nous faudra convertir l'axe des décalages en fréquence Doppler en **vitesses verticales**.
+
+On note $f_e$ la fréquence émise par le radar, et $f_r$ la fréquence reçue, et $v_D$ la vitesse verticale d'une cible.
+
+Comme $v_D << c$, et que l'onde fait un aller-retour entre le radar et la cible, on peut écrire la formule de **l'effet Doppler** de la manière suivante :
+
+$f_r \approx f_e (1 + \frac{v_D}{c})^2 $
+
+Si on développe cette formule, sachant que $v_D << c$, on peut considérer $(\frac{v_D}{c})^2$ comme négligeable.
+Par conséquent :
+
+$f_r \approx f_e (1 + \frac{2 v_D}{c}) $
+
+Et si on note $f_D = f_r - f_e$ le décalage en fréquence Doppler, on obtient :
+
+$f_D = 2 f_e \frac{v_D}{c}$
+
+Or, on sait que $f_e = \frac{c}{\lambda}$ avec $\lambda$ la longueur d'onde de l'impulsion radar.
+Donc :
+
+$f_D = 2 \frac{v_D}{\lambda}$
+
+D'où la formule que nous utiliserons pour convertir les décalages en fréquence Doppler en vitesses verticales :
+
+$v_D = \frac{f_D \lambda}{2}$
+
+_Avec ces formules, retrouvez-vous bien la résolution en distance et la portée maximale de ROXI à partir de `fast_time_axis` ?_
+_Et retrouvez-vous la vitesse ambiguë de ROXI à partir de `frequency_axis` ?_
+
+Si vous utilisez ces formules pour convertir `fast_time_axis` et `frequency_axis`, vous pouvez afficher notre exemple de spectrogramme de manière plus interprétable :
 
 ![Exemple de spectrogramme Doppler avec des axes météorologiques](img/ROXI_spectrogram_meteo_axis_example.png)
 
+On voit que la transition entre les 2 populations d'hydrométéores se fait à environ 3.5 km d'élévation, avec des vitesses aux alentours de 6 m/s pour la population la plus basse, et aux alentours de 1 m/s pour la population la plus haute.
+
+Si on considère que ces vitesses verticales sont en 1ère approximation les vitesses de chute des hydrométéores, on peut déduire de ces vitesses que :
+
+* La population la plus basse correspond à des **gouttes d'eau liquide**.
+
+* La population la plus haute correspond à des **cristaux de glace d'eau**.
+
+La température diminuant avec l'altitude dans la troposphère, cette interprétation est cohérente avec l'axe d'élévations.
+
+3.5 km correspond donc approximativement à l'élévation de **l'isotherme zéro**, où les cristaux de glace **fondent** pour devenir gouttes d'eau.
+
+Pour confirmer cette interprétation, voyons comment modéliser les spectres Doppler afin d'en tirer nos variables météorologiques d'intérêt.
+
 ### Modélisation Gaussienne
+
+On modélise souvent les spectres Doppler de radar météorologiques par une **fonction gaussienne** de la vitesse verticale $v$, de la forme suivante :
+
+$g(v) = P \frac{exp(\frac{-(v-v_{Dop})^2}{2 \sigma^2})}{\sigma \sqrt{2 \pi}}$
+
+avec $P$ la puissance totale du spectre, $v_{Dop}$ la vitesse Doppler moyenne, et $\sigma$ son écart-type.
+
+Pour ajuster un tel modèle à nos spectres Doppler, nous pourrons utiliser la méthode `curve_fit` de la bibliothèque Python `scipy.optimize`, qui permet d'ajuster une fonction quelconque à une courbe.
+Très pratique pour de l'interprétation de données !
+
+N'oubliez donc pas d'importer cette méthode :
 
 ~~~
 from scipy.optimize import curve_fit
 ~~~
 
+Il faudra définir le modèle **gaussien** de spectre Doppler sous la forme d'une fonction Python.
+
+Nos spectres étant noyé dans un bruit blanc de niveau constant d'environ -57 dB, et convertis en dB, notre modèle devra en tenir compte.
+
+Voici une proposition de fonction, avec les entrées `v` pour $v$, `power` pour $P$, `vdop` pour $v_{Dop}$, et `std` pour $\sigma$ :
+
 ~~~
-def gaussian_model(x,ampli,vdop,std):
+def gaussian_model(v,power,vdop,std):
 	
-    signal = ampli*np.exp(-(x-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))
+    signal = power*np.exp(-(v-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))
 	
     return 10*np.log10(signal+10**(-57/10))
 ~~~
 
+Pour ajuster cette fonction à nos spectres en dB, il faudra la fournir en entrée de `curve_fit`, avec notre axe de fréquences Doppler `vdop_axis`.
+
+Pour aider l'algorithme d'optimisation de `curve_fit` à converger, on pourra lui fournir une initialisation des paramètres à optimiser avec l'argument `p0`, ainsi que des bornes min et max avec l'argument `bounds`.
+
+Voici un exemple pour le 11ème spectre de notre spectrogramme (en dB) `mat_spectrum` :
+
 ~~~
-params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum_db[10],p0=[1e3,0,1],bounds=([0,-12,0],[1e6,12,3]))
-ampli,vdop,std = params
+params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum[10],p0=[1e3,0,1],bounds=([0,-12,0],[1e6,12,3]))
+power,vdop,std = params
 ~~~
+
+Après ajustement, vous pouvez afficher notre modèle par dessus le spectre Doppler avec des commandes `matplotlib` de ce genre :
 
 ~~~
 plt.figure()
-plt.plot(vdop_axis,mat_spectrum_db[10],'r-')
-plt.plot(vdop_axis,gaussian_model(vdop_axis,ampli,vdop,std),'b--')
+plt.plot(vdop_axis,mat_spectrum[10],'r-')
+plt.plot(vdop_axis,gaussian_model(vdop_axis,power,vdop,std),'b--')
 plt.xlabel('Doppler velocity (m/s)')
 plt.ylabel('Uncalibrated power (dB)')
 plt.title('Doppler spectrum modelling - 4 integrated acquisitions - fast-time level 10')
@@ -545,9 +676,22 @@ plt.grid()
 plt.show()
 ~~~
 
+Voici le modèle que vous devriez alors obtenir :
+
 ![Exemple de modélisation Gaussienne de spectre Doppler](img/ROXI_spectrum_modelling_example.png)
 
+Le modèle gaussien déterminé par `curve_fit` colle visiblement très bien à notre spectre Doppler.
+
+|Nota Bene|
+|:-|
+|Si le modèle Gaussien simple est très courant car représentatif de la plupart des spectres Doppler météorologiques, il est parfois inadapté :|
+|- Les vents de cisallement, ainsi que la turbulence, peuvent provoquer des spectres asymétriques.|
+|- La présence de plusieurs populations d'hydrométéores au sein d'un même volume fera apparaitre plusieurs gaussiennes dans un même spectre.|
+|- Des échos non-météorologiques (ground clutter, insectes, oiseaux, diffusion de Bragg, etc.) n'auront pas des spectres gaussiens.|
+
 ### Estimation de Z et VDop
+
+Maintenant que nous savons comment ajuster un modèle gaussien à nos spectres Doppler, voyons comment en extraire Z et VDop.
 
 ![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
 
@@ -559,3 +703,4 @@ plt.show()
 
 ### Exportation du résultat
 
+### Conclusion
