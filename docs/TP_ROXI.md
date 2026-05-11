@@ -569,9 +569,9 @@ Pour commencer, il nous faut pouvoir convertir l'axe de "fast-time" en **éléva
 Les ondes éléctromagnétiques se propageant à environ **la vitesse de la lumière** dans l'atmosphère terrestre, cette conversion est très simple.
 Il faut juste faire attention au fait que l'impulsion radar fait un **aller-retour** entre l'antenne et une cible.
 
-Si on note $h$ l'élévation, $dt$ le temps de retard des échos, et $c$ la vitesse de la lumière, on a :
+Si on note $h$ l'élévation, $t$ le temps de retard des échos, et $c$ la vitesse de la lumière, on a :
 
-$h = \frac{c dt}{2}$
+$h = \frac{c t}{2}$
 
 Ensuite, il nous faudra convertir l'axe des décalages en fréquence Doppler en **vitesses verticales**.
 
@@ -579,12 +579,12 @@ On note $f_e$ la fréquence émise par le radar, et $f_r$ la fréquence reçue, 
 
 Comme $v_D << c$, et que l'onde fait un aller-retour entre le radar et la cible, on peut écrire la formule de **l'effet Doppler** de la manière suivante :
 
-$f_r \approx f_e (1 + \frac{v_D}{c})^2 $
+$f_r \approx f_e (1 + \frac{v_D}{c})^2$
 
 Si on développe cette formule, sachant que $v_D << c$, on peut considérer $(\frac{v_D}{c})^2$ comme négligeable.
 Par conséquent :
 
-$f_r \approx f_e (1 + \frac{2 v_D}{c}) $
+$f_r \approx f_e (1 + \frac{2 v_D}{c})$
 
 Et si on note $f_D = f_r - f_e$ le décalage en fréquence Doppler, on obtient :
 
@@ -624,7 +624,7 @@ Pour confirmer cette interprétation, voyons comment modéliser les spectres Dop
 
 On modélise souvent les spectres Doppler de radar météorologiques par une **fonction gaussienne** de la vitesse verticale $v$, de la forme suivante :
 
-$g(v) = P \frac{exp(\frac{-(v-v_{Dop})^2}{2 \sigma^2})}{\sigma \sqrt{2 \pi}}$
+$g(v) = \frac{P}{\sigma \sqrt{2 \pi}} exp(\frac{-(v-v_{Dop})^2}{2 \sigma^2})$
 
 avec $P$ la puissance totale du spectre, $v_{Dop}$ la vitesse Doppler moyenne, et $\sigma$ son écart-type.
 
