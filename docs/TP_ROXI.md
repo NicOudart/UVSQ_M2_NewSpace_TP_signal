@@ -54,7 +54,7 @@ Ces spectres peuvent ensuite être concaténés verticalement afin d'obtenir une
 ![Analyse spectrale Doppler](img/Doppler_spectral_analysis.png)
 
 On peut voir chaque spectre Doppler comme la distribution des puissances reçues par le radar par rapport à la vitesse des hydrométéores au sein d'un volume sondé.
-Il est courant d'essayer de modéliser cette distribution par un modèle Gaussien, afin d'en tirer 2 caractéristiques des précipitations : leur réfléctivité moyenne **Z**, et leur vitesse moyenne **VDop**.
+Il est courant d'essayer de modéliser cette distribution par un modèle Gaussien, afin d'en tirer 2 caractéristiques des précipitations : leur réfléctivité totale **Z**, et leur vitesse moyenne **VDop**.
 
 De ces caractéristiques pourrons être inférées des **grandeurs météorologiques** d'intérêt : le régime de précipitation, sa phase, son intensité, etc.
 
@@ -569,9 +569,9 @@ Pour commencer, il nous faut pouvoir convertir l'axe de "fast-time" en **éléva
 Les ondes éléctromagnétiques se propageant à environ **la vitesse de la lumière** dans l'atmosphère terrestre, cette conversion est très simple.
 Il faut juste faire attention au fait que l'impulsion radar fait un **aller-retour** entre l'antenne et une cible.
 
-Si on note $h$ l'élévation, $t$ le temps de retard des échos, et $c$ la vitesse de la lumière, on a :
+Si on note $h$ l'élévation, $dt$ le temps de retard des échos, et $c$ la vitesse de la lumière, on a :
 
-$h = \frac{c t}{2}$
+$h = \frac{c \times dt}{2}$
 
 Ensuite, il nous faudra convertir l'axe des décalages en fréquence Doppler en **vitesses verticales**.
 
@@ -655,6 +655,8 @@ Pour ajuster cette fonction à nos spectres en dB, il faudra la fournir en entr�
 
 Pour aider l'algorithme d'optimisation de `curve_fit` à converger, on pourra lui fournir une initialisation des paramètres à optimiser avec l'argument `p0`, ainsi que des bornes min et max avec l'argument `bounds`.
 
+Le paramètre $v_{Dop}$ obtenu correspondra directement à **VDop**, et le paramètre $P$ correspondra à la puissance total du signal utile dans le spectre (bruit blanc non compris) que nous convertirons plus tard en **Z**.
+
 Voici un exemple pour le 11ème spectre de notre spectrogramme (en dB) `mat_spectrum` :
 
 ~~~
@@ -682,6 +684,16 @@ Voici le modèle que vous devriez alors obtenir :
 
 Le modèle gaussien déterminé par `curve_fit` colle visiblement très bien à notre spectre Doppler.
 
+On trouve que :
+
+* $P \approx -28.4 dB$
+
+* $V_{Dop} \approx 6.2 m/s$
+
+* $\sigma \approx 0.9 m/s$
+
+Il ne reste plus qu'à savoir comment convertir la puissance totale du spectre $P$ en réfléctivité Z.
+
 |Nota Bene|
 |:-|
 |Si le modèle Gaussien simple est très courant car représentatif de la plupart des spectres Doppler météorologiques, il est parfois inadapté :|
@@ -689,13 +701,69 @@ Le modèle gaussien déterminé par `curve_fit` colle visiblement très bien à 
 |- La présence de plusieurs populations d'hydrométéores au sein d'un même volume fera apparaitre plusieurs gaussiennes dans un même spectre.|
 |- Des échos non-météorologiques (ground clutter, insectes, oiseaux, diffusion de Bragg, etc.) n'auront pas des spectres gaussiens.|
 
-### Estimation de Z et VDop
+### Estimation de Z
 
-Maintenant que nous savons comment ajuster un modèle gaussien à nos spectres Doppler, voyons comment en extraire Z et VDop.
+La **puissance totale** du signal utile dans un spectre Doppler de radar météorologique, correspond à la **puissance reçue** de tous les hydrométéores contenus dans un volume sondé (à un niveau de "fast-time" donné).
+
+Le problème de cette grandeur est qu'elle n'est **pas interprétable météorologiquement** telle quelle.
+
+En effet, afin de les identifier et d'estimer leur distribution en tailles, nous aimerions plutôt connaitre la **réfléctivité** radar des hydrométéores : leur propention à réfléchir le signal du radar.
+
+Contrairement à la puissance reçue, il s'agit d'une **propriété intrinsèque** des hydrométéores, ne dépendant ni des **effets instrumentaux**, ni de la **distance** des hydrométéores au radar.
+
+Pour obtenir la **réfléctivité totale Z** des hydrométéores pour un spectre donné, les météorologues lui appliquent les compensations suivantes :
+
+* Une compensation des **pertes en espace libre** : la puissance reçue d'un volume sondé diminue avec le carré de la distance parcourue par l'impulsion du radar (donc aller-retour).
+
+* Une compensation des **effets instrumentaux** : la puissance émise, le gain des antennes, le faisceau d'émission, la durée de l'impulsion, les pertes interne, etc.
+
+La formule pour convertir $P$ en Z est donc :
+
+$Z = P \times C_{rad} \times R^2$
+
+avec $C_{rad}$ la "**constante radar**", un coefficient prenant en compte tous les effets instrumentaux, et $R$ la **distance de propagation** de l'impulsion.
+
+Cette grandeur est souvent exprimée en **décibels** (on parle de "dBZ"), et permet en théorie de comparer les résultats de 2 radars météorologiques différents. Pratique !
+
+Dans le cadre de ce TP, nous n'implémenterons **que la compensation des pertes d'espace libre** : 
+
+$Z_{dB} = P_{dB} + 20 log_{10}(R)$
+
+Effet, la compensation des effets instrumentaux nécessite un tout travail d'**étalonnage** du radar, beaucoup trop délicat pour être réalisé ici.
+
+Nous obtiendrons donc une valeur de Z en dB **non-calibrée**, qui sera décalé du vrai Z par un offset correspondant à $10 log_{10}(C_{rad})$.
+
+**Vous pouvez enfin compléter votre fonction `interpret` !**
+
+Nous allons l'appliquer à notre exemple, et analyser le résultat.
+
+### Profils de Z et VDop
+
+~~~
+plt.figure()
+plt.errorbar(x=vect_vdop,y=elevation_axis,xerr=vect_std,c='r',ecolor='pink')
+plt.scatter(vect_vdop,elevation_axis,c='r',marker='o')
+plt.xlabel('Doppler velocity (m/s)')
+plt.ylabel('Elevation (m)')
+plt.title('VDop estimations - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
+plt.grid()
+plt.show()
+~~~
 
 ![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
 
 ![Estimations de VDop pour l'orage complet](img/ROXI_VDop_thunderstorm_example.png)
+
+~~~
+plt.figure()
+plt.plot(vect_Z,elevation_axis,'r-')
+plt.scatter(vect_Z,elevation_axis,c='r',marker='o')
+plt.xlabel('Uncalibrated Z (dB)')
+plt.ylabel('Elevation (m)')
+plt.title('Z estimations - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
+plt.grid()
+plt.show()
+~~~
 
 ![Exemple d'estimations de Z](img/ROXI_Z_estimations_example.png)
 
