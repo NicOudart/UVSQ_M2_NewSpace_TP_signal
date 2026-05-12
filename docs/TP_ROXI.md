@@ -552,7 +552,7 @@ L'étape suivante de notre chaîne de traitement sera donc une fonction pour l'i
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
 |- Elle prendra en entrée 3 matrices `numpy` : un spectrogramme intégré et filtré, un axe de "fast-time", un axe de fréquences Doppler.|
-|- Elle retournera 3 matrices `numpy` : un profil d'estimations de Z, un profil d'estimations de VDop, et un axe d'élévations correspondant.|
+|- Elle retournera 4 matrices `numpy` : un profil d'estimations de Z, un profil d'estimations de VDop, un profil d'écart-types sur VDop, et un axe d'élévations correspondant.|
 
 Cette fonction suivra les grandes étapes suivantes :
 
@@ -606,19 +606,9 @@ Si vous utilisez ces formules pour convertir `fast_time_axis` et `frequency_axis
 
 ![Exemple de spectrogramme Doppler avec des axes météorologiques](img/ROXI_spectrogram_meteo_axis_example.png)
 
-On voit que la transition entre les 2 populations d'hydrométéores se fait à environ 3.5 km d'élévation, avec des vitesses aux alentours de 6 m/s pour la population la plus basse, et aux alentours de 1 m/s pour la population la plus haute.
+Nous pouvons à présent voir que la transition entre les 2 populations d'hydrométéores se fait à environ 3.5 km, avec des vitesses aux alentours de 6 m/s pour les basses altitudes et de 1 m/s pour les hautes altitudes.
 
-Si on considère que ces vitesses verticales sont en 1ère approximation les vitesses de chute des hydrométéores, on peut déduire de ces vitesses que :
-
-* La population la plus basse correspond à des **gouttes d'eau liquide**.
-
-* La population la plus haute correspond à des **cristaux de glace d'eau**.
-
-La température diminuant avec l'altitude dans la troposphère, cette interprétation est cohérente avec l'axe d'élévations.
-
-3.5 km correspond donc approximativement à l'élévation de **l'isotherme zéro**, où les cristaux de glace **fondent** pour devenir gouttes d'eau.
-
-Pour confirmer cette interprétation, voyons comment modéliser les spectres Doppler afin d'en tirer nos variables météorologiques d'intérêt.
+Pour caractériser plus précisément chaque spectre, nous allons voir comment leur ajuster un modèle gaussien, et en tirer nos variables météorologiques d'intérêt.
 
 ### Modélisation Gaussienne
 
@@ -626,7 +616,7 @@ On modélise souvent les spectres Doppler de radar météorologiques par une **f
 
 $g(v) = \frac{P}{\sigma \sqrt{2 \pi}} exp(\frac{-(v-v_{Dop})^2}{2 \sigma^2})$
 
-avec $P$ la puissance totale du spectre, $v_{Dop}$ la vitesse Doppler moyenne, et $\sigma$ son écart-type.
+avec $P$ la puissance totale du spectre, $v_{Dop}$ la vitesse Doppler moyenne, et $\sigma$ l'écart-type sur la vitesse Doppler.
 
 Pour ajuster un tel modèle à nos spectres Doppler, nous pourrons utiliser la méthode `curve_fit` de la bibliothèque Python `scipy.optimize`, qui permet d'ajuster une fonction quelconque à une courbe.
 Très pratique pour de l'interprétation de données !
@@ -656,6 +646,7 @@ Pour ajuster cette fonction à nos spectres en dB, il faudra la fournir en entr�
 Pour aider l'algorithme d'optimisation de `curve_fit` à converger, on pourra lui fournir une initialisation des paramètres à optimiser avec l'argument `p0`, ainsi que des bornes min et max avec l'argument `bounds`.
 
 Le paramètre $v_{Dop}$ obtenu correspondra directement à **VDop**, et le paramètre $P$ correspondra à la puissance total du signal utile dans le spectre (bruit blanc non compris) que nous convertirons plus tard en **Z**.
+Le paramètre $\sigma$ donne une indication sur la dispersion des vitesses Doppler au sein du spectre, une information supplémentaire pour l'interprétation des données de ROXI.
 
 Voici un exemple pour le 11ème spectre de notre spectrogramme (en dB) `mat_spectrum` :
 
@@ -739,6 +730,10 @@ Nous allons l'appliquer à notre exemple, et analyser le résultat.
 
 ### Profils de Z et VDop
 
+Appliquez votre chaîne de traitement à notre exemple du 2020/08/11 à 16:12:06 UTC.
+
+Vous pouvez afficher le profil de VDop estimés en fonction de l'élévation, avec les écart-types, en utilsant des commandes `matplotlib` de ce genre :
+
 ~~~
 plt.figure()
 plt.errorbar(x=vect_vdop,y=elevation_axis,xerr=vect_std,c='r',ecolor='pink')
@@ -750,9 +745,43 @@ plt.grid()
 plt.show()
 ~~~
 
+Vous devriez alors obtenir la figure suivante :
+
 ![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
 
+On voit nettement la transition entre les 2 populations d'hydrométéores à environ 3.5 km d'élévation, avec des vitesses aux alentours de 6 m/s pour la population la plus basse, et aux alentours de 1 m/s pour la population la plus haute.
+
+Si on considère que ces vitesses verticales sont en 1ère approximation les vitesses de chute des hydrométéores, on peut déduire de ces vitesses que :
+
+* La population la plus basse correspond à des **gouttes d'eau liquide**.
+
+* La population la plus haute correspond à des **cristaux de glace d'eau**.
+
+La température diminuant avec l'altitude dans la troposphère, cette interprétation est cohérente avec l'axe d'élévations.
+
+3.5 km correspond donc approximativement à l'élévation de **l'isotherme zéro**, où les cristaux de glace **fondent** pour devenir gouttes d'eau.
+
+On voit que des vitesses cohérentes sont mesurées jusqu'à 11.6 km d'élévation environ (au dessus, il s'agit probablement de bruit).
+Ceci est une hauteur normale pour un **cumulonimbus** à la latitude de Guyancourt.
+
+Si vous aviez accès à la totalité des fichiers de données de l'évènement orageux du 2020/08/11, vous pourriez afficher les profils de VDop estimés en fonction du temps.
+Vous obtiendriez alors un graphique de ce type :
+
 ![Estimations de VDop pour l'orage complet](img/ROXI_VDop_thunderstorm_example.png)
+
+(Le profil de 16:12:06 UTC est indiqué par une ligne verticale grise)
+
+On observe aussi sur ce graphique une transition nette entre les phases **liquides** et **solides**, bien qu'une variabilité dans les vitesses apparaisse.
+On trouve des vitesses plus ou moins élevées sous l'isotherme zéro, signe de précipitations plus ou moins intenses.
+On trouve aussi des vitesses parfois élevées au-dessus de l'isotherme zéro, et parfois même des vitesses négatives.
+
+Un orage étant un phénomène **convectif**, l'approximation selon laquelle la vitesse terminale de chute des hydrométéores est égale à la vitesse verticale mesurée par le radar ne tient pas toujours.
+Des vents ascendant et descendants peuvent entrainer les hydrométéores, voir mélanger différentes populations de différentes phases dans un même volume sondé.
+Ce qui explique les variations observées.
+
+D'où l'utilité d'étudier aussi les valeurs de réflectivité pour identifier les hydrométéores.
+
+Vous pouvez également afficher le profil de Z (non-calibrés) estimés en fonction de l'élévation, en utilsant des commandes `matplotlib` de ce genre :
 
 ~~~
 plt.figure()
@@ -767,7 +796,12 @@ plt.show()
 
 ![Exemple d'estimations de Z](img/ROXI_Z_estimations_example.png)
 
+Si vous aviez accès à la totalité des fichiers de données de l'évènement orageux du 2020/08/11, vous pourriez afficher les profils de Z estimés en fonction du temps.
+Vous obtiendriez alors un graphique de ce type :
+
 ![Estimations de Z pour l'orage complet](img/ROXI_Z_thunderstorm_example.png)
+
+(Le profil de 16:12:06 UTC est indiqué par une ligne verticale grise)
 
 ### Exportation du résultat
 
