@@ -794,7 +794,33 @@ plt.grid()
 plt.show()
 ~~~
 
+Vous devriez alors obtenir la figure suivante :
+
 ![Exemple d'estimations de Z](img/ROXI_Z_estimations_example.png)
+
+La **réfléctivité** mesurée dans un volume dépend de **la phase** des hydrométéore (liquide ou solide), et de leur **distribution de tailles**.
+Elle augmente donc à mesure que :
+
+* L'eau devient liquide.
+
+* Les gouttes / cristaux deviennent plus nombreux.
+
+* La taille des gouttes / cristaux devient plus grande.
+
+Dans notre exemple, la réfléctivité au-dessus de l'isotherme 0 est plutôt inférieure à celle en-dessous, ce qui est contre-intuitif, puisque l'eau liquide est plus réfléchissante.
+Ceci est lié au fait que notre profil a été acquis à un moment où les précipitations liquides se calmaient, pendant que des précipitations solides restaient intenses.
+
+Encore une fois, s'agissant d'un phénomène **convectif**, on ne s'attend pas à un régime stationnaire bien "**stratiforme**" avec des précipitations continues et de faible intensité, sans vent vertical, comme pour un **nimbostratus** hivernal.
+
+On voit aussi nettement ressortir un pic de réfléctivité au niveau de l'isotherme 0, à 3.5 km d'élévation.
+
+Il s'agit d'un phénomène connu sous le nom de "**bande brillante**".
+
+D'un côté, comme nous l'avons dit, l'eau **liquide** est **plus réfléchissante** aux ondes radar que l'eau **solide**.
+Et d'un autre, les cristaux de glace ont **un plus grand volume**, et donc une plus grande section efficace radar que les gouttes d'eau.
+
+Lorsque les critaux de glace commencent à **fondre*, nous avons un état intermédiaire où les hydrométéores ont **un grand volume**, et sont **très réfléchissants**.
+On observe alors un pic dans les profils de réfléctivité.
 
 Si vous aviez accès à la totalité des fichiers de données de l'évènement orageux du 2020/08/11, vous pourriez afficher les profils de Z estimés en fonction du temps.
 Vous obtiendriez alors un graphique de ce type :
@@ -802,6 +828,14 @@ Vous obtiendriez alors un graphique de ce type :
 ![Estimations de Z pour l'orage complet](img/ROXI_Z_thunderstorm_example.png)
 
 (Le profil de 16:12:06 UTC est indiqué par une ligne verticale grise)
+
+Comme on s'y attendait avec l'observation des vitesses, on voit des précipitations liquides plus ou moins intenses sous l'isotherme 0 (le maximum étant entre 14:40 et 15:45 UTC).
+On voit aussi que par moments au-dessus de l'isotherme 0, on a de fortes réfléctivités et vitesses (par exemple vers 13:30 UTC), ce qui trahis peut-être une injection d'une population dense d'hydrométéores en cours de fonte, provoquée par de forts mouvements convectifs.
+
+On comprend aussi mieux pourquoi la "**bande brillante**" porte ce nom : on voit comme une ligne horizontale de forte réfléctivité sur tout l'évènement, à 3.5 km d'élévation.
+
+Il faut bien garder à l'esprit qu'un tel événement convectif est **délicat à interpréter**, d'autant plus lorsque l'on dispose pas de mesures d'autres instruments météorologiques, à distance ou encore mieux in-situ.
+**Restons prudents dans notre interprétation !**
 
 ### Exportation du résultat
 
