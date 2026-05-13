@@ -156,8 +156,8 @@ La 1ère étape de notre de chaîne traitement sera d'importer les données ROXI
 |Ajoutez à votre projet Python une fonction `read`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Elle prendra en entrée le chemin d'un fichier HDF5.|
-|- Elle retournera 3 matrices `numpy`, correspondants aux 3 "Datasets" contenus dans le fichier.|
+|- Entrées :  le chemin d'un fichier HDF5.|
+|- Sorties : 3 matrices `numpy`, correspondants aux 3 "Datasets" contenus dans le fichier.|
 
 Pour lire et écrire un fichier HDF5, nous utiliserons la bibliothèque Python `h5py`.
 
@@ -202,8 +202,8 @@ La 2nde étape de notre de chaîne traitement sera de générer un spectre à pa
 |Ajoutez à votre projet Python une fonction `FFT`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Elle prendra en entrée 3 matrices `numpy` telles que retournées par la fonction `read`.|
-|- Elle retournera 2 matrices `numpy` : une contenant les 4 spectrogrammes Doppler correspondant aux 4 profils, et l'autre l'axe des fréquences correspondant à ces spectrogrammes.|
+|- Entrées : 3 matrices `numpy` telles que retournées par la fonction `read`.|
+|- Sorties : 2 matrices `numpy`, une contenant les 4 spectrogrammes Doppler correspondant aux 4 profils, et l'autre l'axe des fréquences correspondant à ces spectrogrammes.|
 
 ### Nature des données
 
@@ -369,8 +369,8 @@ L'étape suivante de notre chaîne de traitement sera donc logiquement d'implém
 |Ajoutez à votre projet Python une fonction `integrate`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Elle prendra en entrée une matrice `numpy` contenant 4 spectrogrammes tels que retournée par `FFT`.|
-|- Elle retournera une matrice `numpy` contenant le spectrogramme intégré à partir des 4 profils.|
+|- Entrées : une matrice `numpy` contenant 4 spectrogrammes tels que retournée par `FFT`.|
+|- Sorties : une matrice `numpy` contenant le spectrogramme intégré à partir des 4 profils.|
 
 ### Intégration cohérente
 
@@ -441,8 +441,8 @@ Ce filtrage dans le domaine fréquentiel aura 2 objectifs :
 |Ajoutez à votre projet Python une fonction `filter`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Elle prendra en entrée une matrice `numpy` contenant un spectrogramme intégré tel que retournée par `integrate`.|
-|- Elle retournera une matrice `numpy` contenant le spectrogramme filtré.|
+|- Entrées : une matrice `numpy` contenant un spectrogramme intégré tel que retournée par `integrate`.|
+|- Sorties : une matrice `numpy` contenant le spectrogramme filtré.|
 
 ### Ground clutter
 
@@ -464,6 +464,13 @@ Regardez le spectre correspondant au dernier échantillon "fast-time".
 Vous devriez observer un pic correspondant à du "ground clutter".
 
 _Comment expliquez-vous ceci ?_
+
+|Nota Bene|
+|:-|
+|Le pic gaussien visible aux alentours de -450 Hz est un artéfact de mesure classique chez les radars Doppler.|
+|Il provient d'un très léger décalage entre les voies d'acquisition I et Q de l'instrument, et est particulièrement visible dans les 1ers échantillons "fast-time".|
+|En toute rigueur, il faudrait ajouter à notre chaîne de traitement une correction de cet effet instrumental.|
+|Pour simplifier notre problème, nous le ferons pas dans le cadre de ce TP.|
 
 ### Filtre médian
 
@@ -551,8 +558,8 @@ L'étape suivante de notre chaîne de traitement sera donc une fonction pour l'i
 |Ajoutez à votre projet Python une fonction `interpret`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Elle prendra en entrée 3 matrices `numpy` : un spectrogramme intégré et filtré, un axe de "fast-time", un axe de fréquences Doppler.|
-|- Elle retournera 4 matrices `numpy` : un profil d'estimations de Z, un profil d'estimations de VDop, un profil d'écart-types sur VDop, et un axe d'élévations correspondant.|
+|- Entrées : 3 matrices `numpy`, un spectrogramme intégré et filtré, un axe de "fast-time", un axe de fréquences Doppler.|
+|- Sorties : 4 matrices `numpy`, un profil d'estimations de Z, un profil d'estimations de VDop, un profil d'écart-types sur VDop, et un axe d'élévations correspondant.|
 
 Cette fonction suivra les grandes étapes suivantes :
 
@@ -745,6 +752,8 @@ plt.grid()
 plt.show()
 ~~~
 
+En partant du principe que vous avez au préalable enregistré le profil de VDop et les écart-types correspondants sous la forme de 2 matrices `numpy` nommées `vect_vdop` et `vect_std`.
+
 Vous devriez alors obtenir la figure suivante :
 
 ![Exemple d'estimations de VDop](img/ROXI_VDop_estimations_example.png)
@@ -794,6 +803,8 @@ plt.grid()
 plt.show()
 ~~~
 
+En partant du principe que vous avez au préalable enregistré le profil de Z sous la forme d'une matrice `numpy` nommée `vect_Z`.
+
 Vous devriez alors obtenir la figure suivante :
 
 ![Exemple d'estimations de Z](img/ROXI_Z_estimations_example.png)
@@ -835,8 +846,58 @@ On voit aussi que par moments au-dessus de l'isotherme 0, on a de fortes réflé
 On comprend aussi mieux pourquoi la "**bande brillante**" porte ce nom : on voit comme une ligne horizontale de forte réfléctivité sur tout l'évènement, à 3.5 km d'élévation.
 
 Il faut bien garder à l'esprit qu'un tel événement convectif est **délicat à interpréter**, d'autant plus lorsque l'on dispose pas de mesures d'autres instruments météorologiques, à distance ou encore mieux in-situ.
-**Restons prudents dans notre interprétation !**
+**Donc restons prudents dans notre interprétation !**
 
-### Exportation du résultat
+## Exportation du résultat
 
-### Conclusion
+Pour terminer notre chaîne de traitement, nous allons ajouter une fonction pour l'**export** des données traitées, sous la forme d'un **fichier HDF5**.
+
+|Ajoutez à votre projet Python une fonction `save`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées : 4 matrices `numpy`, un profil d'estimations de Z, un profil d'estimations de VDop, un profil d'écart-types sur VDop, et un axe d'élévations tels que retournés par `interpret`.|
+|- Elle enregistrera un fichier HDF5 contenant ces 4 matrices sous la forme de "Datasets".|
+
+Pour enregistrer un fichier HDF5 contenant les sorties de notre chaîne de traitement, nous utiliserons encore une fois `h5py`.
+N'oubliez donc pas de l'importer :
+
+~~~
+import h5py
+~~~
+
+Ensuite, vous pouvez créer un fichier HDF5 avec `h5py`, en initialisant un objet `File`.
+Par exemple :
+
+~~~
+hf = h5py.File(".../WISDOM_20220315.h5",'w')
+~~~
+
+On peut alors ajouter à notre fichier des "Datasets" avec la méthode `create_dataset`.
+Elle prend en entrée le nom du "Dataset" à créer, et la matrice à enregistrer dedans.
+
+Voici un exemple de commandes Python pour sauvegarder nos différentes sorties :
+
+~~~
+hf.create_dataset("Z_profile",data=vect_Z)
+hf.create_dataset("vdop_profile",data=vect_vdop)
+hf.create_dataset("std_profile",data=vect_std)
+hf.create_dataset("elevation_axis",data=elevation_axis)
+~~~
+
+**Vous pouvez compléter votre fonction `save` !**
+
+Appliquez-la à notre exemple de données, et essayer d'importer dans Python le fichier HDF5 que vous avez créé, afin de vérifier que votre fonction marche bien.
+
+## Conclusion
+
+**Vous disposez à présent d'une chaîne de traitement complète pour traiter les données de ROXI !**
+
+_Pourriez-vous tracer un schéma-bloc de la chaîne de traitement que vous venez de programmer en Python ?_
+
+Servez-vous de ce schéma pour ajouter à votre projet Python un **script d'exemple**, appliquant toute votre chaîne de traitement à un fichier HDF5 de données ROXI.
+
+---
+
+Cet exemple était un prétexte pour vous faire découvrir des outils de traitement de données, et les appliquer à un exemple réalistes de données instrumentales.
+
+Lors du TP suivant, nous allons appliquer de nouveaux outils de traiement aux données d'un autre instrument développé au LATMOS.
