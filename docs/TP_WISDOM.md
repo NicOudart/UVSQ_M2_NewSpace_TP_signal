@@ -65,6 +65,8 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ### Estimation de la profondeur
 
+### Coins de glace ?
+
 ## Exportation du résultat
 
 ## Conclusion
