@@ -37,15 +37,19 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ### FFT
 
-### Fenêtrage
+### Mesure d'espace libre
 
 ### Zero-padding
 
-## Compensation des effets instrumentaux
+### Fenêtrage
 
-### Couplages interne et direct
+## Amélioration de la lisibilité
 
-### Mesure d'espace libre
+### Filtrage horizontal
+
+### Gain vertical
+
+### Interpolation horizontale
 
 ## Filtrage fréquentiel
 
@@ -53,15 +57,9 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ### Filtre passe-haut
 
-## Compensation des pertes
-
-### Pertes par absorption et diffusion
-
-### Gain vertical
-
-## Interpolation horizontale
-
 ## Interprétation géophysique
+
+### Détection de pics
 
 ### Mesure de la permittivité de surface
 
