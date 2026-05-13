@@ -900,4 +900,4 @@ Servez-vous de ce schéma pour ajouter à votre projet Python un **script d'exem
 
 Cet exemple était un prétexte pour vous faire découvrir des outils de traitement de données, et les appliquer à un exemple réalistes de données instrumentales.
 
-Lors du TP suivant, nous allons appliquer de nouveaux outils de traiement aux données d'un autre instrument développé au LATMOS.
+Lors du TP suivant, nous allons appliquer de nouveaux outils de traitement aux données d'un autre instrument développé au LATMOS : WISDOM.
