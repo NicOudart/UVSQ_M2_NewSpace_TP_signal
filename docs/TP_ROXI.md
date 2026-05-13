@@ -890,7 +890,7 @@ Appliquez-la à notre exemple de données, et essayer d'importer dans Python le 
 
 ## Conclusion
 
-**Vous disposez à présent d'une chaîne de traitement complète pour traiter les données de ROXI !**
+**Vous disposez à présent d'une chaîne de traitement complète pour les données de ROXI !**
 
 _Pourriez-vous tracer un schéma-bloc de la chaîne de traitement que vous venez de programmer en Python ?_
 
