@@ -113,12 +113,6 @@ WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signi
 
 ![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
 
-## Filtrage fréquentiel
-
-### Filtre passe-bas
-
-### Filtre passe-haut
-
 ## Interprétation géophysique
 
 ### Détection de pics
