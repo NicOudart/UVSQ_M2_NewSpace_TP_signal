@@ -29,7 +29,31 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ![Illustration WISDOM](img/WISDOM_illustration.png)
 
+Les **antennes** de WISDOM seront situées **à l'arrière** du rover, et pointeront **vers le sol**, à environ 38 cm de la surface.
+
+Pour sonder le sous-sol, un signal électromagnétiques sera envoyé par l'**antenne émettrice** en direction du sol.
+A chaque **interface** entre matériaux de **propriétés électriques différentes** dans le sous-sol, une partie de ce signal sera renvoyé vers l'**antenne réceptrice**.
+
+Ce signal sera plus ou moins intense suivant le **contraste de propriétés électriques**, et plus ou moins long à revenir suivant la **distance** entre les antennes et l'interface.
+
+Il est prévu que WISDOM réalise des sondages **à intervalles réguliers** de 10 cm le long de **lignes droites**, un opération que l'on appelle "**traverses**".
+Ainsi, les sondages obtenus permettront de visualiser une "coupe" du sous-sol le long de cet axe.
+
+Afin d'ajouter une 3ème dimension à l'étude d'un site donné, il est également prévu que WISDOM réalise jusqu'à **3 traverses en parallèle**, une opération que l'on appelle "**grid**".
+Les 3 vues en "coupe" obtenues permettront alors d'obtenir une visualisation quasi-3D du sous-sol.
+
 ![Animation WISDOM](img/WISDOM_animation.gif)
+
+WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signifie
+
+
+
+|Nota Bene|
+|:-|
+|Une particularité de WISDOM est qu'il s'agit d'un radar **polarimétrique**.|
+|En réalité, il ne possède non pas 2 mais 4 antennes, lui permettant d'émettre et de recevoir dans **2 polarisations linéaires**.|
+|Cette information supplémentaire permettra entre autre d'étudier la rugosité des interfaces dans le sous-sol.|
+|Pour les besoins de ce TP, nous avons simplifié le contenu des données en ne laissant qu'une seule des 4 configurations polarimétriques possibles.|
 
 ## Objectifs
 
