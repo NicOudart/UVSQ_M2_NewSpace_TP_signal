@@ -33,6 +33,12 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ## Importation des données
 
+### Exemple de données WISDOM
+
+![Illustration de la campagne au Svalbard de 2022](img/Svalbard_map_illustration.png)
+
+### Lecture du fichier
+
 ## Analyse spectrale
 
 ### FFT
