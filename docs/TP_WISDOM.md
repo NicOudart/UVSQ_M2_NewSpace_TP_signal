@@ -48,6 +48,8 @@ WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signi
 
 
 
+![Génération d'un radargramme](img/.png)
+
 |Nota Bene|
 |:-|
 |Une particularité de WISDOM est qu'il s'agit d'un radar **polarimétrique**.|
@@ -60,6 +62,8 @@ WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signi
 ## Importation des données
 
 ### Exemple de données WISDOM
+
+Vous trouverez un exemple de fichier de **données WISDOM** au format **HDF5** [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/WISDOM_20220315.h5).
 
 ![Illustration de la campagne au Svalbard de 2022](img/Svalbard_map_illustration.png)
 
@@ -112,6 +116,12 @@ WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signi
 ### Interpolation horizontale
 
 ![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
+
+## Filtrage fréquentiel
+
+### Filtres passe-haut et passe-bas
+
+### Zoomer sur une région du radargramme
 
 ## Interprétation géophysique
 
