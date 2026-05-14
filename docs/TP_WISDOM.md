@@ -29,6 +29,8 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ![Illustration WISDOM](img/WISDOM_illustration.png)
 
+![Animation WISDOM](img/WISDOM_animation.gif)
+
 ## Objectifs
 
 ## Importation des données
