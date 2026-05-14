@@ -37,19 +37,49 @@ Il donnera aussi un **contexte géophysique** aux échantillons récoltés.
 
 ### FFT
 
+![Exemple de spectre WISDOM](img/WISDOM_spectrum_example.png)
+
+![Exemple de spectrogramme WISDOM](img/WISDOM_spectrogram_example.png)
+
+![Exemple de sondage WISDOM brut](img/WISDOM_raw_time_series_example.png)
+
+![Exemple de radargramme WISDOM brut](img/WISDOM_raw_radargram_example.png)
+
 ### Mesure d'espace libre
+
+![Exemple de sondage WISDOM après retrait du free-space](img/WISDOM_freespace_removal_time_series_example.png)
+
+![Exemple de radargramme WISDOM après retrait du free-space](img/WISDOM_freespace_removal_radargram_example.png)
 
 ### Zero-padding
 
+![Exemple de sondage WISDOM après zero-padding](img/WISDOM_zeropadding_time_series_example.png)
+
+![Exemple de radargramme WISDOM après zero-padding](img/WISDOM_zeropadding_radargram_example.png)
+
 ### Fenêtrage
+
+![Exemple de sondage WISDOM après fenêtrage](img/WISDOM_windowing_time_series_example.png)
+
+![Exemple de radargramme WISDOM après fenêtrage](img/WISDOM_windowing_radargram_example.png)
 
 ## Amélioration de la lisibilité
 
 ### Filtrage horizontal
 
+![Exemple de sondage WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_time_series_example.png)
+
+![Exemple de radargramme WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_radargram_example.png)
+
 ### Gain vertical
 
+![Exemple de sondage WISDOM après application d'un gain vertical](img/WISDOM_vertical_gain_time_series_example.png)
+
+![Exemple de radargramme WISDOM après application d'un gain vertical](img/WISDOM_vertical_gain_radargram_example.png)
+
 ### Interpolation horizontale
+
+![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
 
 ## Filtrage fréquentiel
 
