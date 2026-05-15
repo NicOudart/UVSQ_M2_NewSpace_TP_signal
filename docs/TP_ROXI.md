@@ -39,7 +39,7 @@ Nous détaillerons comment dans la suite.
 
 Les données d'un profil de radar impulsionnel Doppler comme ROXI ressemblent donc à une matrice 2D :
 
-![Données d'un radar Doppler](img/Doppler_radar_data.png)
+![Données d'un radar Doppler](img/Doppler_radar_data_schematic.png)
 
 * Chaque élément de la matrice est un **nombre complexe** I/Q (In-phase / Quadrature-phase) contenant les informations d'**amplitude** et de **phase** des échos reçus pour un temps de retard et une émission d'impulsion donnée.
 
@@ -51,7 +51,7 @@ Pour chaque niveau d'élévation, nous pouvons obtenir par analyse spectrale une
 
 Ces spectres peuvent ensuite être concaténés verticalement afin d'obtenir une représentation sous la forme d'une image appelée **spectrogramme Doppler**.
 
-![Analyse spectrale Doppler](img/Doppler_spectral_analysis.png)
+![Analyse spectrale Doppler](img/Doppler_spectral_analysis_schematic.png)
 
 On peut voir chaque spectre Doppler comme la distribution des puissances reçues par le radar par rapport à la vitesse des hydrométéores au sein d'un volume sondé.
 Il est courant d'essayer de modéliser cette distribution par un modèle Gaussien, afin d'en tirer 2 caractéristiques des précipitations : leur réfléctivité totale **Z**, et leur vitesse moyenne **VDop**.
