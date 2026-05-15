@@ -48,7 +48,7 @@ WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signi
 
 
 
-![Génération d'un radargramme](img/.png)
+![Génération d'un radargramme](img/Radargram_generation.png)
 
 |Nota Bene|
 |:-|
