@@ -36,6 +36,15 @@ A chaque **interface** entre matériaux de **propriétés électriques différen
 
 Ce signal sera plus ou moins intense suivant le **contraste de propriétés électriques**, et plus ou moins long à revenir suivant la **distance** entre les antennes et l'interface.
 
+Chaque sondage permettra donc de récupérer un profil d'**amplitudes et de temps de retard des échos reçus**.
+En réalisant des sondages à mesure que le rover se déplace, on obtiendra une série de profils pour différentes **distances horizontales** depuis le point de départ.
+
+* A partir des **temps de retard** et de la **distance horizontale**, on obtiendra une 1ère visualisation de la **structure du sous-sol** (strates, hétérogénéité, inclusions, etc.), sans réelle information de profondeur.
+
+* A partir des amplitudes des échos, le contraste de **propriétés électriques** à l'interface entre 2 couches du sous-sol pourra être estimé, donnant une **indication de la composition** de ces 2 couches (roches volcaniques, roches sédimentaires, glace, etc.).
+
+* La vitesse des ondes électromagnétiques dans un matériau dépendant en 1ère approximation de sa **permittivité diélectrique**, on pourra alors convertir les temps de retard en **profondeurs**, afin d'obtenir une vraie visualisation de la structure du sous-sol.
+
 Il est prévu que WISDOM réalise des sondages **à intervalles réguliers** de 10 cm le long de **lignes droites**, un opération que l'on appelle "**traverses**".
 Ainsi, les sondages obtenus permettront de visualiser une "coupe" du sous-sol le long de cet axe.
 
