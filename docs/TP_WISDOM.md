@@ -97,7 +97,7 @@ Voici les caractéristiques du radar WISDOM :
 |Pas de fréquence d'émission                    |2.5 MHz      |
 |Nombre de pas de fréquence                     |1001         |
 |Durée d'un pas de fréquence                    |200 µs       |
-|Puissance d'émission                           |1 mW         |
+|Puissance d'émission                           |1 mW typique |
 |Gain des antennes                              |0 dBi minimum|
 |Résolution en distance dans le vide            |6 cm         |
 |Distance ambiguë dans le vide                  |60 m         |
