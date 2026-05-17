@@ -74,11 +74,27 @@ Bref, un instrument **plus compact** et **moins consommateur** en puissance : de
 |Par soucis de compacité de l'instrument, WISDOM ne mesure que la partie réelle I du signal.|
 |Nous verrons dans la suite comment faire une analyse spectrale d'un signal réel.|
 
-Les spectres acquis par WISDOM à intervalles réguliers de distance horizontale sont concaténés horizontalement, pour former une matrice 2D appellée "**spectrogramme**".
+Les données WISDOM consistent donc en des spectres acquis à intervalles réguliers de distance, pour former une matrice 2D appellée "**spectrogramme**".
 
+Après transformation de chaque spectre en série temporelle, on obtient une représentation des échos reçus en fonction du temps pour les différents sondages d'un traverse, appelé "**radargramme**".
+Comme mentionné précédemment, l'axe des temps de retards pourra être converti en **profondeurs**, afin d'obtenir une vue en "coupe" du sous-sol.
 
+3 radargrammes acquis en parallèle constitueront une **grid** WISDOM.
 
 ![Génération d'un radargramme](img/Radargram_generation_schematic.png)
+
+Lors de la mission ExoMars, il est prévu qu'une opération **grid** WISDOM soit réalisée à proximité d'un **affleurement** rocheux d'intérêt : une **roche sédimentaire argileuse** qui semble ressortir du régolith de surface.
+Une telle roche, formée à l'époque où Mars était encore habitable, pourrait renfermer des **traces d'une hypothétique vie passée**.
+
+Les 3 vues en coupes obtenues grâce à WISDOM pourront confirmer si cet affleurement rocheux **s'enfonce jusqu'à 2 m** dans le sous-sol, profondeur nécessaire à la **préservation de bio-marqueurs**.
+Si tel est le cas, l'équipe WISDOM pourra indiquer **où creuser** pour récupérer **un échantillon** de cette roche.
+
+Voici les caractéristiques du radar WISDOM :
+
+|Caractéristique                  |Valeur     |
+|:-------------------------------:|:---------:|
+|Fréquences d'émission            |0.5 à 3 GHz|
+|Nombre de fréquences d'émission  |1001       |
 
 |Nota Bene|
 |:-|
