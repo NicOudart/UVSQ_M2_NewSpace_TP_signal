@@ -39,7 +39,7 @@ Ce signal sera plus ou moins intense suivant le **contraste de propriétés éle
 Chaque sondage permettra donc de récupérer un profil d'**amplitudes et de temps de retard des échos reçus**.
 En réalisant des sondages à mesure que le rover se déplace, on obtiendra une série de profils pour différentes **distances horizontales** depuis le point de départ.
 
-* A partir des **temps de retard** et de la **distance horizontale**, on obtiendra une 1ère visualisation de la **structure du sous-sol** (strates, hétérogénéité, inclusions, etc.), sans réelle information de profondeur.
+* A partir des **temps de retard** et de la **distance horizontale**, on obtiendra une 1ère visualisation de la **structure du sous-sol** (strates, hétérogénéité, inclusions, etc.), mais sans réelles estimations de profondeurs.
 
 * A partir des amplitudes des échos, le contraste de **propriétés électriques** à l'interface entre 2 couches du sous-sol pourra être estimé, donnant une **indication de la composition** de ces 2 couches (roches volcaniques, roches sédimentaires, glace, etc.).
 
@@ -53,7 +53,7 @@ Les 3 vues en "coupe" obtenues permettront alors d'obtenir une visualisation qua
 
 ![Animation WISDOM](img/WISDOM_animation.gif)
 
-WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signifie
+WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signifie qu'il n'émet pas une impulsion comme ROXI, mais
 
 
 
