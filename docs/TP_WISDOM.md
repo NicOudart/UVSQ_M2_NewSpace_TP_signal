@@ -39,11 +39,11 @@ Ce signal sera plus ou moins intense suivant le **contraste de propriétés éle
 Chaque sondage permettra donc de récupérer un profil d'**amplitudes et de temps de retard des échos reçus**.
 En réalisant des sondages à mesure que le rover se déplace, on obtiendra une série de profils pour différentes **distances horizontales** depuis le point de départ.
 
-* A partir des **temps de retard** et de la **distance horizontale**, on obtiendra une 1ère visualisation de la **structure du sous-sol** (strates, hétérogénéité, inclusions, etc.), mais sans réelles estimations de profondeurs.
+* A partir des **temps de retard** et de la **distance horizontale**, on obtiendra une 1ère idée de la **structure du sous-sol** (strates, hétérogénéité, inclusions, etc.), mais sans réelles estimations de profondeurs.
 
-* A partir des amplitudes des échos, le contraste de **propriétés électriques** à l'interface entre 2 couches du sous-sol pourra être estimé, donnant une **indication de la composition** de ces 2 couches (roches volcaniques, roches sédimentaires, glace, etc.).
+* A partir des amplitudes des échos, le contraste de **propriétés électriques** à l'interface entre 2 couches du sous-sol pourra être estimé, donnant une **indication de la composition** des différentes strates (roches volcaniques, roches sédimentaires, glace, etc.).
 
-* La vitesse des ondes électromagnétiques dans un matériau dépendant en 1ère approximation de sa **permittivité diélectrique**, on pourra alors convertir les temps de retard en **profondeurs**, afin d'obtenir une vraie visualisation de la structure du sous-sol.
+* La vitesse des ondes électromagnétiques dans un matériau dépendant en 1ère approximation de sa **permittivité diélectrique**, on pourra alors convertir les temps de retard des échos en **profondeurs** des interfaces.
 
 Il est prévu que WISDOM réalise des sondages **à intervalles réguliers** de 10 cm le long de **lignes droites**, un opération que l'on appelle "**traverses**".
 Ainsi, les sondages obtenus permettront de visualiser une "coupe" du sous-sol le long de cet axe.
@@ -53,7 +53,28 @@ Les 3 vues en "coupe" obtenues permettront alors d'obtenir une visualisation qua
 
 ![Animation WISDOM](img/WISDOM_animation.gif)
 
-WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signifie qu'il n'émet pas une impulsion comme ROXI, mais
+WISDOM est un radar **SFCW** ("Stepped Frequency Continuous Wave"), ce qui signifie qu'il n'émet pas une impulsion comme ROXI, mais des **signaux harmoniques continus de fréquences croissantes**, avec un pas régulier.
+
+Pour chaque fréquence, le radar reçoit en retour un signal de même fréquence, résultant de l'interférence des différents échos aux différentes interfaces dans le sous-sol.
+Son amplitude et sa phase seront enregistrés par l'instrument.
+
+Ce type de radar fonctionne donc en **domaine fréquentiel** : avec ses mesures, il reconstruit l'**équivalent fréquentiel** de la **réponse impulsionnelle** du milieu sondé.
+La **transformée de Fourier** des amplitudes et phases obtenues pour les différentes les fréquences permet de reconstituer la **série temporelle** qu'aurait obtenu un **radar impulsionnel équivalent** en sondant le même sous-sol.
+
+C'est pourquoi on parle de "**spectres**" pour désigner les acquisitions de WISDOM pour un sondage donné.
+La série temporelle obtenue après transformée de Fourier correspondra aux **échos** reçus pour différents **temps de retards**.
+
+Cette méthode permet d'obtenir un radar nécessitant **moins de puissance**, avec des **signaux plus simples** à générer, ayant un **rapport signal / bruit** et une **dynamique meilleure** qu'un radar impulsionnel de résolution équivalente.
+Bref, un instrument **plus compact** et **moins consommateur** en puissance : de gros avantages pour un instrument spatial !
+
+|Nota Bene|
+|:-|
+|Un radar SFCW classique construit un complexe I/Q contenant les informations d'amplitude et de phase des signaux reçus pour chaque fréquence.|
+|Mais ceci nécessite 2 chaînes d'acquisitions distinctes.|
+|Par soucis de compacité de l'instrument, WISDOM ne mesure que la partie réelle I du signal.|
+|Nous verrons dans la suite comment faire une analyse spectrale d'un signal réel.|
+
+Les spectres acquis par WISDOM à intervalles réguliers de distance horizontale sont concaténés horizontalement, pour former une matrice 2D appellée "**spectrogramme**".
 
 
 
