@@ -91,10 +91,20 @@ Si tel est le cas, l'équipe WISDOM pourra indiquer **où creuser** pour récup�
 
 Voici les caractéristiques du radar WISDOM :
 
-|Caractéristique                  |Valeur     |
-|:-------------------------------:|:---------:|
-|Fréquences d'émission            |0.5 à 3 GHz|
-|Nombre de fréquences d'émission  |1001       |
+|Caractéristique                                |Valeur       |
+|:---------------------------------------------:|:-----------:|
+|Fréquences d'émission                          |0.5 à 3 GHz  |
+|Pas de fréquence d'émission                    |2.5 MHz      |
+|Nombre de pas de fréquence                     |1001         |
+|Durée d'un pas de fréquence                    |200 µs       |
+|Puissance d'émission                           |1 mW         |
+|Gain des antennes                              |0 dBi minimum|
+|Résolution en distance dans le vide            |6 cm         |
+|Distance ambiguë dans le vide                  |60 m         |
+|Résolution en distance typique dans le sous-sol|3 cm         |
+|Portée typique dans le sous-sol                |3 m          |
+
+Pour plus d'informations : [site de WISDOM](https://www.wisdom-radar.eu).
 
 |Nota Bene|
 |:-|

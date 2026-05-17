@@ -71,6 +71,8 @@ Voici les caractéristiques du radar ROXI :
 |Distance ambiguë                 |12.8 km  |
 |Vitesse ambiguë                  |11.66 m/s|
 
+Pour plus d'informations : [site de ROXI](https://roxi.projet.latmos.ipsl.fr).
+
 ## Objectifs
 
 Lors de ce tutoriel, nous allons programmer une **chaîne de traitement des données de ROXI** sous la forme d'un **projet Python**, que nous utiliserons pour obtenir une **interprétation météorologique** classique.
