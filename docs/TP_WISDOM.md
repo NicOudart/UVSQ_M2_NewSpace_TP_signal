@@ -100,7 +100,7 @@ Voici les caractéristiques du radar WISDOM :
 |Puissance d'émission                           |1 mW typique |
 |Gain des antennes                              |0 dBi minimum|
 |Résolution en distance dans le vide            |6 cm         |
-|Distance ambiguë dans le vide                  |60 m         |
+|Distance ambiguë dans le vide                  |30 m         |
 |Résolution en distance typique dans le sous-sol|3 cm         |
 |Portée typique dans le sous-sol                |3 m          |
 
@@ -115,15 +115,84 @@ Pour plus d'informations : [site de WISDOM](https://www.wisdom-radar.eu).
 
 ## Objectifs
 
+Lors de ce tutoriel, nous allons programmer une **chaîne de traitement des données de WISDOM** sous la forme d'un **projet Python**, que nous utiliserons pour obtenir une **interprétation géophysique** classique.
+
+Ce projet Python devra contenir des fonctions pour :
+
+* Importer des données WISDOM à partir d'un fichier HDF5 tel que celui qui vous sera fourni.
+
+* Convertir en radargrammes les traverses de spectres acquis par le radar, en compensant les effets instrumentaux.
+
+* Filtrer les échos parasites horizontaux.
+
+* Appliquer un gain vertical pour compenser les pertes dans le sous-sol.
+
+* Filtrer fréquentiellement les spectres afin de zoomer sur une zone précise d'un radargramme.
+
+* Estimer la permittivité diélectrique du sous-sol à partir de la calibration du radar, et en déduire la conversion des temps de retard en profondeurs.
+
+* Exporter les radargrammes obtenus sous la forme d'un fichier HDF5.
+
+Créez le dossier de votre projet, et structurez-le avec des sous-dossiers et des fichiers vides pour l'instant.
+
+**Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.**
+
+|Nota Bene|
+|:-|
+|Il est à noter que notre exemple ici a été grandement simplifié pour les besoins de ce TP.|
+|Certains traitements, tels que la correction de l'effet de la température, ont déjà été appliqués aux données fournies.|
+|De plus, lors de l'interprétation, nous allons faire des hypothèses simplificatrices sur les propriétés électriques du sous-sol, et la propagation des signaux WISDOM à travers celui-ci.|
+
+
 ## Importation des données
 
 ### Exemple de données WISDOM
 
 Vous trouverez un exemple de fichier de **données WISDOM** au format **HDF5** [ici](https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/WISDOM_20220315.h5).
 
+On considérera qu'un fichier de données WISDOM issu d'une opération de "**grid**" contient toujours :
+
+* `frequency_axis` : un "dataset", vecteur de dimension 1001, contenant l'**axe des fréquences** (Hz) associé aux spectres WISDOM.
+
+* `free_space` : un "dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis dans une situation de "d'**espace libre**".
+Cette acquisition nous servira lors du traitement de nos données.
+
+* `calibration` : un "dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis lors d'un **étalonnage** sur plaque métallique.
+Cette acquisition nous servira lors de l'interprétation de nos données.
+
+* `traverse_1`, `traverse_2` et `traverse_3` : 3 "groups" pour les **3 "traverses"** de la "grid", contenant chacun un "dataset" nommé `horizontal_distance_axis`, vecteur correspondant à l'axe des **distances horizontales** parcourues par WISDOM (m) pour ce "traverse", et un "dataset" nommé `data`, matrice 2D correspondant au **spectrogramme** acquis pour ce "traverse". 
+
+Ces données ont été acquises le **15/03/2022**, sur un **terrain polygonal** de la vallée d'**Adventdalen**, lors d'une campagne de test de WISDOM au **Svalbard**.
+
 ![Illustration de la campagne au Svalbard de 2022](img/Svalbard_map_illustration.png)
 
+Les terrains **polygonaux** sont une formation géologique classique des plaines arctiques.
+
+Le processus de gel / dégel du proche sous-sol (la zone dite "active") provoque des contraction / décontraction de celui-ci, entrainant des fissures dessinant des "polygones" irrégulier à sa surface.
+Ces "polygones" sont clairement visibles sur les images aériennes du terrain, prises pendant l'été.
+
+De l'eau peut s'infiltrer dans ces fissures, jusqu'à atteindre le pergélisol où elle se retrouve piégée sous forme de glace.
+Se forme alors au fil des gels / dégels un cône appelé "**coin de glace**".
+
+Si des terrains polygonaux ont déjà été détectés sur Mars, la présence de coins de glace reste débattue.
+Dans le cas où de tels formations existeraient sur Mars, elles seraient une **cible de choix pour la recherche de traces de vie**.
+
 ![campagne au Svalbard de 2022](img/Svalbard_campaign_illustration.png)
+
+Lors de la campagne au Svalbard de 2022, notre terrain polygonal d'étude était **entièrement recouvert de neige**, d'une épaisseur de 10 cm au milieu des polygones.
+
+Une opération de "**grid**" a été réalisé avec une copie de secours ("flight spare") de WISDOM. 
+3 traverses parallèles d'environ **25 m** ont été acquis avec un pas de **20 cm** en travers d'un "polygone", de manière à passer au-dessus des sillons le délimitant.
+
+Nous espérons ainsi observer les sillons sous la neige, et potentiellement détecter un "**coin de glace**" en-dessous. 
+
+Ce fichier nous servira d'exemple pour construire notre **chaîne de traitement des données WISDOM**.
+
+|Nota Bene|
+|:-|
+|En réalité, les données WISDOM sont enregistrées spectre par spectre dans des fichiers binaires séparés, et non pas rassemblées dans un seul fichier HDF5.|
+|Chaque fichier contient également des métadonnées qui ne vous sont pas fournies ici.|
+|Pour les besoins de ce TP, nous avons donc fait en sorte de vous faire manipuler un format utile, et simplifié le contenu des données WISDOM.|
 
 ### Lecture du fichier
 
