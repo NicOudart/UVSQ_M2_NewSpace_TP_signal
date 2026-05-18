@@ -199,7 +199,7 @@ _Les dimensions des matrices récupérées sont-elles bien celles attendues ? Le
 
 ## Analyse spectrale
 
-La 2nde étape de notre de chaîne traitement sera de générer un spectre à partir des données ROXI récupérées.
+La 2nde étape de notre de chaîne traitement sera de générer des spectres à partir des données ROXI récupérées.
 
 |Ajoutez à votre projet Python une fonction `FFT`|
 |:-|

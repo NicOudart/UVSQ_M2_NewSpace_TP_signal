@@ -152,15 +152,15 @@ Vous trouverez un exemple de fichier de **données WISDOM** au format **HDF5** [
 
 On considérera qu'un fichier de données WISDOM issu d'une opération de "**grid**" contient toujours :
 
-* `frequency_axis` : un "dataset", vecteur de dimension 1001, contenant l'**axe des fréquences** (Hz) associé aux spectres WISDOM.
+* `frequency_axis` : un "Dataset", vecteur de dimension 1001, contenant l'**axe des fréquences** (Hz) associé aux spectres WISDOM.
 
-* `free_space` : un "dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis dans une situation de "d'**espace libre**".
+* `free_space` : un "Dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis dans une situation de "d'**espace libre**".
 Cette acquisition nous servira lors du traitement de nos données.
 
-* `calibration` : un "dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis lors d'un **étalonnage** sur plaque métallique.
+* `calibration` : un "Dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis lors d'un **étalonnage** sur plaque métallique.
 Cette acquisition nous servira lors de l'interprétation de nos données.
 
-* `traverse_1`, `traverse_2` et `traverse_3` : 3 "groups" pour les **3 "traverses"** de la "grid", contenant chacun un "dataset" nommé `horizontal_distance_axis`, vecteur correspondant à l'axe des **distances horizontales** parcourues par WISDOM (m) pour ce "traverse", et un "dataset" nommé `data`, matrice 2D correspondant au **spectrogramme** acquis pour ce "traverse". 
+* `traverse_1`, `traverse_2` et `traverse_3` : 3 "Groups" pour les **3 "traverses"** de la "grid", contenant chacun un "Dataset" nommé `horizontal_distance_axis`, vecteur correspondant à l'axe des **distances horizontales** parcourues par WISDOM (m) pour ce "traverse", et un "Dataset" nommé `data`, matrice 2D correspondant au **spectrogramme** acquis pour ce "traverse". 
 
 Ces données ont été acquises le **15/03/2022**, sur un **terrain polygonal** de la vallée d'**Adventdalen**, lors d'une campagne de test de WISDOM au **Svalbard**.
 
@@ -195,6 +195,68 @@ Ce fichier nous servira d'exemple pour construire notre **chaîne de traitement 
 |Pour les besoins de ce TP, nous avons donc fait en sorte de vous faire manipuler un format utile, et simplifié le contenu des données WISDOM.|
 
 ### Lecture du fichier
+
+La 1ère étape de notre de chaîne traitement sera d'importer les données WISDOM d'un fichier HDF5.
+
+|Ajoutez à votre projet Python une fonction `read`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées :  le chemin d'un fichier HDF5.|
+|- Sorties : 9 matrices `numpy`, correspondants aux 9 "Datasets" contenus dans le fichier.|
+
+Pour lire et écrire un fichier HDF5, nous utiliserons la bibliothèque Python `h5py`.
+
+Nous convertirons les "Datasets" contenus dans un fichier en matrices `numpy`.
+
+N'oubliez donc pas d'importer ces 2 bibliothèques avec les commandes suivantes :
+
+~~~
+import h5py
+import numpy as np
+~~~
+
+Pour importer un fichier HDF5 avec `h5py`, on crée un objet `File`.
+
+Voici ce que cela donnerait sur notre exemple :
+
+~~~
+hf = h5py.File(".../WISDOM_20220315.h5",'r')
+~~~
+
+On peut alors récupérer les différents "Datasets" contenus dans le fichier avec la méthode `get` et leurs noms.
+Pour les "Datasets" contenus dans des "Groups", il faudra utiliser `get` pour récupérer chaque "Group", puis à nouveau `get` pour récupérer les "Datasets" de chaque "Group".
+On oubliera pas de convertir en matrices `numpy` les "Datasets" récupérés.
+
+Voici ce que pourrait donner la récupération des 9 "Datasets" d'un fichier WISDOM :
+
+~~~
+frequency_axis = np.array(hf.get("frequency_axis"))
+
+vect_free_space = np.array(hf.get("free_space"))
+vect_calibration = np.array(hf.get("calibration"))
+
+group1 = hf.get("traverse_1")
+group2 = hf.get("traverse_2")
+group3 = hf.get("traverse_3")
+
+mat_traverse_1 = np.array(group1.get("data"))
+mat_traverse_2 = np.array(group2.get("data"))
+mat_traverse_3 = np.array(group3.get("data"))
+
+distance_axis_1 = np.array(group1.get("horizontal_distance_axis"))
+distance_axis_2 = np.array(group2.get("horizontal_distance_axis"))
+distance_axis_3 = np.array(group3.get("horizontal_distance_axis"))
+~~~
+
+**Vous pouvez à présent compléter votre fonction `read`**.
+
+Appliquez votre fonction à notre fichier exemple.
+
+_Les dimensions des matrices récupérées sont-elles bien celles attendues ? Le type des données également ? Quelle est la longueur de chaque traverse ?_
+
+Petite question pour voir si vous avez bien compris le fonctionnement du format HDF5 :
+
+_A votre avis, pourquoi avoir rangé l'axe des distances horizontale dans le "Group" de chaque traverse, et pas l'axe des fréquences ?_
 
 ## Analyse spectrale
 
