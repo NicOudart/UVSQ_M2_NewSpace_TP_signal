@@ -127,8 +127,6 @@ Ce projet Python devra contenir des fonctions pour :
 
 * Appliquer un gain vertical pour compenser les pertes dans le sous-sol.
 
-* Filtrer fréquentiellement les spectres afin de zoomer sur une zone précise d'un radargramme.
-
 * Estimer la permittivité diélectrique du sous-sol à partir de la calibration du radar, et en déduire la conversion des temps de retard en profondeurs.
 
 * Exporter les radargrammes obtenus sous la forme d'un fichier HDF5.
@@ -306,12 +304,6 @@ _A votre avis, pourquoi avoir rangé l'axe des distances horizontale dans le "Gr
 
 ![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
 
-## Filtrage fréquentiel
-
-### Filtres passe-haut et passe-bas
-
-### Zoomer sur une région du radargramme
-
 ## Interprétation géophysique
 
 ### Détection de pics
@@ -325,3 +317,6 @@ _A votre avis, pourquoi avoir rangé l'axe des distances horizontale dans le "Gr
 ## Exportation du résultat
 
 ## Conclusion
+
+## BONUS
+
