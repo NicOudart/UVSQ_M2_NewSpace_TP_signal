@@ -127,7 +127,7 @@ Ce projet Python devra contenir des fonctions pour :
 
 * Appliquer un gain vertical pour compenser les pertes dans le sous-sol.
 
-* Estimer la permittivité diélectrique du sous-sol à partir de la calibration du radar, et en déduire la conversion des temps de retard en profondeurs.
+* Estimer la permittivité diélectrique de la 1ère couche du sous-sol à partir de la calibration du radar, et en déduire la conversion des temps de retard en profondeurs.
 
 * Exporter les radargrammes obtenus sous la forme d'un fichier HDF5.
 
@@ -340,7 +340,7 @@ On voit que la somme de sinusoïdes n'est pas tout à fait la même pour chaque 
 
 Avant de réaliser les conversions en domaine temporel, posez-vous les questions suivantes :
 
-_Quel temps de retard maximal pourra mesurer WISDOM ? Retrouvez-vous bien la distance ambiguë dans le vide donnée précédemment ?_
+_Quel temps de retard maximal pourra mesurer WISDOM ? Retrouvez-vous bien la distance ambiguë dans le vide donnée précédemment ? A votre avis, d'où vient la différence ?_
 
 _Quel sera la résolution temporelle de WISDOM ? Retrouvez-vous bien la résolution dans le vide donnée précédemment ?_
 
@@ -348,7 +348,60 @@ _Que risque-t-il de se passer si WISDOM détecte un écho d'une interface plus l
 
 ### FFT réelle avec Numpy
 
+Comme pour le TP précédent, nous allons utiliser la "**Fast Fourier Transform**" (FFT).
+Cependant, à la différence des données ROXI qui étaient complexes, les spectres WISDOM sont **réels**.
+
+Hors, la transformée de Fourier d'un signal réel donne un signal complexe **symétrique autour de 0** : la moitié du signal est **redondante**.
+Dans notre cas, un sondage en domaine temporel contiendrait les mêmes échos pour des temps de retard positifs et négatifs, ce qui n'a pas de sens physique.
+
+Pour éviter ce problème, la bibliothèque `numpy` propose une implémentation spéciale de la FFT nommée `rfft`, **adaptée à l'analyse spectrale de signaux réels**.
+Elle ne retourne que la partie positive du signal après FFT, évitant ainsi la redondance.
+
+|Nota Bene|
+|:-|
+|On en déduit facilement que la distance ambiguë de WISDOM dans le vide est 2 fois plus courte que si WISDOM mesurait des spectres complexes.|
+
+N'oubliez pas d'importer la bibliothèque :
+
+~~~
+import numpy as np
+~~~
+
+Pour déterminer l'axe des temps de retard qui ira avec nos sondages WISDOM, on peut utiliser la méthode `fft.rfftfreq` de `numpy`, qui est l'adaptation pour les signaux réels de `fft.fftfreq` vue au TP précédent.
+
+On pourra donc utiliser des commandes Python de ce genre pour générer notre axe :
+
+~~~
+df = frequency_axis[1]-frequency_axis[0]
+time_axis = np.fft.rfftfreq(len(frequency_axis),d=df)
+~~~
+
+On rappelle que la sortie d'une transformée de Fourier est une série de **nombres complexes**, contenant les informations d'**amplitude** et de **phase** des échos reçus.
+
+* Les amplitudes des échos sont d'autant plus grandes que le **contraste de permittivité diélectrique** à une interface est fort.
+
+* Les décalages de phase des échos indique si l'on passe d'**un milieu de permittivité diélectrique plus faible à un milieu de permittivité diélectrique plus haute**, ou l'**inverse**.
+
+C'est pourquoi on choisi en général d'afficher la **partie réelle** du radargramme d'un radar à pénétration de sol, afin de visualiser à la fois les variations d'amplitude et de phase.
+
+L'amplitude du spectre en sortie de la FFT sera homogène à une tension.
+
+On utilisera la méthode `fft.rfft` de `numpy`, avec une commande similaire à celle-ci :
+
+~~~
+sounding_1_132 = np.real(np.fft.rfft(spectrum_1_132))
+~~~
+
+|Nota Bene|
+|:-|
+|Les tensions obtenues ici ne sont pas calibrées.|
+|Nous nous servirons d'une mesure de calibration de l'amplitudes des échos de surface, pour l'interprétation.|
+
+Si vous appliquez la FFT au 103ème sondage du 1er "traverse", vous obtiendrez la série temporelle suivante :
+
 ![Exemple de sondage WISDOM brut](img/WISDOM_raw_time_series_example.png)
+
+
 
 ![Exemple de radargramme WISDOM brut](img/WISDOM_raw_radargram_example.png)
 
