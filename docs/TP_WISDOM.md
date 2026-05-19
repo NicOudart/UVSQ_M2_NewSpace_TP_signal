@@ -401,9 +401,40 @@ Si vous appliquez la FFT au 103ème sondage du 1er "traverse", vous obtiendrez l
 
 ![Exemple de sondage WISDOM brut](img/WISDOM_raw_time_series_example.png)
 
+On observe clairement des échos dès le début du sondage, entre 0 et 2.5 ns, ce qui est étrange étant donné que les antennes radar sont à 38 cm de la surface.
+Ensuite, on voit un écho intense à environ 12 ns, que l'on pourrait identifier comme étant l'écho de surface.
+Enfin, on devine des échos entre 15 et 30 ns, correspondant probablement à des échos du sous-sol.
 
+Afin d'aider à identifier ces échos, affichons le radargramme complet du 1er "traverse".
+
+Pour ce faire, une fois le radargramme du "traverse" récupéré dans une matrice `numpy` nommée `mat_radargram_1`, vous pouvez utiliser des commandes de ce genre :
+
+~~~
+plt.figure()
+plt.pcolormesh(distance_axis_1,time_axis,mat_radargram_1.T,cmap='binary',vmin=-np.percentile(np.abs(mat_radargram_1),99.9),vmax=np.percentile(np.abs(mat_radargram_1),99.9))
+plt.gca().invert_yaxis()
+plt.xlabel('Horizontal distance (m)',fontsize=12)
+plt.ylabel('Time (s)',fontsize=12)
+plt.colorbar(label='Uncalibrated voltage (V)')
+plt.title('Radargram - Traverse 1',fontsize=12)
+plt.grid()
+plt.show()
+~~~
+
+Vous obtiendrez alors un affichage graphique similaire à celui-ci :
 
 ![Exemple de radargramme WISDOM brut](img/WISDOM_raw_radargram_example.png)
+
+On observe alors que les échos de début de sondage entre 0 et 2.5 ns, ainsi que l'écho intense à 12 ns sont constants tout le long du radargramme.
+On en déduit qu'il s'agit d'**effets instrumentaux** : 
+
+* Les échos entre 0 et 2.5 ns correspondent au "**couplage interne**" : des échos liés à des problèmes d'aptation d'impédance au sein des circuits / câbles de l'instrument.
+
+* L'écho intense à 12 ns correspond au "**couplage direct**" : le signal émis est quasi-directement capté par l'antenne de réception.
+
+Des traits horizontaux, correspondant à des **réflexions multiples** des couplages interne et direct, dérangent la visualisation des échos provenant du sous-sol entre 15 et 30 ns.
+
+Afin de réduire cet effet, nous allons compenser une **mesure d'espace libre**, **en amont** de la FFT.
 
 ### Mesure d'espace libre
 
