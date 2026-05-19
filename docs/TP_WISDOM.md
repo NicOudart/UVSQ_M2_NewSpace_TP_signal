@@ -434,7 +434,7 @@ On en déduit qu'il s'agit d'**effets instrumentaux** :
 
 Des traits horizontaux, correspondant à des **réflexions multiples** des couplages interne et direct, dérangent la visualisation des échos provenant du sous-sol entre 15 et 30 ns.
 
-Afin de réduire cet effet, nous allons compenser une **mesure d'espace libre**, **en amont** de la FFT.
+Afin de réduire ces effets, nous allons compenser une **mesure d'espace libre**, **en amont** de la FFT.
 
 ### Mesure d'espace libre
 
