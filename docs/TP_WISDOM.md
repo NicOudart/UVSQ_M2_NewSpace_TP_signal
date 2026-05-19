@@ -268,11 +268,11 @@ La 2nde étape de notre de chaîne traitement sera de générer des radargrammes
 
 Afin d'obtenir des radargrammes interprétables, nous appliquerons dans cette fonction 3 techniques en amont de la  transformée de Fourier :
 
-* Le **fenêtrage**, afin d'éviter les problèmes liés aux "lobes secondaires".
+* Le retrait d'une mesure d'**espace libre**, afin de réduire les échos parasites provenant de l'instrument et son support.
 
 * Le **zero-padding**, afin d'avoir des radargrammes interpolés verticalement.
 
-* Le retrait d'une mesure d'**espace libre**, afin de réduire les échos parasites provenant de l'instrument et son support.
+* Le **fenêtrage**, afin d'éviter les problèmes liés aux "lobes secondaires".
 
 ### Nature des données
 
