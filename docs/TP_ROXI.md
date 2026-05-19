@@ -220,7 +220,7 @@ import matplotlib.pyplot as plt
 Essayons tout d'abord d'afficher une série temporelle "slow-time" issue de nos données.
 
 Prenons le 1er profil, et regardons la série temporelle "slow-time" pour le niveau du 11ème échantillon "fast-time".
-Affichons les parties réelle et imaginaire du signal avec des commandes Python de ce type :
+Affichons les parties réelle et imaginaire du signal avec des commandes Python de ce genre :
 
 ~~~
 plt.figure()

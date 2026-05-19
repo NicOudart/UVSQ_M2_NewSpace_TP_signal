@@ -121,7 +121,7 @@ Ce projet Python devra contenir des fonctions pour :
 
 * Importer des données WISDOM à partir d'un fichier HDF5 tel que celui qui vous sera fourni.
 
-* Convertir en radargrammes les traverses de spectres acquis par le radar, en compensant les effets instrumentaux.
+* Convertir en radargrammes les traverses de spectres (spectrogrammes) acquis par le radar, en compensant les effets instrumentaux.
 
 * Filtrer les échos parasites horizontaux.
 
@@ -258,11 +258,95 @@ _A votre avis, pourquoi avoir rangé l'axe des distances horizontale dans le "Gr
 
 ## Analyse spectrale
 
-### FFT
+La 2nde étape de notre de chaîne traitement sera de générer des radargrammes pour chaque traverse contenu dans les données WISDOM récupérées.
+
+|Ajoutez à votre projet Python une fonction `FFT`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées : 4 matrices `numpy` contenant les 3 spectrogrammes des 3 "traverses" et l'axe des fréquences, telles que retournées par la fonction `read`.|
+|- Sorties : 4 matrices `numpy`, contenant les 3 radargrammes des 3 "traverses", et l'axe des temps de retard correspondant.|
+
+Afin d'obtenir des radargrammes interprétables, nous appliquerons dans cette fonction 3 techniques en amont de la  transformée de Fourier :
+
+* Le **fenêtrage**, afin d'éviter les problèmes liés aux "lobes secondaires".
+
+* Le **zero-padding**, afin d'avoir des radargrammes interpolés verticalement.
+
+* Le retrait d'une mesure d'**espace libre**, afin de réduire les échos parasites provenant de l'instrument et son support.
+
+### Nature des données
+
+Dans un 1er temps, nous allons nous intéresser à la nature des données dont nous disposons.
+
+Importez la bibliothèque `matplotlib`, qui va nous servir à faire des affichages graphiques :
+
+~~~
+import matplotlib.pyplot as plt
+~~~
+
+Essayons tout d'abord d'afficher un spectre issu de nos données.
+
+Prenons le 103ème sondage du 1er "traverse", et regardons le spectre mesuré.
+Affichons ce signal avec des commandes Python de ce genre :
+
+~~~
+plt.figure()
+plt.plot(frequency_axis,mat_traverse_1[102],'r-')
+plt.xlabel('Frequency (Hz)',fontsize=12)
+plt.ylabel('Unicalibrated voltage (V)',fontsize=12)
+plt.title('Spectrum - Traverse 1 - Sounding 102',fontsize=12)
+plt.grid()
+plt.show()
+~~~
+
+On obtient alors la courbe suivante :
 
 ![Exemple de spectre WISDOM](img/WISDOM_spectrum_example.png)
 
+On voit nettement qu'un spectre WISDOM est un signal réel **périodique**.
+
+Un spectre WISDOM correspond dans le domaine temporel à une serie d'impulsions renvoyées par les différentes interfaces du sous-sol, reçues pour différents temps de retard par rapport à l'émission.
+On s'attend donc à obtenir une **somme de sinusoïdes**, dont la fréquence est d'autant plus élevée que le temps de retard de l'écho est grand.
+
+D'où l'intérêt de vouloir réaliser une **analyse spectrale** de ce signal, afin de séparer temporellement les différents échos reçus par le radar.
+
+|Nota Bene|
+|:-|
+|Considérer les spectres WISDOM comme une somme de sinusoïdes est en réalité une approximation de la réalité.|
+|En effet, des limitations techniques font que WISDOM n'émet pas tout à fait les différentes fréquences avec la même puissance.|
+|Ensuite, les pertes dans le sous-sol (absorption et diffusion) dépendent de la fréquence.|
+|Tout ceci explique le fait que les basses fréquences ont l'air d'avoir une amplitude plus élevée que les hautes fréquences.|
+
+Pour vérifier que l'on retrouve bien un signal périodique pour chaque spectre du 1er traverse, nous pouvons aussi afficher le spectrogramme.
+
+Vous pouvez réaliser cet affichage avec des commandes Python de ce genre :
+
+~~~
+plt.figure()
+plt.pcolormesh(distance_axis_1,frequency_axis,mat_traverse_1.T,cmap='bwr',vmin=-np.percentile(np.abs(mat_traverse_1),99.9),vmax=np.percentile(np.abs(mat_traverse_1),99.9))
+plt.xlabel('Horizontal distance (m)',fontsize=12)
+plt.ylabel('Frequency (Hz)',fontsize=12)
+plt.colorbar(label='Uncalibrated voltage (V)')
+plt.title('Spectrogram - Traverse 1',fontsize=12)
+plt.grid()
+plt.show()
+~~~
+
+On obtient alors l'affichage graphique suivant, qui confirme ce que nous avions observé sur le 103ème sondage :
+
 ![Exemple de spectrogramme WISDOM](img/WISDOM_spectrogram_example.png)
+
+On voit que la somme de sinusoïdes n'est pas tout à fait la même pour chaque sondage, signe que la pronfondeur des différentes interfaces détectées varie avec la distance horizontale.
+
+Avant de réaliser les conversions en domaine temporel, posez-vous les questions suivantes :
+
+_Quel temps de retard maximal pourra mesurer WISDOM ? Retrouvez-vous bien la distance ambiguë dans le vide donnée précédemment ?_
+
+_Quel sera la résolution temporelle de WISDOM ? Retrouvez-vous bien la résolution dans le vide donnée précédemment ?_
+
+_Que risque-t-il de se passer si WISDOM détecte un écho d'une interface plus lointaine que sa distance ambiguë ?_
+
+### FFT réelle avec Numpy
 
 ![Exemple de sondage WISDOM brut](img/WISDOM_raw_time_series_example.png)
 
