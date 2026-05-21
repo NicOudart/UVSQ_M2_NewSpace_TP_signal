@@ -438,9 +438,33 @@ Afin de réduire ces effets, nous allons compenser une **mesure d'espace libre**
 
 ### Mesure d'espace libre
 
+Lorsque l'on veut compenser les effets instrumentaux d'une mesure, on utilise classiquement ce que l'on appelle un "blanc".
+
+Pour un radar, il s'agit d'une mesure "d'**espace libre**", c'est-à-dire sans aucune cible devant les antennes.
+Le sondage obtenu ne contiendra alors que les échos provenant du **couplage interne** et du **couplage direct**.
+
+En soustrayant cette mesure d'espace libre notre 103ème spectre du 1er "traverse", nous obtenons après FFT la série temporelle suivante :
+
 ![Exemple de sondage WISDOM après retrait du free-space](img/WISDOM_freespace_removal_time_series_example.png)
 
+On voit que le **couplage interne** a totalement disparu.
+Le **couplage direct** a été fortement réduit, mais n'a pas été complètement supprimé.
+
+Ceci est lié au fait que le couplage interne est très stable d'une mesure à l'autre, le rendant facilement compensable.
+Le couplage direct quant à lui varie légèrement avec la température (qui n'est jamais parfaitement compensée) et peut être influencé par la surface, ce qui rend sa compensation plus difficile.
+
+Néanmoins, **les échos provenant de la sous-surface ressortent plus clairement**.
+
+Si on soustrait la mesure d'espace libre à tous les spectres du 1er "traverse", on obtient après FFT le radargramme suivant :
+
 ![Exemple de radargramme WISDOM après retrait du free-space](img/WISDOM_freespace_removal_radargram_example.png)
+
+Des structures de la sous-surface commencent à apparaitre, mais des parasites horizontaux perturbent toujours un peu la lecture du radargramme.
+Nous verrons dans la suite du TP comment les compenser.
+
+Le radargramme a un aspect "pixélisé", qui est lié au fait qu'ici la **durée de l'impulsion équivalente** en domaine temporel de WISDOM est **exactement égale à 1 pixel**.
+
+En effet, 
 
 ### Zero-padding
 
