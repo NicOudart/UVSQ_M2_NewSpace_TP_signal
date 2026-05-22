@@ -464,7 +464,13 @@ Nous verrons dans la suite du TP comment les compenser.
 
 Le radargramme a un aspect "pixélisé", qui est lié au fait qu'ici la **durée de l'impulsion équivalente** en domaine temporel de WISDOM est **exactement égale à 1 pixel**.
 
-En effet, 
+Nous allons voir comment faire pour obtenir des sondages un peu plus "lissés", afin d'améliorer leur lisibilité.
+
+|Nota Bene|
+|:-|
+|La durée de l'impulsion équivalente d'un radar fonctionnant en domaine fréquentiel est égale à l'inverse de la bande de fréquences de l'instrument.|
+|WISDOM fonctionnant entre 0.5 et 3 GHz, sa largeur de bande est de 2.5 GHz, et donc la durée de son impulsion équivalente est de 0.4 ns.|
+|La résolution d'un signal obtenu en sortie de la FFT dépend du nombre d'échantillons fournis en entrée.|
 
 ### Zero-padding
 
