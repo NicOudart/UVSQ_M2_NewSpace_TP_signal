@@ -474,9 +474,57 @@ Nous allons voir comment faire pour obtenir des sondages un peu plus "lissés", 
 
 ### Zero-padding
 
+Si nous appliquons la FFT à un spectrum WISDOM contenant **1001 échantillons**, la série temporelle obtenue contiendra **également 1001 échantillons**.
+Le spectre mesuré faisant 2.5 GHz de large, on en déduit que cette série temporelle aura un pas de 0.4 ns.
+
+Pour augmenter le nombre d'échantillons renvoyés par la FFT, on peut augmenter le nombre d'échantillons dans un spectre WISDOM **en ajoutant des zéros à la fin**.
+C'est ce que l'on appelle le "**zero-padding**".
+
+Par exemple, si on complète un spectre WISDOM de 1001 échantillon, en ajoutant 1001 zéros à la fin, on obtient 2002 échantillons en sortie de la FFT.
+Le pas de la série temporelle obtenue sera alors de 0.2 ns.
+
+Par contre, en ajoutant des zéros nous n'avons ajouté aucune information au spectre : la largeur de bande de WISDOM reste de 2.5 GHz.
+La largeur de l'impulsion équivalente reste donc de 0.4 ns.
+
+Le pas de la série temporelle a donc été **divisé par 2**, mais la **résolution** des sondages WISDOM (c'est-à-dire leur capacité à séparer 2 impulsions) **reste la même**.
+
+On en déduit que le "**zero-padding**" agit comme une **interpolation verticale** des radargrammes : il permet de lire plus facilement le temps de retard des échos reçus, mais ne permet pas de mieux les séparer.
+
+Avec l'implémentation `numpy` de la FFT, il n'est pas nécessaire d'ajouter des zéros à la fin de notre spectre pour faire du zero-padding.
+Il suffit d'ajouter un second paramètre en entrée pour définir le nombre d'échantillons que l'on veut en sortie de la FFT.
+
+Pour obtenir une série temporelle contenant 10 fois plus d'échantillons que notre spectre, il suffit donc d'adapter votre commande Python de la manière suivante :
+
+~~~
+sounding_1_132 = np.real(np.fft.rfft(spectrum_1_132,10*len(spectrum_1_132)))
+~~~
+
+**Attention ! Il faut aussi adapter l'axe temporel qui va avec !**
+
+_Quel sera le pas de cette série temporelle ?_
+
+**Pour votre fonction `FFT`, vous pouvez soit ajouter le nombre d'échantillons désiré comme une entrée de la fonction.**
+
+En appliquant la FFT avec "zero-padding" au 103ème sondage du 1er traverse, vous devriez obtenir la série temporelle suivante :
+
 ![Exemple de sondage WISDOM après zero-padding](img/WISDOM_zeropadding_time_series_example.png)
 
+On observe bien ce que l'on attendait : le temps de retard des "pics" correspondants aux impulsions reçues sont beaucoup plus facile à lire.
+
+Mais il est clair que ces pics étaient déjà visibles sur le spectre à 1001 échantillons, et que nous n'en avons pas fait apparaitre de nouveaux.
+Nous n'avons donc apporté aucune information spectrale, juste interpolé le spectre.
+
+Par contre, apparaissent des petits échos parasites, qui sont le plus nettement visibles entre 0 et 11 ns.
+
+Vous pouvez appliquer le "zero-padding" à l'intégralité du radargramme du 1er traverse, pour voir si on retrouve cet artefact dans d'autres sondages.
+Vous devriez alors obtenir le graphique suivant :
+
 ![Exemple de radargramme WISDOM après zero-padding](img/WISDOM_zeropadding_radargram_example.png)
+
+On observe bien cet effet sur l'intégralité du radargramme.
+Il s'agit de ce que l'on appelle des "**lobes secondaires**", un effet classique lorsque l'on réalise une analyse spectral d'un signal fini.
+
+Nous allons voir comment compenser cet effet.
 
 ### Fenêtrage
 
