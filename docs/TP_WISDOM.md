@@ -601,7 +601,18 @@ Nous pourrons donc choisir ou non de les appliquer suivant notre objectif.
 
 ## Amélioration de la lisibilité
 
+Nous allons ajouter 3 traitements optionnels à notre chaîne de traitement des données WISDOM, afin d'améliorer la lisibilité des radargrammes.
+
+Nous les implémenterons sous la forme de 3 fonctions : `horizontal_filter`, `vertical_gain` et `horizontal_interpolation`.
+
 ### Filtrage horizontal
+
+En regardant le radargramme obtenu pour le 1er traverse, nous voyons que de nombreuses lignes horizontales gênent toujours la lecture, malgré le retrait d'une mesure d'espace libre.
+
+Ces "échos parasites" sont donc probablement issus de réflexions multiples entre entre les antennes et le sol, ou entre les antennes et le moyen de transport du radar.
+
+Plusieurs méthodes ont été envisagées par l'équipe WISDOM pour compenser ces parasites.
+Dans le cadre de ce TP, nous implémenterons la plus simple d'entre elles : **le retrait d'une moyenne horizontale**.
 
 ![Exemple de sondage WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_time_series_example.png)
 
