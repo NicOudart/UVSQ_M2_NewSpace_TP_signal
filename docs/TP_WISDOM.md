@@ -528,9 +528,76 @@ Nous allons voir comment compenser cet effet.
 
 ### Fenêtrage
 
+En théorie, la transformée de Fourier d'une **sinusoïde complexe** donne un spectre contenant **un unique pic** (ou "Dirac"), à la fréquence correspondante.
+
+Dans la réalité, nous ne pouvons traiter que des signaux **finis** et **discrets**.
+
+Lorsque l'on applique une FFT à un signal, 2 phénomènes apparaissent alors :
+
+* "**Aliasing**" (ou "repliement de spectre): échantillonner revient dans le domaine fréquentiel à une convolution par un "peigne de Dirac", où chaque "Dirac" est espacé de la fréquence d'échantillonnage $F_e$.
+On obtient donc un spectre répétant les composantes fréquentielles du signal tous les $F_e$.
+Si le signal temporel contient des fréquences supérieures à $F_e/2$, il y aura chevauchement entre ces répétitions dans le spectre.
+
+* "**Spectral leakage**" : avoir un signal fini revient à multiplier un signal infini par une fenêtre rectangulaire.
+La transformée de Fourier d'une fenêtre rectangulaire étant un sinus cardinal, ceci revient dans le domaine fréquentiel à une convolution par un sinus cardinal.
+Pour chaque composante fréquentielle du signal, nous obtenons donc un sinus cardinal, avec un "lobe principal" et des "**lobes secondaires**".
+
+C'est ce 2nd phénomène qui cause l'artefact que nous observons dans notre radargramme.
+
+Il est particulièrement problématique ici, car un "lobe secondaire" pourrait être pris par erreur pour un écho provenant du sous-sol.
+
+C'est pourquoi on doit appliquer un "**fenêtrage**" à un spectre WISDOM **avant FFT**.
+
+L'idée est d'adoucir les discontinuités sur les bord de notre spectre fini, en le multipliant par un type de fonction appelée "**fenêtre d'apodisation**".
+Parmi les fenêtres connues, on peut citer Hann, Hamming et Blackman.
+
+Le choix d'une fenêtre est toujours un compromis entre **résolution** et réduction des "**lobes secondaires**" :
+
+* Trop "adoucir" les bords du spectre revient à réduire la bande de fréquences effective de l'instrument, et donc à **dégrader sa résolution**.
+
+* Ne pas assez "adoucir" les bords du spectre revient à prendre le risque d'avoir de **confondre des lobes secondaires avec des échos**.
+
+Il existe des implémentations `numpy` des différentes fenêtres d'aposation.
+Elle portent en général simplement le nom de la fenêtre, et prennent en entrée le nombre d'échantillons dans le spectre.
+
+Voici comment adapter notre commande pour appliquer la **fenêtre de Hann** à notre spectre WISDOM avant FFT :
+
+~~~
+sounding_1_132 = np.real(np.fft.rfft(spectrum_1_132*np.hanning(len(spectrum_1_132)),10*len(spectrum_1_132)))
+~~~
+
+|Nota Bene|
+|:-|
+|Vous avez peut-être remarqué que la fenêtre de "Hann" est nommée "Hanning" par `numpy`.|
+|Il s'agit d'une erreur classique : comme il existe une fenêtre de "Hamming", et que beaucoup d'anglophones pensent qu'il s'agit d'un verbe au gérondif, le fenêtrage de "Hann" est parfois nommé "Hanning".|
+|En réalité, "Hamming" est le nom d'un mathématicien américain : il n'existe pas de fenêtre de "Ham".|
+
+**Pour votre fonction `FFT`, vous pouvez aussi utiliser la fenêtre de Hann, qui est souvent la fenêtre choisie par défaut.**
+
+En appliquant la FFT avec fenêtrage de Hann au 103ème sondage du 1er traverse, vous devriez obtenir la série temporelle suivante :
+
 ![Exemple de sondage WISDOM après fenêtrage](img/WISDOM_windowing_time_series_example.png)
 
+Comme attendu, on voit que les "lobes secondaires" ont quasiment disparu.
+
+Par contre, la durée des impulsions reçue a clairement augmenté, et donc la résolution temporelle du radar a été dégradée.
+Encore une fois, il s'agit d'un compromis.
+
+Si vous affichez le radargramme complet du 1er traverse, vous pourrez apprécier l'amélioration : 
+
 ![Exemple de radargramme WISDOM après fenêtrage](img/WISDOM_windowing_radargram_example.png)
+
+On distingue à présent plutôt bien la surface entre 13 et 14 ns, puis des structures du sous-sol jusqu'à presque 30 ns.
+Nous discuterons plus tard de leur interprétation.
+
+**Vous pouvez enfin compléter votre fonction `FFT`**.
+
+En théorie, nous pourrions arrêter notre chaîne de traitement ici, et passer à l'interprétation.
+
+Cependant, pour améliorer la **lisibilité** d'un radargramme WISDOM, on ajoute souvent quelques traitements supplémentaires à la chaîne : filtrage horizontal, gain vertical et interpolation horizontale.
+
+Si ces traitements améliorent grandement notre capacité à interpréter visuellement les radargrammes, ils peuvent empêcher certaines interprétations physiques.
+Nous pourrons donc choisir ou non de les appliquer suivant notre objectif.
 
 ## Amélioration de la lisibilité
 
@@ -563,6 +630,4 @@ Nous allons voir comment compenser cet effet.
 ## Exportation du résultat
 
 ## Conclusion
-
-## BONUS
 
