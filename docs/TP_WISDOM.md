@@ -592,6 +592,8 @@ Nous discuterons plus tard de leur interprétation.
 
 **Vous pouvez enfin compléter votre fonction `FFT`**.
 
+_Nous remarquons encore quelques lignes horizontales dans le radargramme, que le retrait de la mesure d'espace libre n'a pas éliminé. A votre avis, quelle est leur origine ?_
+
 En théorie, nous pourrions arrêter notre chaîne de traitement ici, et passer à l'interprétation.
 
 Cependant, pour améliorer la **lisibilité** d'un radargramme WISDOM, on ajoute souvent quelques traitements supplémentaires à la chaîne : filtrage horizontal, gain vertical et interpolation horizontale.
@@ -605,6 +607,8 @@ Nous allons ajouter 3 traitements optionnels à notre chaîne de traitement des 
 
 Nous les implémenterons sous la forme de 3 fonctions : `horizontal_filter`, `vertical_gain` et `horizontal_interpolation`.
 
+Ces traitements arrivant après la génération du radargramme par `FFT`, ils s'appliquent donc dans le **domaine temporel**.
+
 ### Filtrage horizontal
 
 En regardant le radargramme obtenu pour le 1er traverse, nous voyons que de nombreuses lignes horizontales gênent toujours la lecture, malgré le retrait d'une mesure d'espace libre.
@@ -614,9 +618,52 @@ Ces "échos parasites" sont donc probablement issus de réflexions multiples ent
 Plusieurs méthodes ont été envisagées par l'équipe WISDOM pour compenser ces parasites.
 Dans le cadre de ce TP, nous implémenterons la plus simple d'entre elles : **le retrait d'une moyenne horizontale**.
 
+Il s'agit simplement de calculer la moyenne des amplitudes pour les différentes lignes du radaragramme, et de soustraire le vecteur obtenu à chaque colonne.
+
+_Quelle hypothèse faisons-nous ici sur les échos parasites par rapport aux échos du sous-sol ?_
+
+_Que risque-t-il de se passer si nous avons une interface horizontale dans le sous-sol ?_
+
+_Cette méthode fonctionne-t-elle d'autant plus que le traverse est long ou court ?_
+
+La prochaine étape de notre chaîne de traitement sera donc de soustraire sa moyenne horizontale au radargramme.
+
+|Ajoutez à votre projet Python une fonction `horizontal_filter`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses", tels que retournés par la fonction `FFT`.|
+|- Sorties : 3 matrices `numpy`, contenant les 3 radargrammes des 3 "traverses", après retrait d'une moyenne horizontale.|
+
+Pour calculer la moyenne d'une matrice selon l'axe horizontal, on peut utiliser une méthode de `numpy` nommée `mean`, avec le paramètre `axis` égal à 0.
+
+Si nous appliquons ce traitement au 103ème sondage du 1er traverse, nous obtenons la série temporelle suivante :
+
 ![Exemple de sondage WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_time_series_example.png)
 
+On observe que des échos parasites on presque disparu.
+Par exemple, un petit peu avant 20 ns.
+
+Mais on voit aussi que l'écho de la surface semble avoir été un peu déformé.
+
+Si nous appliquons le retrait d'une moyenne horizontale à l'intégralité du radargramme du 1er traverse, nous obtenons le résultat suivant :
+
 ![Exemple de radargramme WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_radargram_example.png)
+
+On voit en effet que la forme et l'intensité de l'écho de sol semblent avoir été plus ou moins impactées selon les sondages.
+
+On pouvait le deviner : WISDOM se déplaçant à une distance quasi-constante au-dessus de la surface, l'écho de sol est très constant avec la distance parcourue.
+On s'attend donc à ce que **l'écho de sol soit impacté par le retrait d'une moyenne horizontale**.
+
+Ceci n'est pas très problématique lorsque l'on n'est intéressé que par les échos de la sous-surface.
+Mais dans la suite, nous utiliserons l'intensité de l'écho de sol pour notre interprétation.
+
+Il faudra alors faire attention de réaliser notre interprétation de l'écho de sol **avant le retrait de la moyenne horizontale !**
+
+|Nota Bene|
+|:-|
+|Il est a noté que ce traitement est assez spécifique à WISDOM.|
+|En effet, la plupart des géoradars terrestres ont leur antennes collées au sol, et donc leur radargrammes ne présentent ni réflexion au niveau du sol, ni réflexions multiples entre les antennes et le sol.|
+|Les antennes de WISDOM sont à 38 cm au-dessus de la surface pour des raisons pratiques de déplacement du rover.|
 
 ### Gain vertical
 
