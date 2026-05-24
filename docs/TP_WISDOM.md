@@ -21,7 +21,7 @@ _Mais comment savoir où creuser ?_
 Les forages seront longs et gourmands en énergie, on veut éviter d'abimer la foreuse sur de la roche trop dure, et le nombre de tubes à échantillons est limité.
 Il est donc capital pour la mission d'**avoir un a priori sur le sous-sol avant de creuser**.
 
-C'est là qu'interviendra le **radar à pénétration de sol WISDOM**, développé au LATMOS.
+C'est là qu'interviendra le **radar à pénétration de sol** (ou "géoradar") **WISDOM**, développé au LATMOS.
 
 Il s'agit d'un instrument qui sera capable de révéler la **structure** des premiers mètres du sous-sol martien, et de donner des indices sur sa **composition**.
 Avant toute opération de forage, WISDOM sondera le proche sous-sol pour déterminer si un site est **intéressant scientifiquement** et **sans danger pour la foreuse**.
@@ -640,7 +640,7 @@ Si nous appliquons ce traitement au 103ème sondage du 1er traverse, nous obteno
 
 ![Exemple de sondage WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_time_series_example.png)
 
-On observe que des échos parasites on presque disparu.
+On observe que les échos parasites on presque disparu.
 Par exemple, un petit peu avant 20 ns.
 
 Mais on voit aussi que l'écho de la surface semble avoir été un peu déformé.
@@ -659,17 +659,93 @@ Mais dans la suite, nous utiliserons l'intensité de l'écho de sol pour notre i
 
 Il faudra alors faire attention de réaliser notre interprétation de l'écho de sol **avant le retrait de la moyenne horizontale !**
 
+**Vous pouvez à présent compléter votre fonction `horizontal_filter`**.
+
 |Nota Bene|
 |:-|
 |Il est a noté que ce traitement est assez spécifique à WISDOM.|
 |En effet, la plupart des géoradars terrestres ont leur antennes collées au sol, et donc leur radargrammes ne présentent ni réflexion au niveau du sol, ni réflexions multiples entre les antennes et le sol.|
 |Les antennes de WISDOM sont à 38 cm au-dessus de la surface pour des raisons pratiques de déplacement du rover.|
 
+Maintenant que les échos parasites ne gênent plus la lecture de notre radargramme du 1er traverse, on distingue bien mieux la structure du sous-sol.
+
+Par contre, plus les échos viennent de loin dans le sous-sol, plus ils sont faibles comparés à l'écho de sol...
+
 ### Gain vertical
+
+Lorsque les ondes électromagnétiques émises par un géoradar se propagent dans le sous-sol, elles sont atténuées par 3 phénomènes différents :
+
+* La **divergence géométrique** du faisceau émit, qui fait diminuer l'amplitude du signal proportionnellement à la distance parcourue.
+
+* L'**absportion** du matériau liée aux pertes diélectriques et de conductivité, qui fait diminuer diminuer l'amplitude du signal exponentiellement.
+
+* La **diffusion** par les hétérogénéités du sous-sol, qui fait aussi diminuer l'amplitude du signal exponentiellement.
+
+Tout ceci fait que les échos seront avec une amplitude d'autant plus faible que leur profondeur d'origine est élevée.
+
+La dynamique nécessaire pour représenter les différents échos d'un radargramme est donc souvent très grande, et il est donc difficile de trouver une échelle de couleur permettant de visualiser tous les échos sans saturation.
+
+C'est pourquoi il est commun pour les radars à pénétration de sol d'appliquer **un gain le long de l'axe vertical des radargrammes**, afin de compenser les pertes, et de faire ressortir les échos profonds.
+
+Nous allons ajouter à notre chaîne de traitement un gain vertical pour compenser les pertes dans le sous-sol.
+
+|Ajoutez à votre projet Python une fonction `vertical_gain`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" tels que retournés par la fonction `FFT`, et les 3 paramètres nécessaires à la fonction de gain que nous voulons implémenter.|
+|- Sorties : 3 matrices `numpy`, contenant les 3 radargrammes des 3 "traverses", après application d'un gain selon l'axe vertical.|
+
+En tout rigueur, il faudrait utiliser pour le gain une fonction qui combine compensations linéaire (pertes par divergence) et exponentielle (absorption et diffusion) avec la profondeur, en se basant sur les propriétés du sous-sol.
+Malheureusement, nous n'avons pas toujours accès à la composition du sol.
+
+Pour simplifier, dans le cadre de ce TP nous allons utiliser une fonction exponentielle $G$ du temps de retard des échos $t$ :
+
+$G(t) = \left\{
+    \begin{array}{ll}
+        exp(\alpha \frac{t-t_{min}}{t_{max}-t_{min}}) & \mbox{si } t \in [t_{min},t_{max}] \\
+        1 & \mbox{sinon.}
+    \end{array}
+\right.$
+
+avec $t_{min}$ le temps de retard à partir duquel appliquer le gain (pour compenser les pertes dans le sous-sol, on choisira celui de l'écho de surface), $t_{max}$ le temps de retard au-dela duquel on arrête d'appliquer le gain, et $\alpha$ un coefficient à ajuster.
+
+Pour chaque colonne du radargramme, on multipliera les amplitudes reçues par le radar par le gain $G(t)$.
+
+_A votre avis, pourquoi choisir le temps de retard de l'écho de sol pour $t_{min}$ ?_
+
+_Pourquoi avoir définit un $t_{max}$ ?_
+
+_Que représente physiquement $\alpha$ ?_
+
+Si vous appliquez au 103ème sondage du 1er traverse un tel gain avec $t_{min} = 13 ns$, $t_{max} = 35 ns$ et $\alpha = 1.3$, vous devriez obtenir la série temporelle suivante :
 
 ![Exemple de sondage WISDOM après application d'un gain vertical](img/WISDOM_vertical_gain_time_series_example.png)
 
+Les échos du sous-sol situés entre 25 et 30 ns ont été fortement amplifiés !
+
+On peut afficher le radargramme complet du 1er traverse, pour apprécier l'amélioration de la lisibilité :
+
 ![Exemple de radargramme WISDOM après application d'un gain vertical](img/WISDOM_vertical_gain_radargram_example.png)
+
+On discerne à présent très bien une interface qui a l'air de plonger entre 15 et 20 m, et de remonter entre 20 et 23 m de distance horizontale.
+Nous discuterons plus tard de son interprétation.
+
+**Vous pouvez à présent compléter votre fonction `vertical_gain`**.
+
+Vous pouvez jouer sur la valeur du coefficient $\alpha$ pour tester son effet.
+
+|Nota Bene|
+|:-|
+|Avec ce traitement, nous avons fait l'hypothèse implicite que les 3 effets de pertes que nous cherchons à compenser sont indépendants de la fréquence du signal.|
+|C'est en réalité une approximation, qui n'est pas toujours valide !|
+|De manière générale, les hautes fréquences sont plus fortement atténuées que les basses.|
+|Notre fonction de gain ne dépendant pas de la fréquence, elle ne pourra jamais compenser parfaitement les pertes dans le sous-sol.|
+
+Vous l'avez sûrement remarqué, notre radargramme a toujours un aspect "pixélisé", malgré l'interpolation du "zero-padding" implémentée plus tôt.
+
+C'est lié au fait que le nombre de lignes de notre radargramme (5006) est beaucoup plus grand que le nombre de colonnes (126).
+
+Pour atténuer cet effet visuel, nous allons dans la suite appliquer une interpolation horizontale aux radargrammes de WISDOM.
 
 ### Interpolation horizontale
 
