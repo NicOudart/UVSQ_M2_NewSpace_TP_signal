@@ -741,13 +741,24 @@ Vous pouvez jouer sur la valeur du coefficient $\alpha$ pour tester son effet.
 |De manière générale, les hautes fréquences sont plus fortement atténuées que les basses.|
 |Notre fonction de gain ne dépendant pas de la fréquence, elle ne pourra jamais compenser parfaitement les pertes dans le sous-sol.|
 
-Vous l'avez sûrement remarqué, notre radargramme a toujours un aspect "pixélisé", malgré l'interpolation du "zero-padding" implémentée plus tôt.
-
-C'est lié au fait que le nombre de lignes de notre radargramme (5006) est beaucoup plus grand que le nombre de colonnes (126).
+Vous l'avez sûrement remarqué, notre radargramme a toujours un aspect "pixélisé" selon l'axe horizontal.
 
 Pour atténuer cet effet visuel, nous allons dans la suite appliquer une interpolation horizontale aux radargrammes de WISDOM.
 
 ### Interpolation horizontale
+
+Lors de la mission ExoMars, il est prévu que les sondages WISDOM soient acquis avec **un pas horizontal de 10 cm**.
+Dans le cas des 3 traverses effectués le 15/03/2022 au Svalbard, les sondages ont été acquis avec **un pas horizontal de 20 cm**.
+
+Dans un proche sous-sol martien typique, on s'attend à ce que les sondages WISDOM aient **une résolution en de l'ordre de 3 cm**.
+
+Sur Mars le pas horizontal des traverses WISDOM sera donc environ **3 fois plus grand** que la résolution des sondages, et au Svalbard il était même presque **7 fois plus grand**.
+
+Ceci explique l'aspect "pixélisé" des radargrammes WISDOM selon l'axe horizontal, qui peut gêner leur lecture.
+
+C'est pourquoi l'équipe WISDOM ajoute en général à la chaîne de traitement de l'instrument une **interpolation horizontale** des radargrammes.
+
+
 
 ![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
 
