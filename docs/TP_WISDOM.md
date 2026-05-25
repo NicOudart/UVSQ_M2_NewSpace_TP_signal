@@ -758,6 +758,25 @@ Ceci explique l'aspect "pixélisé" des radargrammes WISDOM selon l'axe horizont
 
 C'est pourquoi l'équipe WISDOM ajoute en général à la chaîne de traitement de l'instrument une **interpolation horizontale** des radargrammes.
 
+|Ajoutez à votre projet Python une fonction `horizontal_interpolation`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" tels que retournés par la fonction `FFT`, et les 3 axes de distances horizontales correspondants.|
+|- Sorties : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" après interpolation horizontale, et les 3 axes de distances horizontales correspodants.|
+
+Pour réaliser cette interpolation, nous allons utiliser la très classique méthode des "**splines cubiques**".
+
+Il s'agit d'une méthode d'interpolation "**par morceaux**" approximant l'intervalle entre 2 points de mesure par un **polynôme de degré 3**.
+
+Il existe une implémentation des splines cubiques dans le module `scipy.interpolate`, du nom de `CubicSpline`.
+C'est cette implémentation que nous utiliserons ici.
+
+N'oubliez donc pas de l'importer avec la commande suivante :
+
+~~~
+from scipy.interpolate import CubicSpline
+~~~
+
 
 
 ![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
