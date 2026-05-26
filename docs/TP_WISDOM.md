@@ -768,7 +768,7 @@ Pour réaliser cette interpolation, nous allons utiliser la très classique mét
 
 Il s'agit d'une méthode d'interpolation "**par morceaux**" approximant l'intervalle entre 2 points de mesure par un **polynôme de degré 3**.
 
-Il existe une implémentation des splines cubiques dans le module `scipy.interpolate`, du nom de `CubicSpline`.
+Il existe une implémentation des "splines cubiques" dans le module `scipy.interpolate`, du nom de `CubicSpline`.
 C'est cette implémentation que nous utiliserons ici.
 
 N'oubliez donc pas de l'importer avec la commande suivante :
@@ -777,13 +777,33 @@ N'oubliez donc pas de l'importer avec la commande suivante :
 from scipy.interpolate import CubicSpline
 ~~~
 
+Par exemple, pour appliquer une interpolation horizontale à la 10ème ligne du radargramme du 1er "traverse", on peut utiliser les commandes suivantes :
 
+~~~
+cubic_spline_model = CubicSpline(distance_axis_1,mat_radargram_1[:,9])
+                        
+mat_radargram_interp_1[:,9] = cubic_spline_model(distance_axis_interp_1)
+~~~
+
+avec `mat_radargram_interp_1` la matrice interpolée et `distance_axis_interp_1` l'axe de distance correspondant.
+
+La 1ère ligne sert à définir le modèle d'interpolation "splines cubiques", à partir de la ligne du radargramme et de l'axe de distance horizontal correspondant.
+La 2nde ligne sert à réaliser l'interpolation, en se basant sur un nouvel axe de distances horizontales plus grand, et à stocker le résultat dans une nouvelle matrice `numpy` ayant un nombre de colonnes égal à la taille du nouvel axe de distances horizontales.
+
+Il faut donc définir un nouvel axe de distance horizontale `distance_axis_interp_1` et initialiser une nouvelle matrice `mat_radargram_interp_1` en amont.
+
+En interpolant horizontalement 3 fois le radargramme du 1er "traverse", vous obtiendrez le résultat suivant :
 
 ![Exemple de radargramme WISDOM après interpolation horizontale](img/WISDOM_horizontal_interpolation_radargram_example.png)
 
+On peut apprécier le gain en lisibilité du radargramme.
+Cependant, il faut garder à l'esprit que ceci n'est qu'une interpolation : **nous n'avons apporté aucune information ici**.
+
+**Vous pouvez à présent compléter votre fonction `horizontal_interpolation`**.
+
 ## Interprétation géophysique
 
-### Détection de pics
+Notre chaîne de traitement des données WISDOM est à présent assez avancée pour pouvoir afficher un **radargramme** interprétable.
 
 ### Mesure de la permittivité de surface
 
