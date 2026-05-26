@@ -820,11 +820,15 @@ Cependant, il faut garder à l'esprit que ceci n'est qu'une interpolation : **no
 
 Notre chaîne de traitement des données WISDOM est à présent assez avancée pour pouvoir afficher un **radargramme** interprétable.
 
+Essayons donc d'**interpréter les échos** que nous observons dans le radargramme du 1er traverse, et d'estimer la **profondeur** des interfaces correspondantes.
+
+### Coins de glace ?
+
+![Interprétation du radargramme du traverse 1](img/Ice_wedge_polygon_interpretation.png)
+
 ### Mesure de la permittivité de surface
 
 ### Estimation de la profondeur
-
-### Coins de glace ?
 
 ## Exportation du résultat
 
