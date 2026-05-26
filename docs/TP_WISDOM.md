@@ -383,14 +383,29 @@ On rappelle que la sortie d'une transformée de Fourier est une série de **nomb
 * Les décalages de phase des échos indique si l'on passe d'**un milieu de permittivité diélectrique plus faible à un milieu de permittivité diélectrique plus haute**, ou l'**inverse**.
 
 C'est pourquoi on choisi en général d'afficher la **partie réelle** du radargramme d'un radar à pénétration de sol, afin de visualiser à la fois les variations d'amplitude et de phase.
+Le **module** pourra être utilisé pour les mesures de réflectivité.
 
 L'amplitude du spectre en sortie de la FFT sera homogène à une tension.
 
 On utilisera la méthode `fft.rfft` de `numpy`, avec une commande similaire à celle-ci :
 
 ~~~
-sounding_1_132 = np.real(np.fft.rfft(spectrum_1_132))
+sounding_1_132 = np.fft.rfft(spectrum_1_132)
 ~~~
+
+Pour obtenir la partie réelle de la série temporelle, il suffira d'utiliser la commande :
+
+~~~
+sounding_1_132_real = np.real(sounding_1_132)
+~~~
+
+Et pour le module :
+
+~~~
+sounding_1_132_real = np.abs(sounding_1_132)
+~~~
+
+**Sauf mentionné autrement, nous considèrerons dans la suite de ce TP que nous récupérons la partie réelle du signal**.
 
 |Nota Bene|
 |:-|
@@ -496,7 +511,7 @@ Il suffit d'ajouter un second paramètre en entrée pour définir le nombre d'é
 Pour obtenir une série temporelle contenant 10 fois plus d'échantillons que notre spectre, il suffit donc d'adapter votre commande Python de la manière suivante :
 
 ~~~
-sounding_1_132 = np.real(np.fft.rfft(spectrum_1_132,10*len(spectrum_1_132)))
+sounding_1_132 = np.fft.rfft(spectrum_1_132,10*len(spectrum_1_132))
 ~~~
 
 **Attention ! Il faut aussi adapter l'axe temporel qui va avec !**
@@ -563,7 +578,7 @@ Elle portent en général simplement le nom de la fenêtre, et prennent en entr�
 Voici comment adapter notre commande pour appliquer la **fenêtre de Hann** à notre spectre WISDOM avant FFT :
 
 ~~~
-sounding_1_132 = np.real(np.fft.rfft(spectrum_1_132*np.hanning(len(spectrum_1_132)),10*len(spectrum_1_132)))
+sounding_1_132 = np.fft.rfft(spectrum_1_132*np.hanning(len(spectrum_1_132)),10*len(spectrum_1_132))
 ~~~
 
 |Nota Bene|
