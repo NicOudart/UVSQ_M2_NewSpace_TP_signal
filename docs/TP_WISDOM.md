@@ -664,15 +664,15 @@ Si nous appliquons le retrait d'une moyenne horizontale à l'intégralité du ra
 
 ![Exemple de radargramme WISDOM après retrait de la moyenne](img/WISDOM_mean_removal_radargram_example.png)
 
-On voit en effet que la forme et l'intensité de l'écho de sol semblent avoir été plus ou moins impactées selon les sondages.
+On voit en effet que la forme et l'intensité de l'écho de surface semblent avoir été plus ou moins impactées selon les sondages.
 
-On pouvait le deviner : WISDOM se déplaçant à une distance quasi-constante au-dessus de la surface, l'écho de sol est très constant avec la distance parcourue.
-On s'attend donc à ce que **l'écho de sol soit impacté par le retrait d'une moyenne horizontale**.
+On pouvait le deviner : WISDOM se déplaçant à une distance quasi-constante au-dessus de la surface, l'écho de surface est très constant avec la distance parcourue.
+On s'attend donc à ce que **l'écho de surface soit impacté par le retrait d'une moyenne horizontale**.
 
 Ceci n'est pas très problématique lorsque l'on n'est intéressé que par les échos de la sous-surface.
-Mais dans la suite, nous utiliserons l'intensité de l'écho de sol pour notre interprétation.
+Mais dans la suite, nous utiliserons l'intensité de l'écho de surface pour notre interprétation.
 
-Il faudra alors faire attention de réaliser notre interprétation de l'écho de sol **avant le retrait de la moyenne horizontale !**
+Il faudra alors faire attention de réaliser notre interprétation de l'écho de surface **avant le retrait de la moyenne horizontale !**
 
 **Vous pouvez à présent compléter votre fonction `horizontal_filter`**.
 
@@ -684,7 +684,7 @@ Il faudra alors faire attention de réaliser notre interprétation de l'écho de
 
 Maintenant que les échos parasites ne gênent plus la lecture de notre radargramme du 1er traverse, on distingue bien mieux la structure du sous-sol.
 
-Par contre, plus les échos viennent de loin dans le sous-sol, plus ils sont faibles comparés à l'écho de sol...
+Par contre, plus les échos viennent de loin dans le sous-sol, plus ils sont faibles comparés à l'écho de surface...
 
 ### Gain vertical
 
@@ -726,7 +726,7 @@ avec $t_{min}$ le temps de retard à partir duquel appliquer le gain (pour compe
 
 Pour chaque colonne du radargramme, on multipliera les amplitudes reçues par le radar par le gain $G(t)$.
 
-_A votre avis, pourquoi choisir le temps de retard de l'écho de sol pour $t_{min}$ ?_
+_A votre avis, pourquoi choisir le temps de retard de l'écho de surface pour $t_{min}$ ?_
 
 _Pourquoi avoir définit un $t_{max}$ ?_
 
@@ -867,11 +867,11 @@ Pour estimer la profondeur de notre **coin de glace**, nous allons essayer d'est
 
 Nous savons que l'**écho de surface** correspond à la réflexion au niveau de l'**interface air-neige**.
 
-Dans l'hypothèse d'une interface lisse et infiniment grande à l'échelle du radar, entre 2 matériaux homogènes de **permittivité diélectrique** $\epsilon_1$ et $\epsilon_2$, vers laquelle une onde électromagnétique plane est émise perpendiculairement, le **ratio** $\Gamma$ entre l'**amplitude réfléchie** et l'**amplitude incidente**  sera égal à :
+Dans l'hypothèse d'une interface air-neige lisse et infiniment grande à l'échelle du radar, avec 2 matériaux homogènes de **permittivité diélectrique** $\epsilon_{air}$ et $\epsilon_{neige}$, vers laquelle une onde électromagnétique plane est émise perpendiculairement, le **ratio** $\Gamma_{surface}$ entre l'**amplitude réfléchie** et l'**amplitude incidente**  sera égal à :
 
-$\Gamma = \lvert\frac{\sqrt{\epsilon_2}-\sqrt{\epsilon_1}}{\sqrt{\epsilon_2}+\sqrt{\epsilon_1}}\rvert$
+$\Gamma_{surface} = \lvert\frac{\sqrt{\epsilon_{neige}}-\sqrt{\epsilon_{air}}}{\sqrt{\epsilon_{neige}}+\sqrt{\epsilon_{air}}}\rvert$
 
-Dans le cas de notre interface air-neige, nous recherchons $\epsilon_{neige}$, et nous savons que $\epsilon_{air} \approx 1$.
+Nous savons que $\epsilon_{air} \approx 1$.
 D'où le ratio :
 
 $\Gamma_{surface} = \frac{\sqrt{\epsilon_{neige}}-1}{\sqrt{\epsilon_{neige}}+1}$
@@ -882,7 +882,32 @@ $\epsilon_{neige} = \left( \frac{1+\Gamma_{surface}}{1-\Gamma_{surface}} \right)
 
 Problème : nous ne mesurons pas directement $\Gamma_{surface}$, mais l'amplitude réfléchie par la surface.
 
-Pour déterminer le ratio amplitude réfléchie / amplitude incidente, il nous faudrait connaitre l'amplitude qui serait réfléchie à la surface si elle était **parfaitement réfléchissante**, c'est-à-dire si $\Gamma = 1$.
+Pour déterminer le ratio amplitude réfléchie / amplitude incidente, il nous faudrait connaitre l'amplitude qui serait réfléchie à la surface si elle était **parfaitement réfléchissante**, c'est-à-dire si $\Gamma_{surface} = 1$.
+
+Or, nous disposons des données nécessaires pour obtenir cette information : nous avons une mesure d'**étalonnage** sur plaque métallique !
+
+Il suffira alors de mesurer le ratio entre l'amplitude **en module** de l'écho de surface et l'amplitude **en module** de l'écho sur plaque métallique pour obtenir $\Gamma_{surface}$.
+
+Ajoutons donc ce traitement à notre chaîne.
+
+|Ajoutez à votre projet Python une fonction `surface_permittivity`|
+|:-|
+|Cette section vous donne les éléments nécessaires pour la compléter.|
+|- Entrées : 4 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" et la mesure de calibration tels que retournés par la fonction `FFT`, et l'axe de temps de retard correspondant.|
+|- Sorties : les 3 valeurs permittivité diélectrique moyenne de surface, estimées pour chacun des 3 "traverses", ainsi que leurs écart-types.|
+
+Pour venir récupérer les amplitudes (en module) des échos de surface, ainsi que de la plaque métallique, vous pourrez utiliser le fait que cet écho se trouve toujours dans une même fenêtre temporelle, dont il est le maximum local.
+
+**Lorsque vous utiliserez cette fonction, il ne faudra appliquer aucun des 3 traitements d'amélioration de la lisibilité (filtrage horizontal, gain vertical, interpolation horizontale) !**
+
+Si vous appliquez votre fonction `surface_permittivity` à notre exemple, pour le 1er "traverse" vous devriez obtenir une permittivité diélectrique moyenne autour de 2.6, avec un écart-type d'environ 1.
+
+Cette valeur est cohérente avec de la **neige sèche**.
+
+|Nota Bene|
+|:-|
+|Nous pouvons utiliser la mesure d'étalonnage telle quelle, car la plaque métallique a été disposée à la même distance des antennes de WISDOM que l'interface air-neige.|
+|Si ce n'était pas le cas, il faudrait appliquer un correctif pour compenser les pertes liées à la distance.|
 
 ### Estimation de la profondeur
 
