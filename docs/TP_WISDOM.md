@@ -856,7 +856,12 @@ Ceci est cohérent avec **le passage de la couche active à la glace** (d'enviro
 
 Comme nous l'avions mentionné plus tôt, un **coin de glace** est une cible d'intérêt pour WISDOM.
 
-Si nous connaissons sa position horizontale, nous ne connaissons pas encore sa profondeur, donnée essentielle pour guider un hypothétique forage.
+Si nous connaissons sa position horizontale, nous ne connaissons pas encore sa **profondeur**, donnée essentielle pour guider un hypothétique forage.
+
+Comme nous l'avons mentionné plus tôt, pour estimer la distance parcourue par les ondes électromagnétiques dans le sous-sol, nous avons besoin de connaitre la vitesse de la lumière dans les milieux sondés.
+Et en 1ère approximation, cette vitesse est liée à la **permittivité diélectrique** des milieux.
+
+Pour estimer la profondeur de notre **coin de glace**, nous allons essayer d'estimer la **permittivité diélectrique de la neige** qui recouvrait le terrain polygonal.
 
 ### Mesure de la permittivité de surface
 
