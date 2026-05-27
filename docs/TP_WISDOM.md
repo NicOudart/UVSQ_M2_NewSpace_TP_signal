@@ -912,6 +912,9 @@ Si vous appliquez votre fonction `surface_permittivity` à notre exemple, pour l
 
 Cette valeur est cohérente avec de la **neige sèche**.
 
+_Retrouvez-vous des estimations similaires pour les 2 autres "traverses" ?_
+_A votre avis, d'où peut provenir la différence ?_
+
 |Nota Bene|
 |:-|
 |Nous pouvons utiliser la mesure d'étalonnage telle quelle, car la plaque métallique a été disposée à la même distance des antennes de WISDOM que l'interface air-neige.|
@@ -921,11 +924,11 @@ Cette valeur est cohérente avec de la **neige sèche**.
 
 Maintenant que nous disposons d'une estimation de la **permittivité diélectrique** de la couche de neige, nous pouvons essayer d'estimer **la profondeur du coin de glace**.
 
-Pour simplifier, nous considèrerons qu'entre la surface et le sommet du coin de glace, les ondes électromagnétique ne traversent que de la neige, dont la permittivité diélectrique est celle estimée plus tôt : $\epsilon_{neige} \approx 2.6$.
+Pour simplifier, nous considèrerons qu'entre la surface et le sommet du **coin de glace**, les ondes électromagnétique ne traversent **que de la neige**, dont la permittivité diélectrique est celle estimée plus tôt : $\epsilon_{neige} \approx 2.6$.
 
 Dans le cas d'un matériau non-magnétique avec de faibles pertes par absorption tel que la neige sèche, on peut approximer la vitesse de propagation des ondes électromagnétiques $v_{neige}$ par :
 
-$v_{neige} = \frac{c}{\sqrt{epsilon_{neige}}}$
+$v_{neige} = \frac{c}{\sqrt{\epsilon_{neige}}}$
 
 Pour une cible située dans la neige, la profondeur $z$ associée à son écho de temps de retard $t$ peut être approximée par :
 
@@ -935,7 +938,21 @@ avec $t_{surface}$ le temps de retard associé à l'écho de surface.
 
 Ajoutons une fonction à notre chaîne de traitement afin de déterminer un axe de profondeurs allant avec nos radargrammes.
 
+|Ajoutez à votre projet Python une fonction `subsurface_depth`|
+|:-|
+|Cette section vous donne les éléments nécessaires pour la compléter.|
+|- Entrées : la matrice `numpy` contenant l'axe des temps de retards, la permittivité diélectrique du sous-sol, et le temps de retard de l'écho de surface.|
+|- Sorties : la matrice `numpy` contenant l'axe des profondeurs estimées à partir des temps de retard.|
 
+**Vous pouvez complétez directement votre fonction `subsurface_depth` !**
+
+Si vous l'appliquez à l'axe des temps pour le radargramme du 1er "radargramme", vous pourrez réaliser l'affichage suivant :
+
+![Exemple de radargramme WISDOM avec estimation des profondeurs](img/WISDOM_depth_radargram_example.png)
+
+On en déduit que le sommet du **coin de glace** se trouve entre 1.3 et 1.4 m de profondeur.
+
+_Avec l'écart-type sur la permittivité diélectrique que vous avez mesurée pour le 1er "traverse", pouvez-vous donner une barre d'erreur à cette profondeur estimée ?_
 
 ## Exportation du résultat
 
