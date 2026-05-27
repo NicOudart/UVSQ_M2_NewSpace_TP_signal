@@ -822,6 +822,12 @@ Notre chaîne de traitement des données WISDOM est à présent assez avancée p
 
 Essayons donc d'**interpréter les échos** que nous observons dans le radargramme du 1er traverse, et d'estimer la **profondeur** des interfaces correspondantes.
 
+Nous allons ajouter à notre chaîne de traitement 2 fonctions d'interprétation : 
+
+* `surface_permittivity` pour estimer la permittivité diélectrique de la 1ère couche du sous-sol.
+
+* `subsurface_depth` pour estimer un axe de profondeurs à partir d'une estimation de la constante diélectrique du sous-sol.
+
 ### Coin de glace ?
 
 Voici l'interprétation qui a été faites par l'équipe WISDOM du radagramme du 1er traverse.
@@ -898,9 +904,11 @@ Ajoutons donc ce traitement à notre chaîne.
 
 Pour venir récupérer les amplitudes (en module) des échos de surface, ainsi que de la plaque métallique, vous pourrez utiliser le fait que cet écho se trouve toujours dans une même fenêtre temporelle, dont il est le maximum local.
 
+**Vous pouvez complétez votre fonction `surface_permittivity`.**
+
 **Lorsque vous utiliserez cette fonction, il ne faudra appliquer aucun des 3 traitements d'amélioration de la lisibilité (filtrage horizontal, gain vertical, interpolation horizontale) !**
 
-Si vous appliquez votre fonction `surface_permittivity` à notre exemple, pour le 1er "traverse" vous devriez obtenir une permittivité diélectrique moyenne autour de 2.6, avec un écart-type d'environ 1.
+Si vous appliquez votre fonction `surface_permittivity` à notre exemple, pour le 1er "traverse" vous devriez obtenir une permittivité diélectrique moyenne autour de $\epsilon_{neige} \approx 2.6$, avec un écart-type d'environ 1.
 
 Cette valeur est cohérente avec de la **neige sèche**.
 
@@ -910,6 +918,24 @@ Cette valeur est cohérente avec de la **neige sèche**.
 |Si ce n'était pas le cas, il faudrait appliquer un correctif pour compenser les pertes liées à la distance.|
 
 ### Estimation de la profondeur
+
+Maintenant que nous disposons d'une estimation de la **permittivité diélectrique** de la couche de neige, nous pouvons essayer d'estimer **la profondeur du coin de glace**.
+
+Pour simplifier, nous considèrerons qu'entre la surface et le sommet du coin de glace, les ondes électromagnétique ne traversent que de la neige, dont la permittivité diélectrique est celle estimée plus tôt : $\epsilon_{neige} \approx 2.6$.
+
+Dans le cas d'un matériau non-magnétique avec de faibles pertes par absorption tel que la neige sèche, on peut approximer la vitesse de propagation des ondes électromagnétiques $v_{neige}$ par :
+
+$v_{neige} = \frac{c}{\sqrt{epsilon_{neige}}}$
+
+Pour une cible située dans la neige, la profondeur $z$ associée à son écho de temps de retard $t$ peut être approximée par :
+
+$z = \frac{v_{neige} (t-t_{surface})}{2}$
+
+avec $t_{surface}$ le temps de retard associé à l'écho de surface.
+
+Ajoutons une fonction à notre chaîne de traitement afin de déterminer un axe de profondeurs allant avec nos radargrammes.
+
+
 
 ## Exportation du résultat
 
