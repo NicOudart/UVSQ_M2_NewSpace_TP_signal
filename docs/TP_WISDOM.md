@@ -43,7 +43,7 @@ En réalisant des sondages à mesure que le rover se déplace, on obtiendra une 
 
 * A partir des amplitudes des échos, le contraste de **propriétés électriques** à l'interface entre 2 couches du sous-sol pourra être estimé, donnant une **indication de la composition** des différentes strates (roches volcaniques, roches sédimentaires, glace, etc.).
 
-* La vitesse des ondes électromagnétiques dans un matériau dépendant en 1ère approximation de sa **permittivité diélectrique**, on pourra alors convertir les temps de retard des échos en **profondeurs** des interfaces.
+* La vitesse des ondes électromagnétiques dans un matériau dépendant en 1ère approximation de sa **permittivité diélectrique** $\epsilon$, on pourra alors convertir les temps de retard des échos en **profondeurs** des interfaces.
 
 Il est prévu que WISDOM réalise des sondages **à intervalles réguliers** de 10 cm le long de **lignes droites**, un opération que l'on appelle "**traverses**".
 Ainsi, les sondages obtenus permettront de visualiser une "coupe" du sous-sol le long de cet axe.
@@ -824,7 +824,39 @@ Essayons donc d'**interpréter les échos** que nous observons dans le radargram
 
 ### Coins de glace ?
 
+Voici l'interprétation qui a été faites par l'équipe WISDOM du radagramme du 1er traverse.
+
+Nous savons que le 15/03/2022 la surface était recouverte de **neige**.
+Cette neige est visiblement **stratifiée**, puisque nous voyons quelques échos juste après la surface.
+
+Ensuite, nous distinguons les **sillons** de chaque côté du **polygone**, au alentours de 6 et de 20 m de distance horizontale.
+Celui à 20 m est le plus visible, avec echos plongeants de 15 à 20 m, puis remontant de 20 à 23 m.
+
+Le **fond du sillon** ressort particulièrement à 20 m de distance horizontale, comme un écho à un temps de retard d'environ 26 ns.
+Pour le sillon à 6 m, l'écho de fond existe mais est plus dur à visualiser, il faut augmenter le contraste du radargramme pour le distinguer.
+
+On peut facilement montrer par simulation numérique que l'on s'attend à ce que WISDOM observe un tel écho quasi "ponctuel" au fond d'un sillon.
+Ceci est lié à la concavité du fond du sillon.
+
+Nous ne distinguons pas clairement ici l'interface entre la **couche active** (zone du sous-sol qui dégèle en été) et le **pergélisol** (zone du sous-sol gelée en permanence), ce qui tend à indiquer qu'il n'y a pas d'interface claire entre les deux.
+Ceci est plausible à cette période de l'année, où la couche active est encore gelée.
+
+Enfin, en-dessous de l'écho du fond du sillon à 20 m de distance horizontale, on observe un 2nd écho intense.
+Cet écho a été interprété comme correspondant au sommet d'un **coin de glace**.
+
 ![Interprétation du radargramme du traverse 1](img/Ice_wedge_polygon_interpretation.png)
+
+Cette théorie est cohérente avec le contexte géologique, a été étayée par des simulations numériques, et est compatible avec les changements de phases des échos observés.
+
+En effet, on voit que le pic de l'écho du fond du sillon est négatif, ce qui correspond au déphasage attendu pour le passage d'un milieu de permittivité diélectrique plus faible à plus élevée.
+Ceci est cohérent avec **le passage de la neige à la couche active** (d'environ $\epsilon \approx 2$ à $\epsilon \approx 7$).
+
+On voit que le pic de l'écho en dessous est positif, ce qui correspond au déphasage attendu pour le passage d'un milieu de permittivité diélectrique plus élevée à plus faible.
+Ceci est cohérent avec **le passage de la couche active à la glace** (d'environ $\epsilon \approx 7$ à $\epsilon \approx 3$).
+
+Comme nous l'avions mentionné plus tôt, un **coin de glace** est une cible d'intérêt pour WISDOM.
+
+Si nous connaissons sa position horizontale, nous ne connaissons pas encore sa profondeur, donnée essentielle pour guider un hypothétique forage.
 
 ### Mesure de la permittivité de surface
 
