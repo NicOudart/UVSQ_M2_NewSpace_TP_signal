@@ -865,6 +865,25 @@ Pour estimer la profondeur de notre **coin de glace**, nous allons essayer d'est
 
 ### Mesure de la permittivité de surface
 
+Nous savons que l'**écho de surface** correspond à la réflexion au niveau de l'**interface air-neige**.
+
+Dans l'hypothèse d'une interface lisse et infiniment grande à l'échelle du radar, entre 2 matériaux homogènes de **permittivité diélectrique** $\epsilon_1$ et $\epsilon_2$, vers laquelle une onde électromagnétique plane est émise perpendiculairement, le **ratio** $\Gamma$ entre l'**amplitude réfléchie** et l'**amplitude incidente**  sera égal à :
+
+$\Gamma = \lvert\frac{\sqrt{\epsilon_2}-\sqrt{\epsilon_1}}{\sqrt{\epsilon_2}+\sqrt{\epsilon_1}}\rvert$
+
+Dans le cas de notre interface air-neige, nous recherchons $\epsilon_{neige}$, et nous savons que $\epsilon_{air} \approx 1$.
+D'où le ratio :
+
+$\Gamma_{surface} = \frac{\sqrt{\epsilon_{neige}}-1}{\sqrt{\epsilon_{neige}}+1}$
+
+On en déduit aisément que :
+
+$\epsilon_{neige} = \left( \frac{1+\Gamma_{surface}}{1-\Gamma_{surface}} \right)^2$
+
+Problème : nous ne mesurons pas directement $\Gamma_{surface}$, mais l'amplitude réfléchie par la surface.
+
+Pour déterminer le ratio amplitude réfléchie / amplitude incidente, il nous faudrait connaitre l'amplitude qui serait réfléchie à la surface si elle était **parfaitement réfléchissante**, c'est-à-dire si $\Gamma = 1$.
+
 ### Estimation de la profondeur
 
 ## Exportation du résultat
