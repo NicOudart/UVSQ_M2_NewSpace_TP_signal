@@ -822,7 +822,7 @@ Notre chaîne de traitement des données WISDOM est à présent assez avancée p
 
 Essayons donc d'**interpréter les échos** que nous observons dans le radargramme du 1er traverse, et d'estimer la **profondeur** des interfaces correspondantes.
 
-### Coins de glace ?
+### Coin de glace ?
 
 Voici l'interprétation qui a été faites par l'équipe WISDOM du radagramme du 1er traverse.
 
@@ -849,10 +849,10 @@ Cet écho a été interprété comme correspondant au sommet d'un **coin de glac
 Cette théorie est cohérente avec le contexte géologique, a été étayée par des simulations numériques, et est compatible avec les changements de phases des échos observés.
 
 En effet, on voit que le pic de l'écho du fond du sillon est négatif, ce qui correspond au déphasage attendu pour le passage d'un milieu de permittivité diélectrique plus faible à plus élevée.
-Ceci est cohérent avec **le passage de la neige à la couche active** (d'environ $\epsilon \approx 2$ à $\epsilon \approx 7$).
+Ceci est cohérent avec **le passage de la neige à la couche active** (de $\epsilon \approx 2$ à $\epsilon \approx 7$).
 
 On voit que le pic de l'écho en dessous est positif, ce qui correspond au déphasage attendu pour le passage d'un milieu de permittivité diélectrique plus élevée à plus faible.
-Ceci est cohérent avec **le passage de la couche active à la glace** (d'environ $\epsilon \approx 7$ à $\epsilon \approx 3$).
+Ceci est cohérent avec **le passage de la couche active à la glace** (de $\epsilon \approx 7$ à $\epsilon \approx 3$).
 
 Comme nous l'avions mentionné plus tôt, un **coin de glace** est une cible d'intérêt pour WISDOM.
 
