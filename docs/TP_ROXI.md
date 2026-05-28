@@ -871,7 +871,7 @@ Ensuite, vous pouvez créer un fichier HDF5 avec `h5py`, en initialisant un obje
 Par exemple :
 
 ~~~
-hf = h5py.File(".../WISDOM_20220315.h5",'w')
+hf = h5py.File(".../Level2_ROXI_11082020_161206.h5",'w')
 ~~~
 
 On peut alors ajouter à notre fichier des "Datasets" avec la méthode `create_dataset`.
@@ -888,7 +888,7 @@ hf.create_dataset("elevation_axis",data=elevation_axis)
 
 **Vous pouvez compléter votre fonction `save` !**
 
-Appliquez-la à notre exemple de données, et essayer d'importer dans Python le fichier HDF5 que vous avez créé, afin de vérifier que votre fonction marche bien.
+Appliquez-la à notre exemple de données, et essayez d'importer dans Python le fichier HDF5 que vous avez créé, afin de vérifier que votre fonction marche bien.
 
 ## Conclusion
 

@@ -200,7 +200,7 @@ La 1ère étape de notre de chaîne traitement sera d'importer les données WISD
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
 |- Entrées :  le chemin d'un fichier HDF5.|
-|- Sorties : 9 matrices `numpy`, correspondants aux 9 "Datasets" contenus dans le fichier.|
+|- Sorties : 9 matrices `numpy`, correspondant aux 9 "Datasets" contenus dans le fichier.|
 
 Pour lire et écrire un fichier HDF5, nous utiliserons la bibliothèque Python `h5py`.
 
@@ -524,7 +524,7 @@ En appliquant la FFT avec "zero-padding" au 103ème sondage du 1er traverse, vou
 
 ![Exemple de sondage WISDOM après zero-padding](img/WISDOM_zeropadding_time_series_example.png)
 
-On observe bien ce que l'on attendait : le temps de retard des "pics" correspondants aux impulsions reçues sont beaucoup plus facile à lire.
+On observe bien ce que l'on attendait : le temps de retard des "pics" correspondant aux impulsions reçues sont beaucoup plus facile à lire.
 
 Mais il est clair que ces pics étaient déjà visibles sur le spectre à 1001 échantillons, et que nous n'en avons pas fait apparaitre de nouveaux.
 Nous n'avons donc apporté aucune information spectrale, juste interpolé le spectre.
@@ -776,7 +776,7 @@ C'est pourquoi l'équipe WISDOM ajoute en général à la chaîne de traitement 
 |Ajoutez à votre projet Python une fonction `horizontal_interpolation`|
 |:-|
 |Cette section vous donnera les éléments nécessaires pour la compléter.|
-|- Entrées : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" tels que retournés par la fonction `FFT`, et les 3 axes de distances horizontales correspondants.|
+|- Entrées : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" tels que retournés par la fonction `FFT`, et les 3 axes de distances horizontales correspondant.|
 |- Sorties : 3 matrices `numpy` contenant les 3 radargrammes des 3 "traverses" après interpolation horizontale, et les 3 axes de distances horizontales correspodants.|
 
 Pour réaliser cette interpolation, nous allons utiliser la très classique méthode des "**splines cubiques**".
@@ -913,7 +913,7 @@ Si vous appliquez votre fonction `surface_permittivity` à notre exemple, pour l
 Cette valeur est cohérente avec de la **neige sèche**.
 
 _Retrouvez-vous des estimations similaires pour les 2 autres "traverses" ?_
-_A votre avis, d'où peut provenir la différence ?_
+_A votre avis, d'où peut provenir la différence ? Tracez l'estimation de $\epsilon_{neige}$ en fonction de la distance horizontale pour vérifier.$_
 
 |Nota Bene|
 |:-|
@@ -946,7 +946,7 @@ Ajoutons une fonction à notre chaîne de traitement afin de déterminer un axe 
 
 **Vous pouvez complétez directement votre fonction `subsurface_depth` !**
 
-Si vous l'appliquez à l'axe des temps pour le radargramme du 1er "radargramme", vous pourrez réaliser l'affichage suivant :
+Si vous l'appliquez à l'axe des temps pour le 1er "traverse", puis que vous appliquez la chaîne de traitement complète pour obtenir le radargramme, vous pourrez réaliser l'affichage suivant :
 
 ![Exemple de radargramme WISDOM avec estimation des profondeurs](img/WISDOM_depth_radargram_example.png)
 
@@ -954,7 +954,70 @@ On en déduit que le sommet du **coin de glace** se trouve entre 1.3 et 1.4 m de
 
 _Avec l'écart-type sur la permittivité diélectrique que vous avez mesurée pour le 1er "traverse", pouvez-vous donner une barre d'erreur à cette profondeur estimée ?_
 
+En utilisant $\epsilon_{neige} = 2.6$ pour les 3 "traverses" de l'opération de "grid" WISDOM de notre exemple, on obtient les 3 radargrammes suivants, avec estimations de profondeur :
+
+![Exemple de radargrammes d'une "grid" WISDOM](img/WISDOM_radargrams_grid_example.png)
+
+On voit que la pronfondeur des 2 sillons visibles du polygone varie assez peu d'un "traverse" à l'autre.
+Par contre, le **coin de glace** n'est clairement visible que sur le 1er traverse.
+
+Si nous devions choisir un **site de forage**, nous choisirions donc le 1er "traverse", à environ 20 m de distance horizontale.
+Il faudrait forer jusqu'à environ 1.3 m de profondeur pour atteindre le sommet du **coin de glace**, ce qui est largement atteignable par la foreuse d'ExoMars qui pourra atteindre 2 m de profondeur.
+
 ## Exportation du résultat
+
+Pour terminer notre chaîne de traitement, nous allons ajouter une fonction pour l'**export** des données traitées, sous la forme d'un **fichier HDF5**.
+
+|Ajoutez à votre projet Python une fonction `save`|
+|:-|
+|Cette section vous donnera les éléments nécessaires pour la compléter.|
+|- Entrées : 3 matrices `numpy` contenant les 3 radargrammes de la "grid", 3 matrices `numpy` contenant les axes de distance correspondant, 3 matrices `numpy` contenant les axes de profondeur correspondant.|
+|- Elle enregistrera un fichier HDF5 contenant 3 "Groups" (un par "traverse"), chacun contenant un radargramme et ses axes sous la forme de "Datasets".|
+
+Pour enregistrer un fichier HDF5 contenant les sorties de notre chaîne de traitement, nous utiliserons encore une fois `h5py`.
+N'oubliez donc pas de l'importer :
+
+~~~
+import h5py
+~~~
+
+Ensuite, vous pouvez créer un fichier HDF5 avec `h5py`, en initialisant un objet `File`.
+Par exemple :
+
+~~~
+hf = h5py.File(".../Level2_WISDOM_20220315.h5",'w')
+~~~
+
+On peut alors ajouter à notre fichier des "Groups" avec la méthode `create_group`.
+Elle prend en entrée le nom du "Group" à créer.
+
+Ensuite, on peut ajouter à nos "Groups" des "Datasets" avec la méthode `create_dataset` que nous avons déjà vue au TP précédent.
+
+Voici un exemple de commandes Python pour sauvegarder les sorties du 1er "traverse" :
+
+~~~
+group1 = hf.create_group("traverse_1")
+group1.create_dataset("radargram",data=mat_radargram_1)
+group1.create_dataset("horizontal_distance_axis",data=distance_axis_1)
+group1.create_dataset("depth_axis",data=depth_axis_1)
+~~~
+
+avec `depth_axis_1` l'axe des profondeurs déterminé pour le 1er "traverse".
+
+**Vous pouvez compléter votre fonction `save` !**
+
+Appliquez-la à notre exemple de données, et essayez d'importer dans Python le fichier HDF5 que vous avez créé, afin de vérifier que votre fonction marche bien.
 
 ## Conclusion
 
+**Vous disposez à présent d'une chaîne de traitement complète pour les données de WISDOM !**
+
+_Pourriez-vous tracer un schéma-bloc de la chaîne de traitement que vous venez de programmer en Python ?_
+
+Servez-vous de ce schéma pour ajouter à votre projet Python un **script d'exemple**, appliquant toute votre chaîne de traitement à un fichier HDF5 de données WISDOM.
+
+---
+
+Cet exemple était encore une fois un prétexte pour vous faire découvrir des outils de traitement de données, et les appliquer à un exemple réalistes de données instrumentales.
+
+Lors des TP suivants nous verrons des outils d'**analyse de données**, pour de la classification supervisée et non-supervisée.
