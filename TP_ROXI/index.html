@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Nicolas OUDART" /><link rel="canonical" href="https://nicoudart.github.io/UVSQ_M2_NewSpace_TP_signal/TP_ROXI/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>TP ROXI - UVSQ_M2_NewSpace_TP_signal</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "TP ROXI";
+        var mkdocs_page_input_path = "TP_ROXI.md";
+        var mkdocs_page_url = "/UVSQ_M2_NewSpace_TP_signal/TP_ROXI/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> UVSQ_M2_NewSpace_TP_signal
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Accueil</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">TP ROXI</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#contexte-scientifique">Contexte scientifique</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#objectifs">Objectifs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#importation-des-donnees">Importation des données</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#le-format-hdf5">Le format HDF5</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exemple-de-donnees-roxi">Exemple de données ROXI</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#lecture-du-fichier">Lecture du fichier</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#analyse-spectrale">Analyse spectrale</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#nature-des-donnees">Nature des données</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fft-avec-numpy">FFT avec Numpy</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fftshift-et-db">FFTshift et dB</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reduction-du-bruit">Réduction du bruit</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#integration-coherente">Intégration cohérente</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#integration-incoherente">Intégration incohérente</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#filtrage">Filtrage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#ground-clutter">Ground clutter</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#filtre-median">Filtre médian</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#spectrogramme">Spectrogramme</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interpretation-meteorologique">Interprétation météorologique</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#conversion-en-elevations-et-vitesses-verticales">Conversion en élévations et vitesses verticales</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#modelisation-gaussienne">Modélisation Gaussienne</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#estimation-de-z">Estimation de Z</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#profils-de-z-et-vdop">Profils de Z et VDop</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exportation-du-resultat">Exportation du résultat</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../TP_WISDOM/">TP WISDOM</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">UVSQ_M2_NewSpace_TP_signal</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">TP ROXI</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="roxi-radar-meteorologique-pour-letude-de-la-pluie">ROXI : radar météorologique pour l'étude de la pluie</h1>
+<p><img alt="En-tête TP ROXI" src="../img/Header_TP_ROXI.png" /></p>
+<p><em>"Rob McKenna had 231 different types of rain entered in his little book, and he didn't like any of them. [...] Since he had left Denmark the previous afternoon, he had been through types 33 (light pricking drizzle which made the roads slippery), 39 (heavy spotting), 47 to 51 (vertical light drizzle through to sharply slanting light to moderate drizzle freshening), 87 and 88 (two finely distinguished varieties of vertical torrential downpour), 100 (post-downpour squalling, cold), all the seastorm types between 192 and 213 at once, 123, 124, 126, 127 (mild and intermediate cold gusting, regular and syncopated cab-drumming), 11 (breezy droplets), and now his least favourite of all, 17."</em></p>
+<p><strong>Douglas Adams, So Long and Thanks for All the Fish (1984)</strong></p>
+<hr />
+<h2 id="contexte-scientifique">Contexte scientifique</h2>
+<p><strong>ROXI</strong> est un <strong>radar météorologique</strong> en développement au LATMOS depuis 2016.
+Fonctionnant en bande X (à une fréquence de 9,42 GHz), il est conçu pour l'<strong>étude des précipitations</strong>.</p>
+<p><img alt="Illustration ROXI" src="../img/ROXI_illustration.png" /></p>
+<p>ROXI est à <strong>visée zénithale</strong> : son antenne est orientée vers le zénith, dans le but d'acquérir des "<strong>profils verticaux</strong>" des propriétés des précipitations en fonction de l'élévation.
+Ces profils sont acquis à intervalles de temps réguliers, afin de suivre l'évolution temporelle d'un évènement de précipitations.</p>
+<p>Il s'agit d'un radar <strong>impulsionnel</strong> : il émet une impulsion électromagnétique vers le zénith, et réceptionne les échos provenant des gouttes de pluie ou des cristaux de glace rencontrés par l'impulsion.</p>
+<ul>
+<li>
+<p>Le temps de retard entre l'émission de l'impulsion et la réception des échos permettra de déterminer leur <strong>distance au radar</strong> (correspondant ici à l'élévation).</p>
+</li>
+<li>
+<p>La durée de l'impulsion définira alors la <strong>résolution verticale</strong> de l'instrument.</p>
+</li>
+<li>
+<p>La puissance des échos reçus comparée à la puissance de l'impulsion émise permettra d'estimer la <strong>réflectivité</strong> des hydrométéores, une information utile pour déterminer la <strong>phase</strong> (liquide ou solide) et l'<strong>intensité</strong> (taux de pluie) des précipitations.</p>
+</li>
+</ul>
+<p>Il s'agit également d'un radar <strong>Doppler</strong> : en réalité il réalise des milliers d'émissions d'impulsion en quelques secondes, afin d'estimer la vitesse des cibles par <strong>effet Doppler</strong>.
+En effet, la différence entre les signaux acquis pour une même élévation mais pour des émissions d'impulsion différentes, est liée au mouvement des hydrométéores, et permet donc de discriminer leurs différentes <strong>vitesses de chute</strong>. 
+Cette information est liée au diamètre et à la phase des hydrométéores, permettant ainsi la caractérisation de la <strong>microphysique</strong> des précipitations.</p>
+<ul>
+<li>
+<p>Le taux de répétition entre 2 émissions d'impulsion définira la <strong>portée maximale</strong> de l'instrument (l'élévation maximale mesurable).</p>
+</li>
+<li>
+<p>Le temps entre 2 émissions d'impulsions, le nombre d'impulsions d'affilée, ainsi que la longueur d'onde du radar définiront la résolution en vitesses et la <strong>vitesse ambigue</strong> (vitesse maximale mesurable) du radar.
+Nous détaillerons comment dans la suite.</p>
+</li>
+</ul>
+<p><img alt="Animation ROXI" src="../img/ROXI_animation.gif" /></p>
+<p>Les données d'un profil de radar impulsionnel Doppler comme ROXI ressemblent donc à une matrice 2D :</p>
+<p><img alt="Données d'un radar Doppler" src="../img/Doppler_radar_data_schematic.png" /></p>
+<ul>
+<li>
+<p>Chaque élément de la matrice est un <strong>nombre complexe</strong> I/Q (In-phase / Quadrature-phase) contenant les informations d'<strong>amplitude</strong> et de <strong>phase</strong> des échos reçus pour un temps de retard et une émission d'impulsion donnée.</p>
+</li>
+<li>
+<p>L'axe vertical correspond aux temps de retard des échos pour une émission d'impulsion donnée, aussi appelé "<strong>fast-time</strong>".</p>
+</li>
+<li>
+<p>L'axe horizotal correspond aux temps entre 2 répétitions d'impulsion, aussi appelé "<strong>slow-time</strong>".</p>
+</li>
+</ul>
+<p>Pour chaque niveau d'élévation, nous pouvons obtenir par analyse spectrale une présentation de la puissance reçue par le radar en fonction de la vitesse Doppler mesurée, appelée <strong>spectre Doppler</strong>.</p>
+<p>Ces spectres peuvent ensuite être concaténés verticalement afin d'obtenir une représentation sous la forme d'une image appelée <strong>spectrogramme Doppler</strong>.</p>
+<p><img alt="Analyse spectrale Doppler" src="../img/Doppler_spectral_analysis_schematic.png" /></p>
+<p>On peut voir chaque spectre Doppler comme la distribution des puissances reçues par le radar par rapport à la vitesse des hydrométéores au sein d'un volume sondé.
+Il est courant d'essayer de modéliser cette distribution par un modèle Gaussien, afin d'en tirer 2 caractéristiques des précipitations : leur réfléctivité totale <strong>Z</strong>, et leur vitesse moyenne <strong>VDop</strong>.</p>
+<p>De ces caractéristiques pourrons être inférées des <strong>grandeurs météorologiques</strong> d'intérêt : le régime de précipitation, sa phase, son intensité, etc.</p>
+<p>Voici les caractéristiques du radar ROXI :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Caractéristique</th>
+<th style="text-align: center;">Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Fréquence d'émission</td>
+<td style="text-align: center;">9.42 GHz</td>
+</tr>
+<tr>
+<td style="text-align: center;">Puissance d'émission</td>
+<td style="text-align: center;">70 W</td>
+</tr>
+<tr>
+<td style="text-align: center;">Gain de l'antenne</td>
+<td style="text-align: center;">41 dBi</td>
+</tr>
+<tr>
+<td style="text-align: center;">Durée de l'impulsion</td>
+<td style="text-align: center;">666.67 ns</td>
+</tr>
+<tr>
+<td style="text-align: center;">Période de répétition d'impulsion</td>
+<td style="text-align: center;">682.67 µs</td>
+</tr>
+<tr>
+<td style="text-align: center;">Nombre d'impulsions par profil</td>
+<td style="text-align: center;">4096</td>
+</tr>
+<tr>
+<td style="text-align: center;">Distance ambiguë</td>
+<td style="text-align: center;">12.8 km</td>
+</tr>
+<tr>
+<td style="text-align: center;">Vitesse ambiguë</td>
+<td style="text-align: center;">11.66 m/s</td>
+</tr>
+</tbody>
+</table>
+<p>Pour plus d'informations : <a href="https://roxi.projet.latmos.ipsl.fr">site de ROXI</a>.</p>
+<h2 id="objectifs">Objectifs</h2>
+<p>Lors de ce tutoriel, nous allons programmer une <strong>chaîne de traitement des données de ROXI</strong> sous la forme d'un <strong>projet Python</strong>, que nous utiliserons pour obtenir une <strong>interprétation météorologique</strong> classique.</p>
+<p>Ce projet Python devra contenir des fonctions pour :</p>
+<ul>
+<li>
+<p>Importer des données ROXI à partir d'un fichier HDF5 tel que celui qui vous sera fourni.</p>
+</li>
+<li>
+<p>Convertir en spectres Doppler les données I+Q acquises par le radar.</p>
+</li>
+<li>
+<p>Réaliser une intégration incohérente des spectres obtenus pour réduire le bruit.</p>
+</li>
+<li>
+<p>Appliquer un filtre "anti-clutter" aux spectres intégrés.</p>
+</li>
+<li>
+<p>Ajuster un modèle Gaussien aux spectres Doppler pour en déduire Z et VDop.</p>
+</li>
+<li>
+<p>Exporter les estimations de Z et VDop obtenues sous la forme d'un fichier HDF5.</p>
+</li>
+</ul>
+<p>Créez le dossier de votre projet, et structurez-le avec des sous-dossiers et des fichiers vides pour l'instant.</p>
+<p><strong>Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Il est à noter que notre exemple ici a été grandement simplifié pour les besoins de ce TP.</td>
+</tr>
+<tr>
+<td style="text-align: left;">En particulier, l'estimation de Z, qui nécessite normalement une réelle calibration du radar pour compenser tous les effets instrumentaux.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="importation-des-donnees">Importation des données</h2>
+<h3 id="le-format-hdf5">Le format HDF5</h3>
+<p>Lors de ce TP, nous partirons du principe que les données ROXI sont mises sous la forme de fichiers <strong>HDF5</strong>.</p>
+<p>Le "Hierarchical Data Format" est un format de fichiers utilisé pour <strong>stocker de grandes quantités d'informations</strong> de manière organisée et accessible efficacement.
+C'est pourquoi il est très classique en analyse de données.</p>
+<p>Comme son nom l'indique, les données sont stockées hiérarchiquement, à la manière de l'arborescence d'un dossier sur votre ordinateur.
+L'équivalent d'un dossier dans un fichier HDF5 est ce que l'on appelle un "<strong>Group</strong>".
+On peut alors ranger les données dans des Groups, voir même dans des sous-Groups d'un Group.</p>
+<p>Les données stockées sont enregistrées sous la forme de tableaux, que l'on appelle des "<strong>Datasets</strong>".</p>
+<p>On peut également stocker des métadonnées, sous la forme "d'<strong>Attributes</strong>".</p>
+<p>Nous verrons comment lire un fichier HDF5 avec Python, puis comment exporter des données dans ce format, grâce à la bibliothèque <code>h5py</code>.</p>
+<h3 id="exemple-de-donnees-roxi">Exemple de données ROXI</h3>
+<p>Vous trouverez un exemple de fichier de <strong>données ROXI</strong> au format <strong>HDF5</strong> <a href="https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/ROXI_20200811_161206.h5">ici</a>.</p>
+<p>On considérera qu'un fichier de données ROXI contient toujours les 3 "Datasets" suivants, directement à la racine :</p>
+<ul>
+<li>
+<p><code>I+Q</code> : une matrice de dimensions 4x128x4096, correspondant à <strong>4 profils</strong> acquis d'affilée, contenant chacun <strong>128 échantillons fast-time</strong> pour <strong>4096 échantillons slow-time</strong>.
+Chaque élément de la matrice est donc un nombre complexe I/Q mesuré par le radar (homogène à des volts).
+Ces 4 profils étant acquis sur un lapse de temps très court, on peut considérer qu'il s'agit de 4 répétitions d'un même profil.</p>
+</li>
+<li>
+<p><code>fast_time_axis</code> : un vecteur de dimension 128, contenant les temps de retard des échos (s), correspondants aux <strong>128 échantillons fast-time</strong>.</p>
+</li>
+<li>
+<p><code>slow_time_axis</code> : un vecteur de dimension 4096, contenant les temps d'émission des impulsions (s), correspondants aux <strong>4096 échantillons slow-time</strong>.</p>
+</li>
+</ul>
+<p>Ces données ont été acquises le <strong>11/08/2020</strong> à <strong>16:12:06 UTC</strong> sur le site de l'<strong>Observatoire de Versailles Saint-Quentin</strong> (OVSQ), à Guyancourt.</p>
+<p>Il s'agit d'une observation d'un <strong>orage multicellulaire</strong> survenu à la fin de la canicule d'août 2020.
+Une vague chaleur atteignant les 38°C, ainsi qu'une forte humidité dans les basses couches atmosphériques ont favorisé la formation de cet évènement convectif, qui a duré de 12:30 à 18:00 UTC, avec des hydrométéores détectés jusqu'à 12 km d'élévation.
+Si son intensité est restée relativement modérée au-dessus de Guyancourt, de violentes averses ont été enregistrées localement en région parisienne, notamment en Essonne.</p>
+<p>Voici une animation Météo-France de l'évènement, avec les taux de précipitations estimés en mm/h :</p>
+<p><img alt="Animation orage Météo-France" src="../img/Thunderstorm_meteofrance_animation.gif" /></p>
+<p>Ce fichier nous servira d'exemple pour construire notre <strong>chaîne de traitement des données ROXI</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">En réalité, les données ROXI n'étant pas très lourdes, elles sont enregistrées dans des fichiers binaires qui ne sont pas au format HDF5.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Un fichier ROXI contient également des métadonnées qui ne vous sont pas fournies ici.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pour les besoins de ce TP, nous avons donc fait en sorte de vous faire découvrir un format utile, et simplifié le contenu des données ROXI.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lecture-du-fichier">Lecture du fichier</h3>
+<p>La 1ère étape de notre de chaîne traitement sera d'importer les données ROXI d'un fichier HDF5.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>read</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées :  le chemin d'un fichier HDF5.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 3 matrices <code>numpy</code>, correspondants aux 3 "Datasets" contenus dans le fichier.</td>
+</tr>
+</tbody>
+</table>
+<p>Pour lire et écrire un fichier HDF5, nous utiliserons la bibliothèque Python <code>h5py</code>.</p>
+<p>Nous convertirons les "Datasets" contenus dans un fichier en matrices <code>numpy</code>.</p>
+<p>N'oubliez donc pas d'importer ces 2 bibliothèques avec les commandes suivantes :</p>
+<pre><code>import h5py
+import numpy as np
+</code></pre>
+<p>Pour importer un fichier HDF5 avec <code>h5py</code>, on crée un objet <code>File</code>.</p>
+<p>Voici ce que cela donnerait sur notre exemple :</p>
+<pre><code>hf = h5py.File(&quot;.../ROXI_20200811_161206.h5&quot;,'r')
+</code></pre>
+<p>On peut alors récupérer les différents "Datasets" contenus dans le fichier avec la méthode <code>get</code> et leurs noms.
+On oubliera pas de convertir en matrices <code>numpy</code> les "Datasets" récupérés.</p>
+<p>Voici ce que pourrait donner la récupération des 3 "Datasets" d'un fichier ROXI :</p>
+<pre><code>mat_iq = np.array(hf.get('I+Q'))
+fast_time_axis = np.array(hf.get('fast_time_axis'))
+slow_time_axis = np.array(hf.get('slow_time_axis'))
+</code></pre>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>read</code></strong>.</p>
+<p>Appliquez votre fonction à notre fichier exemple.</p>
+<p><em>Les dimensions des matrices récupérées sont-elles bien celles attendues ? Le type des données également ?</em></p>
+<h2 id="analyse-spectrale">Analyse spectrale</h2>
+<p>La 2nde étape de notre de chaîne traitement sera de générer des spectres à partir des données ROXI récupérées.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>FFT</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 3 matrices <code>numpy</code> telles que retournées par la fonction <code>read</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 2 matrices <code>numpy</code>, une contenant les 4 spectrogrammes Doppler correspondant aux 4 profils, et l'autre l'axe des fréquences correspondant à ces spectrogrammes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nature-des-donnees">Nature des données</h3>
+<p>Dans un 1er temps, nous allons nous intéresser à la nature des données dont nous disposons.</p>
+<p>Importez la bibliothèque <code>matplotlib</code>, qui va nous servir à faire des affichages graphiques :</p>
+<pre><code>import matplotlib.pyplot as plt
+</code></pre>
+<p>Essayons tout d'abord d'afficher une série temporelle "slow-time" issue de nos données.</p>
+<p>Prenons le 1er profil, et regardons la série temporelle "slow-time" pour le niveau du 11ème échantillon "fast-time".
+Affichons les parties réelle et imaginaire du signal avec des commandes Python de ce genre :</p>
+<pre><code>plt.figure()
+plt.plot(slow_time_axis,np.real(mat_iq[0][10]),'r-')
+plt.plot(slow_time_axis,np.imag(mat_iq[0][10]),'g-')
+plt.xlabel('Slow-time (s)')
+plt.ylabel('Unicalibrated voltage (V)')
+plt.title('I+Q - acquisition 0 - fast-time level 10')
+plt.grid()
+plt.show()
+</code></pre>
+<p>On obtient alors la courbe suivante :</p>
+<p><img alt="Exemple de données I+Q" src="../img/ROXI_I%2BQ_example.png" /></p>
+<p>Si on fait un zoom sur une partie de la courbe, on voit qu'il s'agit d'un <strong>signal périodique</strong> :</p>
+<p><img alt="Zoom sur les données I+Q" src="../img/ROXI_I%2BQ_example_zoomed.png" /></p>
+<p>Ces oscillations correspondent aux décalages de fréquence par effet Doppler, liés aux mouvements verticaux des hydrométéores dans le volume sondé (au niveau du 11ème échantillon "fast-time").
+Tous les hydrométéores n'ayant pas la même vitesse verticale, et la même réfléctivé radar, ce signal est une <strong>somme de sinusoïdes complexes</strong>, dont la fréquence est d'autant plus grande que la vitesse est élevée.</p>
+<p>D'où l'intérêt de vouloir réaliser une <strong>analyse spectrale</strong> de ce signal, afin de séparer les différents décalages de fréquence Doppler, et la puissance associée à chacun.</p>
+<p>Avant de réaliser cette analyse, posez-vous les questions suivantes :</p>
+<ul>
+<li>
+<p><em>Quelle fréquence Doppler maximale peut mesurer ROXI ?</em></p>
+</li>
+<li>
+<p><em>Quelle est la résolution en fréquence de ROXI ?</em></p>
+</li>
+<li>
+<p><em>Retrouvez-vous bien la durée de d'une impulsion et la période de répétition d'impulsion de ROXI ?</em></p>
+</li>
+</ul>
+<p>Répondez-y en vous appuyant sur les axes "fast-time" et "slow-time" que vous avez récupérés.</p>
+<h3 id="fft-avec-numpy">FFT avec Numpy</h3>
+<p>Pour réaliser l'analyse spectrale des séries temporelles "slow-time" de ROXI, nous allons utiliser la "<strong>Fast Fourier Transform</strong>".
+Il s'agit d'un algorithme calculant la transformée de Fourier discrète de manière significativement plus rapide que la méthode naïve.</p>
+<p>La bibliothèque <code>numpy</code> contient une implémentation de la FFT.</p>
+<p>N'oubliez donc pas d'importer cette bibliothèque :</p>
+<pre><code>import numpy as np
+</code></pre>
+<p>Pour déterminer l'axe des fréquences qui ira avec nos spectres Doppler, on peut utiliser la méthode <code>fft.fftfreq</code> de <code>numpy</code>.
+Cette méthode prend en entrée la longueur de l'axe temporel du signal à analyser, et le pas temporel correspondant.</p>
+<p>On pourra donc utiliser des commandes Python de ce genre :</p>
+<pre><code>slow_time_dt = slow_time_axis[1]-slow_time_axis[0]
+frequency_axis = np.fft.fftfreq(len(slow_time_axis),d=slow_time_dt)
+</code></pre>
+<p>La sortie d'une transformée de Fourier est une série de <strong>nombres complexes</strong>, contenant les informations d'<strong>amplitude</strong> et de <strong>phase</strong> du spectre.</p>
+<p>L'information de phase n'est généralement pas exploitée, car elle ne contient pas d'information physique intéressante.
+L'amplitude en revanche permet d'estimer la puissance reçue pour chaque décalage de fréquence Doppler.</p>
+<p>L'amplitude du spectre en sortie de la FFT sera homogène à une tension.
+Pour obtenir une grandeur homogène à une <strong>puissance</strong>, nous prendrons son module, et nous le mettrons au carré.</p>
+<p>On utilisera la méthode <code>fft.fft</code> de <code>numpy</code>, avec une commande similaire à celle-ci :</p>
+<pre><code>spectrum_0_10 = np.abs(np.fft.fft(mat_iq[0][10]))**2
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Les puissances obtenues ici ne sont pas calibrées.</td>
+</tr>
+<tr>
+<td style="text-align: left;">En effet, les tensions ne sont pas calibrées, et nous n'avons pas divisé par une impédance.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Il y a donc un offset avec la vraie puissance reçue pour chaque fréquence en dB.</td>
+</tr>
+</tbody>
+</table>
+<p>Essayez sur le 11ème échantillon "fast-time" du 1er profil.</p>
+<p><em>Observez-vous des composantes fréquentielles ressortir ?</em>
+<em>Dans quelle ordre méthode <code>fft.fft</code> sort-elle les fréquences du spectre ?</em></p>
+<h3 id="fftshift-et-db">FFTshift et dB</h3>
+<p>Vous l'avez compris, l'implémentation <code>numpy</code> de la FFT sort les fréquences dans un ordre un peu contre-intuitif.
+La raison de cet ordre est purement algorithmique.</p>
+<p>Pour <strong>ordonner</strong> les sorties de la fréquence négative la plus faible à la fréquence positive la plus élevée, avec le 0 au milieu, on pourra utiliser la méthode <code>fft.fftshift</code> de <code>numpy</code>.</p>
+<p>Voici un exemple de commandes pour l'axe fréquentiel et le spectre renvoyé par la FFT :</p>
+<pre><code>spectrum_0_10 = np.fft.fftshift(spectrum_0_10)
+frequency_axis = np.fft.fftshift(frequency_axis)
+</code></pre>
+<p><em>D'un point de vue physique, que signifie avoir un décalage de fréquence Doppler positif ou négatif ?</em>
+<em>Que se passera-t-il si les mouvements des cibles provoquent des décalages Doppler de fréquences supérieures à la limite de ROXI ?</em></p>
+<p>Les puissances reçues par un radar météorologique peuvent varier sur 6 ou 7 ordres de grandeur.
+C'est pourquoi on converti en général les spectres Doppler en <strong>décibels</strong>.</p>
+<p>Ceci peut facilement être fait avec une commande Python de ce genre : </p>
+<pre><code>spectrum_0_10_db = 10*np.log10(spectrum_0_10)
+</code></pre>
+<p>Pour voir à quoi ressemble un spectre Doppler ROXI après ces 2 traitements, vous pouvez utiliser des commandes Python similaires à celles-ci :</p>
+<pre><code>plt.figure()
+plt.plot(frequency_axis,spectrum_0_10_db,'r-')
+plt.xlabel('Doppler frequency (Hz)')
+plt.ylabel('Uncalibrated power (dB)')
+plt.title('Doppler spectrum - acquisition 0 - fast-time level 10')
+plt.grid()
+plt.show()
+</code></pre>
+<p>Voici à quoi ressemble le spectre pour le 11ème échantillon "fast-time" du 1er profil :</p>
+<p><img alt="Exemple de spectre Doppler brut" src="../img/ROXI_spectrum_raw_example.png" /></p>
+<p>On observe une distribution quasi-gaussienne, avec un pic aux alentours de 400 Hz de décalage Doppler.
+Cette forme est assez classique pour un signal météorologique.
+Un <strong>modèle gaussien</strong> sera d'ailleurs souvent utilisé lors de l'interprétation des spectres Doppler d'un radar météorologique.</p>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>FFT</code></strong>.</p>
+<p>Appliquez votre fonction à notre exemple.
+Regardez différents spectres pour différents profils et différents échantillons "fast-time".</p>
+<p><em>Le spectre est-il toujours gaussien ?</em>
+<em>La fréquence du pic est-elle toujours la même ?</em>
+<em>Voyez-vous des pics ayant l'air d'avoir une autre origine que les précipitations ?</em></p>
+<h2 id="reduction-du-bruit">Réduction du bruit</h2>
+<p>Vous l'avez sûrement remarqué, les spectres Doppler ROXI sont bruités.</p>
+<p>Extraire le signal utile du bruit est un des grands enjeux du traitement du signal.
+Dans le cas de ROXI, nous pouvons tirer profit du fait que nous disposons de 4 répétitions du même profil, pour diminuer le bruit en les intégrant.</p>
+<p>L'étape suivante de notre chaîne de traitement sera donc logiquement d'implémenter une "<strong>intégration incohérente</strong>" (définirons ce terme dans la suite) pour réduire le bruit dans les spectres Doppler.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>integrate</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : une matrice <code>numpy</code> contenant 4 spectrogrammes tels que retournée par <code>FFT</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : une matrice <code>numpy</code> contenant le spectrogramme intégré à partir des 4 profils.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="integration-coherente">Intégration cohérente</h3>
+<p>Un <strong>bruit blanc</strong> dans une série temporelle donnera un spectre plat.
+Le spectre d'un signal bruité contiendra donc un offset, dont le niveau correspondra au <strong>niveau du bruit</strong>.</p>
+<p>Si on trace un spectre en décibels, la différence entre le pic du signal utile et le niveau du bruit donnera le ratio signal/bruit ou <strong>SNR</strong>.</p>
+<p>On comprend intuitivement que plus le pic dépasse du niveau de bruit (donc plus le SNR est élevé), meilleure sera la détection puis la caractérisation du signal utile.</p>
+<p>Mettons que l'on dispose de plusieurs répétitions d'une même série temporelle, et que l'on fait l'hypothèse que la <strong>phase du signal</strong> reste <strong>cohérente</strong> entre 2 répétitions, et que le <strong>bruit</strong> est <strong>aléatoire</strong>.
+<strong>Moyenner</strong> les différentes répétitions permettra d'obtenir une série temporelle de <strong>SNR plus élevé</strong>, et donc un spectre au <strong>niveau de bruit plus bas</strong>.</p>
+<p>Cette méthode reposant sur l'hypothèse de cohérence de la phase du signal entre 2 répétitions, on l'appelle "<strong>intégration cohérente</strong>".</p>
+<p>Nous ne l'implémenterons pas ici, mais elle est faite par ROXI de manière cachée : en réalité, un profil ROXI est issu de <strong>8 intégrations cohérentes</strong>.
+Ce qui explique pourquoi la période de répétition d'impulsion de ROXI n'est pas égale à 128 fois la durée de son impulsion, mais 128x8.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Par linéairité de la transformée de Fourier, il est équivalent d'appliquer l'intégration à la série temporelle ou à son spectre.</td>
+</tr>
+<tr>
+<td style="text-align: left;">On pourrait donc tout aussi bien l'appliquer avant FFT.</td>
+</tr>
+</tbody>
+</table>
+<p>Bien entendu, l'intégration cohérente à des limites : <strong>plus on intègre longtemps</strong>, plus les cibles auront bougé, et donc <strong>moins l'hypothèse de cohérence de la phase sera vérifiée</strong>.</p>
+<p><em>Quel est environ le niveau du bruit pour les différents spectres obtenus ? Est-il le même pour tous les spectres ? Comment expliquez-vous ceci ?</em></p>
+<p><em>Quel est environ le SNR pour le spectre obtenu plus tôt avec le 11ème échantillon "fast-time" du 1er profil ?</em></p>
+<p>Petite question bonus :</p>
+<p>Plus on augmente le nombre d'intégration cohérentes, plus l'intervalle entre 2 échantillons "slow-time" est grand.
+<em>Quelle performance du radar est donc impactée lorsque l'on augmente le nombre d'intégrations cohérentes ?</em></p>
+<h3 id="integration-incoherente">Intégration incohérente</h3>
+<p>Nous implémenterons ici l'<strong>intégration incohérente</strong> (ou "non-cohérente").</p>
+<p>Par opposition avec l'intégration cohérente, l'intégration incohérente <strong>moyenne les puissances des spectres</strong> obtenus après FFT et module au carré pour les différentes répétitions d'une même série temporelle, <strong>en excluant l'information de phase</strong>.</p>
+<p>Le résultat est que le niveau de bruit du spectre ne varie pas, mais le spectre obtenu est <strong>plus "lisse"</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">L'opération "module" n'étant pas linéaire, contrairement à l'intégration cohérente, l'intégration incohérente doit être effectuée après FFT.</td>
+</tr>
+</tbody>
+</table>
+<p>Tout comme l'intégration cohérente, l'intégration incohérente a des limites : la forme des spectres évolue au fur et à mesure que les cibles se déplacent ou changent, et au bout d'un certain temps intégrer les spectres n'a plus aucun sens.
+En météorologie radar, on ne dépasse généralement pas quelques secondes.</p>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>integrate</code></strong> : elle fera la moyenne des 4 spectrogrammes en puissances obtenus à partir des 4 profils contenus dans un fichier de données ROXI.</p>
+<p>Si vous appliquez votre fonction à notre exemple, et que vous affichez le spectre obtenu pour le 11ème échantillon "fast-time", vous devriez obtenir ceci :</p>
+<p><img alt="Exemple de spectre Doppler intégré" src="../img/ROXI_spectrum_integrated_example.png" /></p>
+<p><em>Observez-vous bien le résultat attendu ? D'après-vous, quel sera l'intérêt de lisser ainsi les spectres Doppler de ROXI ?</em></p>
+<h2 id="filtrage">Filtrage</h2>
+<p>La prochaine étape de notre chaîne de traitement sera d'appliquer un <strong>filtre médian</strong> à nos spectres Doppler.</p>
+<p>Ce filtrage dans le domaine fréquentiel aura 2 objectifs :</p>
+<ul>
+<li>
+<p><strong>Lisser encore plus les spectres</strong>, afin de faciliter leur interprétation.</p>
+</li>
+<li>
+<p>Réduire l'effet des <strong>échos de sol</strong> aussi appelés "ground clutter" en anglais.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>filter</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : une matrice <code>numpy</code> contenant un spectrogramme intégré tel que retournée par <code>integrate</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : une matrice <code>numpy</code> contenant le spectrogramme filtré.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ground-clutter">Ground clutter</h3>
+<p>Avant d'implémenter le filtrage médian, voyons un peu les effets du "<strong>ground clutter</strong>".</p>
+<p>Si vous affichez le spectre intégré obtenu pour le 3ème échantillon "fast-time", vous obtiendrez :</p>
+<p><img alt="Exemple de spectre avant filtrage du clutter" src="../img/ROXI_spectrum_before_filtering_example.png" /></p>
+<p>On voit nettement un pic très fin autour de <strong>0 Hz</strong>.
+Il correspond aux échos de cibles situées <strong>au sol</strong>.</p>
+<p>En effet, bien que le lobe principal de l'antenne de ROXI soit très étroit, il peut recevoir des échos provenant du sol (bâtiments, arbres, etc.).
+Ces cibles n'étant pas en mouvement par rapport au radar, elle produisent des échos de <strong>décalage Doppler nul</strong>.</p>
+<p>Comme les cibles au sol sont proches du radar, on voit particulièrement ces échos parasites dans les premiers échantillons "fast-time".</p>
+<p>Regardez le spectre correspondant au dernier échantillon "fast-time".
+Vous devriez observer un pic correspondant à du "ground clutter".</p>
+<p><em>Comment expliquez-vous ceci ?</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Le pic gaussien visible aux alentours de -450 Hz est un artéfact de mesure classique chez les radars Doppler.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Il provient d'un très léger décalage entre les voies d'acquisition I et Q de l'instrument, et est particulièrement visible dans les 1ers échantillons "fast-time".</td>
+</tr>
+<tr>
+<td style="text-align: left;">En toute rigueur, il faudrait ajouter à notre chaîne de traitement une correction de cet effet instrumental.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pour simplifier notre problème, nous le ferons pas dans le cadre de ce TP.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filtre-median">Filtre médian</h3>
+<p>Le <strong>filtre médian</strong> est couramment utilisé pour le "despiking", ou filtrage de <strong>bruit impulsionnel</strong>.</p>
+<p>Lorsqu'un signal contient des <strong>pics abérrants</strong>, le filtrage médian permet de réduire ces parasites sans trop déformer le signal.</p>
+<p>Il s'agit simplement d'une <strong>fenêtre glissante</strong>, qui vient remplacer la valeur centrale de la fenêtre par <strong>la médiane</strong> des valeurs dans la fenêtre.</p>
+<p>On pourra s'appuyer sur l'implémentation de la bibliothèque Python <code>scipy.signal</code>, la méthode <code>medfilt</code>.
+N'oubliez donc pas de l'importer :</p>
+<pre><code>from scipy.signal import medfilt
+</code></pre>
+<p>On peut spécifier à la méthode <strong>les dimensions de la fenêtre</strong> avec l'argument <code>kernel_size</code>.</p>
+<p>Il s'agit forcément d'un <strong>nombre impair</strong>.
+Pour le "despiking", on choisit en général 3, 5 ou 7 maximum.</p>
+<p>Voici un exemple de commande appliquant <code>medfilt</code> pour un fenêtre de dimension 7 :</p>
+<pre><code>spectrum_0_2_db = medfilt(spectrum_0_2_db,kernel_size=7)
+</code></pre>
+<p>Si vous appliquez cette méthode au spectre correspondant au 3ème échantillon "fast-time", vous obtiendrez ceci :</p>
+<p><img alt="Exemple de spectre après filtrage du clutter" src="../img/ROXI_spectrum_after_filtering_example.png" /></p>
+<p>On voit que le pic correspondant au "ground clutter" a été réduit de 40 dB !
+Le spectre est plus lisse, sans avoir été trop déformé.</p>
+<p>Vous pouvez essayer d'autres valeurs de <code>kernel_size</code> :</p>
+<p><em>Que se passe-t-il si vous diminuez ou augmentez cette valeur ?</em></p>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>filter</code></strong>.</p>
+<p>Appliquez-là à notre exemple, et confirmez la réduction du "ground clutter" pour les différents spectres.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">En météorologie radar, il existe d'autres techniques classiques pour réduire le "ground clutter" :</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Soustraire une mesure d'air clair à chaque série temporelle I/Q avant FFT.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Appliquer à chaque série temporelle I/Q un filtre coupe-bande très étroit, type "notch", avant FFT.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Soustraire 2 à 2 les échantillons des séries temporelles I/Q avant FFT.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="spectrogramme">Spectrogramme</h2>
+<p>Notre chaîne de traitement des données ROXI est à présent assez avancée pour pouvoir afficher un <strong>spectrogramme Doppler</strong> interprétable.</p>
+<p>Mettons que nous ayons récupéré en sortie de notre chaîne actuelle une matrice <code>numpy</code> 2D du nom de <code>mat_spectrum</code>, contenant notre spectrogramme (en dB).
+Nous pouvons facilement l'afficher avec les commandes <code>matplotlib</code> suivantes :</p>
+<pre><code>plt.figure()
+plt.pcolormesh(frequency_axis,fast_time_axis,mat_spectrum)
+plt.xlabel('Doppler frequency (Hz)')
+plt.ylabel('Fast-time (s)')
+plt.colorbar(label='Uncalibrated power (dB)')
+plt.title('Doppler spectrogram - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
+plt.show()
+</code></pre>
+<p>Voici le spectrogramme que vous devriez obtenir pour notre exemple :</p>
+<p><img alt="Exemple de spectrogramme Doppler" src="../img/ROXI_spectrogram_example.png" /></p>
+<p>On observe clairement 2 grands types d'échos : </p>
+<ul>
+<li>
+<p>En-dessous de 25 ms de "fast-time", les décalages en fréquence Doppler sont plus élevés, avec des distributions plus larges.</p>
+</li>
+<li>
+<p>Au-dessus de 25 ms de "fast-time", les décalages en fréquence Doppler sont plus faibles, avec des distributions plus étroites.</p>
+</li>
+</ul>
+<p>Pour pouvoir interpréter ces 2 populations d'hydrométéores, il va nous falloir convertir les axes de "fast-time" et de fréquences Doppler en <strong>élévations</strong> et <strong>vitesses verticales</strong>.</p>
+<p>Ensuite, nous devrons extraire des variables météorologiques utiles de chaque spectre : <strong>réflectivité Z</strong> et <strong>vitesse verticale moyenne VDop</strong>.</p>
+<h2 id="interpretation-meteorologique">Interprétation météorologique</h2>
+<p>L'étape suivante de notre chaîne de traitement sera donc une fonction pour l'interprétation météorologique des spectres Doppler ROXI.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>interpret</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 3 matrices <code>numpy</code>, un spectrogramme intégré et filtré, un axe de "fast-time", un axe de fréquences Doppler.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 4 matrices <code>numpy</code>, un profil d'estimations de Z, un profil d'estimations de VDop, un profil d'écart-types sur VDop, et un axe d'élévations correspondant.</td>
+</tr>
+</tbody>
+</table>
+<p>Cette fonction suivra les grandes étapes suivantes :</p>
+<ul>
+<li>
+<p>Convertir les axes de "fast-time" et de fréquences Doppler en <strong>élévation</strong> et <strong>vitesses verticales</strong>.</p>
+</li>
+<li>
+<p>Ajuster un modèle gaussien à chaque spectre Doppler, pour récupérer de estimations de <strong>puissance reçue</strong> et <strong>VDop</strong>.</p>
+</li>
+<li>
+<p>Convertir la puissance reçue en <strong>réflectivité Z</strong> (non calibrée) avec une correction de l'élévation.</p>
+</li>
+</ul>
+<h3 id="conversion-en-elevations-et-vitesses-verticales">Conversion en élévations et vitesses verticales</h3>
+<p>Pour commencer, il nous faut pouvoir convertir l'axe de "fast-time" en <strong>élévations</strong>.</p>
+<p>Les ondes éléctromagnétiques se propageant à environ <strong>la vitesse de la lumière</strong> dans l'atmosphère terrestre, cette conversion est très simple.
+Il faut juste faire attention au fait que l'impulsion radar fait un <strong>aller-retour</strong> entre l'antenne et une cible.</p>
+<p>Si on note <span class="arithmatex">\(h\)</span> l'élévation, <span class="arithmatex">\(dt\)</span> le temps de retard des échos, et <span class="arithmatex">\(c\)</span> la vitesse de la lumière, on a :</p>
+<p><span class="arithmatex">\(h = \frac{c \times dt}{2}\)</span></p>
+<p>Ensuite, il nous faudra convertir l'axe des décalages en fréquence Doppler en <strong>vitesses verticales</strong>.</p>
+<p>On note <span class="arithmatex">\(f_e\)</span> la fréquence émise par le radar, et <span class="arithmatex">\(f_r\)</span> la fréquence reçue, et <span class="arithmatex">\(v_D\)</span> la vitesse verticale d'une cible.</p>
+<p>Comme <span class="arithmatex">\(v_D &lt;&lt; c\)</span>, et que l'onde fait un aller-retour entre le radar et la cible, on peut écrire la formule de <strong>l'effet Doppler</strong> de la manière suivante :</p>
+<p><span class="arithmatex">\(f_r \approx f_e (1 + \frac{v_D}{c})^2\)</span></p>
+<p>Si on développe cette formule, sachant que <span class="arithmatex">\(v_D &lt;&lt; c\)</span>, on peut considérer <span class="arithmatex">\((\frac{v_D}{c})^2\)</span> comme négligeable.
+Par conséquent :</p>
+<p><span class="arithmatex">\(f_r \approx f_e (1 + \frac{2 v_D}{c})\)</span></p>
+<p>Et si on note <span class="arithmatex">\(f_D = f_r - f_e\)</span> le décalage en fréquence Doppler, on obtient :</p>
+<p><span class="arithmatex">\(f_D = 2 f_e \frac{v_D}{c}\)</span></p>
+<p>Or, on sait que <span class="arithmatex">\(f_e = \frac{c}{\lambda}\)</span> avec <span class="arithmatex">\(\lambda\)</span> la longueur d'onde de l'impulsion radar.
+Donc :</p>
+<p><span class="arithmatex">\(f_D = 2 \frac{v_D}{\lambda}\)</span></p>
+<p>D'où la formule que nous utiliserons pour convertir les décalages en fréquence Doppler en vitesses verticales :</p>
+<p><span class="arithmatex">\(v_D = \frac{f_D \lambda}{2}\)</span></p>
+<p><em>Avec ces formules, retrouvez-vous bien la résolution en distance et la portée maximale de ROXI à partir de <code>fast_time_axis</code> ?</em>
+<em>Et retrouvez-vous la vitesse ambiguë de ROXI à partir de <code>frequency_axis</code> ?</em></p>
+<p>Si vous utilisez ces formules pour convertir <code>fast_time_axis</code> et <code>frequency_axis</code>, vous pouvez afficher notre exemple de spectrogramme de manière plus interprétable :</p>
+<p><img alt="Exemple de spectrogramme Doppler avec des axes météorologiques" src="../img/ROXI_spectrogram_meteo_axis_example.png" /></p>
+<p>Nous pouvons à présent voir que la transition entre les 2 populations d'hydrométéores se fait à environ 3.5 km, avec des vitesses aux alentours de 6 m/s pour les basses altitudes et de 1 m/s pour les hautes altitudes.</p>
+<p>Pour caractériser plus précisément chaque spectre, nous allons voir comment leur ajuster un modèle gaussien, et en tirer nos variables météorologiques d'intérêt.</p>
+<h3 id="modelisation-gaussienne">Modélisation Gaussienne</h3>
+<p>On modélise souvent les spectres Doppler de radar météorologiques par une <strong>fonction gaussienne</strong> de la vitesse verticale <span class="arithmatex">\(v\)</span>, de la forme suivante :</p>
+<p><span class="arithmatex">\(g(v) = \frac{P}{\sigma \sqrt{2 \pi}} exp(\frac{-(v-v_{Dop})^2}{2 \sigma^2})\)</span></p>
+<p>avec <span class="arithmatex">\(P\)</span> la puissance totale du spectre, <span class="arithmatex">\(v_{Dop}\)</span> la vitesse Doppler moyenne, et <span class="arithmatex">\(\sigma\)</span> l'écart-type sur la vitesse Doppler.</p>
+<p>Pour ajuster un tel modèle à nos spectres Doppler, nous pourrons utiliser la méthode <code>curve_fit</code> de la bibliothèque Python <code>scipy.optimize</code>, qui permet d'ajuster une fonction quelconque à une courbe.
+Très pratique pour de l'interprétation de données !</p>
+<p>N'oubliez donc pas d'importer cette méthode :</p>
+<pre><code>from scipy.optimize import curve_fit
+</code></pre>
+<p>Il faudra définir le modèle <strong>gaussien</strong> de spectre Doppler sous la forme d'une fonction Python.</p>
+<p>Nos spectres étant noyé dans un bruit blanc de niveau constant d'environ -57 dB, et convertis en dB, notre modèle devra en tenir compte.</p>
+<p>Voici une proposition de fonction, avec les entrées <code>v</code> pour <span class="arithmatex">\(v\)</span>, <code>power</code> pour <span class="arithmatex">\(P\)</span>, <code>vdop</code> pour <span class="arithmatex">\(v_{Dop}\)</span>, et <code>std</code> pour <span class="arithmatex">\(\sigma\)</span> :</p>
+<pre><code>def gaussian_model(v,power,vdop,std):
+
+    signal = power*np.exp(-(v-vdop)**2/(2*std**2))/(std*np.sqrt(2*np.pi))
+
+    return 10*np.log10(signal+10**(-57/10))
+</code></pre>
+<p>Pour ajuster cette fonction à nos spectres en dB, il faudra la fournir en entrée de <code>curve_fit</code>, avec notre axe de fréquences Doppler <code>vdop_axis</code>.</p>
+<p>Pour aider l'algorithme d'optimisation de <code>curve_fit</code> à converger, on pourra lui fournir une initialisation des paramètres à optimiser avec l'argument <code>p0</code>, ainsi que des bornes min et max avec l'argument <code>bounds</code>.</p>
+<p>Le paramètre <span class="arithmatex">\(v_{Dop}\)</span> obtenu correspondra directement à <strong>VDop</strong>, et le paramètre <span class="arithmatex">\(P\)</span> correspondra à la puissance total du signal utile dans le spectre (bruit blanc non compris) que nous convertirons plus tard en <strong>Z</strong>.
+Le paramètre <span class="arithmatex">\(\sigma\)</span> donne une indication sur la dispersion des vitesses Doppler au sein du spectre, une information supplémentaire pour l'interprétation des données de ROXI.</p>
+<p>Voici un exemple pour le 11ème spectre de notre spectrogramme (en dB) <code>mat_spectrum</code> :</p>
+<pre><code>params,_ = curve_fit(gaussian_model,vdop_axis,mat_spectrum[10],p0=[1e3,0,1],bounds=([0,-12,0],[1e6,12,3]))
+power,vdop,std = params
+</code></pre>
+<p>Après ajustement, vous pouvez afficher notre modèle par dessus le spectre Doppler avec des commandes <code>matplotlib</code> de ce genre :</p>
+<pre><code>plt.figure()
+plt.plot(vdop_axis,mat_spectrum[10],'r-')
+plt.plot(vdop_axis,gaussian_model(vdop_axis,power,vdop,std),'b--')
+plt.xlabel('Doppler velocity (m/s)')
+plt.ylabel('Uncalibrated power (dB)')
+plt.title('Doppler spectrum modelling - 4 integrated acquisitions - fast-time level 10')
+plt.legend(['observation','model'])
+plt.grid()
+plt.show()
+</code></pre>
+<p>Voici le modèle que vous devriez alors obtenir :</p>
+<p><img alt="Exemple de modélisation Gaussienne de spectre Doppler" src="../img/ROXI_spectrum_modelling_example.png" /></p>
+<p>Le modèle gaussien déterminé par <code>curve_fit</code> colle visiblement très bien à notre spectre Doppler.</p>
+<p>On trouve que :</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(P \approx -28.4 dB\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(V_{Dop} \approx 6.2 m/s\)</span></p>
+</li>
+<li>
+<p><span class="arithmatex">\(\sigma \approx 0.9 m/s\)</span></p>
+</li>
+</ul>
+<p>Il ne reste plus qu'à savoir comment convertir la puissance totale du spectre <span class="arithmatex">\(P\)</span> en réfléctivité Z.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Si le modèle Gaussien simple est très courant car représentatif de la plupart des spectres Doppler météorologiques, il est parfois inadapté :</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Les vents de cisallement, ainsi que la turbulence, peuvent provoquer des spectres asymétriques.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- La présence de plusieurs populations d'hydrométéores au sein d'un même volume fera apparaitre plusieurs gaussiennes dans un même spectre.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Des échos non-météorologiques (ground clutter, insectes, oiseaux, diffusion de Bragg, etc.) n'auront pas des spectres gaussiens.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="estimation-de-z">Estimation de Z</h3>
+<p>La <strong>puissance totale</strong> du signal utile dans un spectre Doppler de radar météorologique, correspond à la <strong>puissance reçue</strong> de tous les hydrométéores contenus dans un volume sondé (à un niveau de "fast-time" donné).</p>
+<p>Le problème de cette grandeur est qu'elle n'est <strong>pas interprétable météorologiquement</strong> telle quelle.</p>
+<p>En effet, afin de les identifier et d'estimer leur distribution en tailles, nous aimerions plutôt connaitre la <strong>réfléctivité</strong> radar des hydrométéores : leur propention à réfléchir le signal du radar.</p>
+<p>Contrairement à la puissance reçue, il s'agit d'une <strong>propriété intrinsèque</strong> des hydrométéores, ne dépendant ni des <strong>effets instrumentaux</strong>, ni de la <strong>distance</strong> des hydrométéores au radar.</p>
+<p>Pour obtenir la <strong>réfléctivité totale Z</strong> des hydrométéores pour un spectre donné, les météorologues lui appliquent les compensations suivantes :</p>
+<ul>
+<li>
+<p>Une compensation des <strong>pertes en espace libre</strong> : la puissance reçue d'un volume sondé diminue avec le carré de la distance parcourue par l'impulsion du radar (donc aller-retour).</p>
+</li>
+<li>
+<p>Une compensation des <strong>effets instrumentaux</strong> : la puissance émise, le gain des antennes, le faisceau d'émission, la durée de l'impulsion, les pertes interne, etc.</p>
+</li>
+</ul>
+<p>La formule pour convertir <span class="arithmatex">\(P\)</span> en Z est donc :</p>
+<p><span class="arithmatex">\(Z = P \times C_{rad} \times R^2\)</span></p>
+<p>avec <span class="arithmatex">\(C_{rad}\)</span> la "<strong>constante radar</strong>", un coefficient prenant en compte tous les effets instrumentaux, et <span class="arithmatex">\(R\)</span> la <strong>distance de propagation</strong> de l'impulsion.</p>
+<p>Cette grandeur est souvent exprimée en <strong>décibels</strong> (on parle de "dBZ"), et permet en théorie de comparer les résultats de 2 radars météorologiques différents. Pratique !</p>
+<p>Dans le cadre de ce TP, nous n'implémenterons <strong>que la compensation des pertes d'espace libre</strong> : </p>
+<p><span class="arithmatex">\(Z_{dB} = P_{dB} + 20 log_{10}(R)\)</span></p>
+<p>Effet, la compensation des effets instrumentaux nécessite un tout travail d'<strong>étalonnage</strong> du radar, beaucoup trop délicat pour être réalisé ici.</p>
+<p>Nous obtiendrons donc une valeur de Z en dB <strong>non-calibrée</strong>, qui sera décalé du vrai Z par un offset correspondant à <span class="arithmatex">\(10 log_{10}(C_{rad})\)</span>.</p>
+<p><strong>Vous pouvez enfin compléter votre fonction <code>interpret</code> !</strong></p>
+<p>Nous allons l'appliquer à notre exemple, et analyser le résultat.</p>
+<h3 id="profils-de-z-et-vdop">Profils de Z et VDop</h3>
+<p>Appliquez votre chaîne de traitement à notre exemple du 2020/08/11 à 16:12:06 UTC.</p>
+<p>Vous pouvez afficher le profil de VDop estimés en fonction de l'élévation, avec les écart-types, en utilsant des commandes <code>matplotlib</code> de ce genre :</p>
+<pre><code>plt.figure()
+plt.errorbar(x=vect_vdop,y=elevation_axis,xerr=vect_std,c='r',ecolor='pink')
+plt.scatter(vect_vdop,elevation_axis,c='r',marker='o')
+plt.xlabel('Doppler velocity (m/s)')
+plt.ylabel('Elevation (m)')
+plt.title('VDop estimations - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
+plt.grid()
+plt.show()
+</code></pre>
+<p>En partant du principe que vous avez au préalable enregistré le profil de VDop et les écart-types correspondants sous la forme de 2 matrices <code>numpy</code> nommées <code>vect_vdop</code> et <code>vect_std</code>.</p>
+<p>Vous devriez alors obtenir la figure suivante :</p>
+<p><img alt="Exemple d'estimations de VDop" src="../img/ROXI_VDop_estimations_example.png" /></p>
+<p>On voit nettement la transition entre les 2 populations d'hydrométéores à environ 3.5 km d'élévation, avec des vitesses aux alentours de 6 m/s pour la population la plus basse, et aux alentours de 1 m/s pour la population la plus haute.</p>
+<p>Si on considère que ces vitesses verticales sont en 1ère approximation les vitesses de chute des hydrométéores, on peut déduire de ces vitesses que :</p>
+<ul>
+<li>
+<p>La population la plus basse correspond à des <strong>gouttes d'eau liquide</strong>.</p>
+</li>
+<li>
+<p>La population la plus haute correspond à des <strong>cristaux de glace d'eau</strong>.</p>
+</li>
+</ul>
+<p>La température diminuant avec l'altitude dans la troposphère, cette interprétation est cohérente avec l'axe d'élévations.</p>
+<p>3.5 km correspond donc approximativement à l'élévation de <strong>l'isotherme zéro</strong>, où les cristaux de glace <strong>fondent</strong> pour devenir gouttes d'eau.</p>
+<p>On voit que des vitesses cohérentes sont mesurées jusqu'à 11.6 km d'élévation environ (au dessus, il s'agit probablement de bruit).
+Ceci est une hauteur normale pour un <strong>cumulonimbus</strong> à la latitude de Guyancourt.</p>
+<p>Si vous aviez accès à la totalité des fichiers de données de l'évènement orageux du 2020/08/11, vous pourriez afficher les profils de VDop estimés en fonction du temps.
+Vous obtiendriez alors un graphique de ce type :</p>
+<p><img alt="Estimations de VDop pour l'orage complet" src="../img/ROXI_VDop_thunderstorm_example.png" /></p>
+<p>(Le profil de 16:12:06 UTC est indiqué par une ligne verticale grise)</p>
+<p>On observe aussi sur ce graphique une transition nette entre les phases <strong>liquides</strong> et <strong>solides</strong>, bien qu'une variabilité dans les vitesses apparaisse.
+On trouve des vitesses plus ou moins élevées sous l'isotherme zéro, signe de précipitations plus ou moins intenses.
+On trouve aussi des vitesses parfois élevées au-dessus de l'isotherme zéro, et parfois même des vitesses négatives.</p>
+<p>Un orage étant un phénomène <strong>convectif</strong>, l'approximation selon laquelle la vitesse terminale de chute des hydrométéores est égale à la vitesse verticale mesurée par le radar ne tient pas toujours.
+Des vents ascendant et descendants peuvent entrainer les hydrométéores, voir mélanger différentes populations de différentes phases dans un même volume sondé.
+Ce qui explique les variations observées.</p>
+<p>D'où l'utilité d'étudier aussi les valeurs de réflectivité pour identifier les hydrométéores.</p>
+<p>Vous pouvez également afficher le profil de Z (non-calibrés) estimés en fonction de l'élévation, en utilsant des commandes <code>matplotlib</code> de ce genre :</p>
+<pre><code>plt.figure()
+plt.plot(vect_Z,elevation_axis,'r-')
+plt.scatter(vect_Z,elevation_axis,c='r',marker='o')
+plt.xlabel('Uncalibrated Z (dB)')
+plt.ylabel('Elevation (m)')
+plt.title('Z estimations - 4 integrated acquisitions - 2020/08/11 16:12:06 UTC')
+plt.grid()
+plt.show()
+</code></pre>
+<p>En partant du principe que vous avez au préalable enregistré le profil de Z sous la forme d'une matrice <code>numpy</code> nommée <code>vect_Z</code>.</p>
+<p>Vous devriez alors obtenir la figure suivante :</p>
+<p><img alt="Exemple d'estimations de Z" src="../img/ROXI_Z_estimations_example.png" /></p>
+<p>La <strong>réfléctivité</strong> mesurée dans un volume dépend de <strong>la phase</strong> des hydrométéore (liquide ou solide), et de leur <strong>distribution de tailles</strong>.
+Elle augmente donc à mesure que :</p>
+<ul>
+<li>
+<p>L'eau devient liquide.</p>
+</li>
+<li>
+<p>Les gouttes / cristaux deviennent plus nombreux.</p>
+</li>
+<li>
+<p>La taille des gouttes / cristaux devient plus grande.</p>
+</li>
+</ul>
+<p>Dans notre exemple, la réfléctivité au-dessus de l'isotherme 0 est plutôt inférieure à celle en-dessous, ce qui est contre-intuitif, puisque l'eau liquide est plus réfléchissante.
+Ceci est lié au fait que notre profil a été acquis à un moment où les précipitations liquides se calmaient, pendant que des précipitations solides restaient intenses.</p>
+<p>Encore une fois, s'agissant d'un phénomène <strong>convectif</strong>, on ne s'attend pas à un régime stationnaire bien "<strong>stratiforme</strong>" avec des précipitations continues et de faible intensité, sans vent vertical, comme pour un <strong>nimbostratus</strong> hivernal.</p>
+<p>On voit aussi nettement ressortir un pic de réfléctivité au niveau de l'isotherme 0, à 3.5 km d'élévation.</p>
+<p>Il s'agit d'un phénomène connu sous le nom de "<strong>bande brillante</strong>".</p>
+<p>D'un côté, comme nous l'avons dit, l'eau <strong>liquide</strong> est <strong>plus réfléchissante</strong> aux ondes radar que l'eau <strong>solide</strong>.
+Et d'un autre, les cristaux de glace ont <strong>un plus grand volume</strong>, et donc une plus grande section efficace radar que les gouttes d'eau.</p>
+<p>Lorsque les critaux de glace commencent à <strong>fondre*, nous avons un état intermédiaire où les hydrométéores ont </strong>un grand volume<strong>, et sont </strong>très réfléchissants**.
+On observe alors un pic dans les profils de réfléctivité.</p>
+<p>Si vous aviez accès à la totalité des fichiers de données de l'évènement orageux du 2020/08/11, vous pourriez afficher les profils de Z estimés en fonction du temps.
+Vous obtiendriez alors un graphique de ce type :</p>
+<p><img alt="Estimations de Z pour l'orage complet" src="../img/ROXI_Z_thunderstorm_example.png" /></p>
+<p>(Le profil de 16:12:06 UTC est indiqué par une ligne verticale grise)</p>
+<p>Comme on s'y attendait avec l'observation des vitesses, on voit des précipitations liquides plus ou moins intenses sous l'isotherme 0 (le maximum étant entre 14:40 et 15:45 UTC).
+On voit aussi que par moments au-dessus de l'isotherme 0, on a de fortes réfléctivités et vitesses (par exemple vers 13:30 UTC), ce qui trahis peut-être une injection d'une population dense d'hydrométéores en cours de fonte, provoquée par de forts mouvements convectifs.</p>
+<p>On comprend aussi mieux pourquoi la "<strong>bande brillante</strong>" porte ce nom : on voit comme une ligne horizontale de forte réfléctivité sur tout l'évènement, à 3.5 km d'élévation.</p>
+<p>Il faut bien garder à l'esprit qu'un tel événement convectif est <strong>délicat à interpréter</strong>, d'autant plus lorsque l'on dispose pas de mesures d'autres instruments météorologiques, à distance ou encore mieux in-situ.
+<strong>Donc restons prudents dans notre interprétation !</strong></p>
+<h2 id="exportation-du-resultat">Exportation du résultat</h2>
+<p>Pour terminer notre chaîne de traitement, nous allons ajouter une fonction pour l'<strong>export</strong> des données traitées, sous la forme d'un <strong>fichier HDF5</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>save</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 4 matrices <code>numpy</code>, un profil d'estimations de Z, un profil d'estimations de VDop, un profil d'écart-types sur VDop, et un axe d'élévations tels que retournés par <code>interpret</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Elle enregistrera un fichier HDF5 contenant ces 4 matrices sous la forme de "Datasets".</td>
+</tr>
+</tbody>
+</table>
+<p>Pour enregistrer un fichier HDF5 contenant les sorties de notre chaîne de traitement, nous utiliserons encore une fois <code>h5py</code>.
+N'oubliez donc pas de l'importer :</p>
+<pre><code>import h5py
+</code></pre>
+<p>Ensuite, vous pouvez créer un fichier HDF5 avec <code>h5py</code>, en initialisant un objet <code>File</code>.
+Par exemple :</p>
+<pre><code>hf = h5py.File(&quot;.../Level2_ROXI_11082020_161206.h5&quot;,'w')
+</code></pre>
+<p>On peut alors ajouter à notre fichier des "Datasets" avec la méthode <code>create_dataset</code>.
+Elle prend en entrée le nom du "Dataset" à créer, et la matrice à enregistrer dedans.</p>
+<p>Voici un exemple de commandes Python pour sauvegarder nos différentes sorties :</p>
+<pre><code>hf.create_dataset(&quot;Z_profile&quot;,data=vect_Z)
+hf.create_dataset(&quot;vdop_profile&quot;,data=vect_vdop)
+hf.create_dataset(&quot;std_profile&quot;,data=vect_std)
+hf.create_dataset(&quot;elevation_axis&quot;,data=elevation_axis)
+</code></pre>
+<p><strong>Vous pouvez compléter votre fonction <code>save</code> !</strong></p>
+<p>Appliquez-la à notre exemple de données, et essayez d'importer dans Python le fichier HDF5 que vous avez créé, afin de vérifier que votre fonction marche bien.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p><strong>Vous disposez à présent d'une chaîne de traitement complète pour les données de ROXI !</strong></p>
+<p><em>Pourriez-vous tracer un schéma-bloc de la chaîne de traitement que vous venez de programmer en Python ?</em></p>
+<p>Servez-vous de ce schéma pour ajouter à votre projet Python un <strong>script d'exemple</strong>, appliquant toute votre chaîne de traitement à un fichier HDF5 de données ROXI.</p>
+<hr />
+<p>Cet exemple était un prétexte pour vous faire découvrir des outils de traitement de données, et les appliquer à un exemple réalistes de données instrumentales.</p>
+<p>Lors du TP suivant, nous allons appliquer de nouveaux outils de traitement aux données d'un autre instrument développé au LATMOS : WISDOM.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Accueil"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../TP_WISDOM/" class="btn btn-neutral float-right" title="TP WISDOM">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../TP_WISDOM/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/mathjax.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
