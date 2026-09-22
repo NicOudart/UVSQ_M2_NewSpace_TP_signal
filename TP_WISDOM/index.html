@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Nicolas OUDART" /><link rel="canonical" href="https://nicoudart.github.io/UVSQ_M2_NewSpace_TP_signal/TP_WISDOM/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>TP WISDOM - UVSQ_M2_NewSpace_TP_signal</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "TP WISDOM";
+        var mkdocs_page_input_path = "TP_WISDOM.md";
+        var mkdocs_page_url = "/UVSQ_M2_NewSpace_TP_signal/TP_WISDOM/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> UVSQ_M2_NewSpace_TP_signal
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Accueil</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../TP_ROXI/">TP ROXI</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">TP WISDOM</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#contexte-scientifique">Contexte scientifique</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#objectifs">Objectifs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#importation-des-donnees">Importation des données</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#exemple-de-donnees-wisdom">Exemple de données WISDOM</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#lecture-du-fichier">Lecture du fichier</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#analyse-spectrale">Analyse spectrale</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#nature-des-donnees">Nature des données</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fft-reelle-avec-numpy">FFT réelle avec Numpy</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mesure-despace-libre">Mesure d'espace libre</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#zero-padding">Zero-padding</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fenetrage">Fenêtrage</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#amelioration-de-la-lisibilite">Amélioration de la lisibilité</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#filtrage-horizontal">Filtrage horizontal</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#gain-vertical">Gain vertical</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interpolation-horizontale">Interpolation horizontale</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interpretation-geophysique">Interprétation géophysique</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#coin-de-glace">Coin de glace ?</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mesure-de-la-permittivite-de-surface">Mesure de la permittivité de surface</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#estimation-de-la-profondeur">Estimation de la profondeur</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exportation-du-resultat">Exportation du résultat</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">UVSQ_M2_NewSpace_TP_signal</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">TP WISDOM</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="wisdom-radar-a-penetration-de-sol-pour-letude-du-sous-sol-martien">WISDOM : radar à pénétration de sol pour l'étude du sous-sol martien</h1>
+<p><img alt="En-tête TP WISDOM" src="../img/Header_TP_WISDOM.png" /></p>
+<p><em>"On a bien réfléchi et on s'est dit que le Graal, il devait sûrement être enterré. [...] Donc, par association d'idées, s'il est enterré, la meilleure chose à faire, c'est de creuser. [...] Après, on s'est posé la question de la profondeur. [...] On est partis sur trois pieds et demi."</em></p>
+<p><strong>Alexandre Astier, Kaamelott livre I, épisode 77 : Le Forage (2005)</strong></p>
+<hr />
+<h2 id="contexte-scientifique">Contexte scientifique</h2>
+<p>En 2030, le rover de la mission <strong>ExoMars</strong> (ESA), nommé "Rosalind Franklin", explorera le site d'Oxia Planum <strong>à la recherche de potentielles traces d'une vie passée sur Mars</strong>.</p>
+<p>Dans l'hypothèse ou la vie serait apparue sur Mars lorsqu'elle était habitable, des milliards d'années d'exposition à des conditions hostiles (radiations et oxydation) en auront fait disparaitre toute trace à sa surface.
+En revanche, on peut espérer qu'<strong>à quelques mètres de profondeur dans le sous-sol</strong>, qui n'a pas bougé faute d'activité tectonique, <strong>de telles traces de vie auraient été préservées</strong>.</p>
+<p>C'est pourquoi le rover d'ExoMars sera le tout premier équipé d'une <strong>foreuse</strong> capable de récolter des échantillons <strong>jusqu'à 2 m</strong> dans le sous-sol martien.
+Ces échantillons seront remontés dans le corps du rover, où une suite d'instruments pourra les analyser à la recherche de bio-marqueurs.</p>
+<p><em>Mais comment savoir où creuser ?</em></p>
+<p>Les forages seront longs et gourmands en énergie, on veut éviter d'abimer la foreuse sur de la roche trop dure, et le nombre de tubes à échantillons est limité.
+Il est donc capital pour la mission d'<strong>avoir un a priori sur le sous-sol avant de creuser</strong>.</p>
+<p>C'est là qu'interviendra le <strong>radar à pénétration de sol</strong> (ou "géoradar") <strong>WISDOM</strong>, développé au LATMOS.</p>
+<p>Il s'agit d'un instrument qui sera capable de révéler la <strong>structure</strong> des premiers mètres du sous-sol martien, et de donner des indices sur sa <strong>composition</strong>.
+Avant toute opération de forage, WISDOM sondera le proche sous-sol pour déterminer si un site est <strong>intéressant scientifiquement</strong> et <strong>sans danger pour la foreuse</strong>.
+Il donnera aussi un <strong>contexte géophysique</strong> aux échantillons récoltés.</p>
+<p><img alt="Illustration WISDOM" src="../img/WISDOM_illustration.png" /></p>
+<p>Les <strong>antennes</strong> de WISDOM seront situées <strong>à l'arrière</strong> du rover, et pointeront <strong>vers le sol</strong>, à environ 38 cm de la surface.</p>
+<p>Pour sonder le sous-sol, un signal électromagnétiques sera envoyé par l'<strong>antenne émettrice</strong> en direction du sol.
+A chaque <strong>interface</strong> entre matériaux de <strong>propriétés électriques différentes</strong> dans le sous-sol, une partie de ce signal sera renvoyé vers l'<strong>antenne réceptrice</strong>.</p>
+<p>Ce signal sera plus ou moins intense suivant le <strong>contraste de propriétés électriques</strong>, et plus ou moins long à revenir suivant la <strong>distance</strong> entre les antennes et l'interface.</p>
+<p>Chaque sondage permettra donc de récupérer un profil d'<strong>amplitudes et de temps de retard des échos reçus</strong>.
+En réalisant des sondages à mesure que le rover se déplace, on obtiendra une série de profils pour différentes <strong>distances horizontales</strong> depuis le point de départ.</p>
+<ul>
+<li>
+<p>A partir des <strong>temps de retard</strong> et de la <strong>distance horizontale</strong>, on obtiendra une 1ère idée de la <strong>structure du sous-sol</strong> (strates, hétérogénéité, inclusions, etc.), mais sans réelles estimations de profondeurs.</p>
+</li>
+<li>
+<p>A partir des amplitudes des échos, le contraste de <strong>propriétés électriques</strong> à l'interface entre 2 couches du sous-sol pourra être estimé, donnant une <strong>indication de la composition</strong> des différentes strates (roches volcaniques, roches sédimentaires, glace, etc.).</p>
+</li>
+<li>
+<p>La vitesse des ondes électromagnétiques dans un matériau dépendant en 1ère approximation de sa <strong>permittivité diélectrique</strong> <span class="arithmatex">\(\epsilon\)</span>, on pourra alors convertir les temps de retard des échos en <strong>profondeurs</strong> des interfaces.</p>
+</li>
+</ul>
+<p>Il est prévu que WISDOM réalise des sondages <strong>à intervalles réguliers</strong> de 10 cm le long de <strong>lignes droites</strong>, un opération que l'on appelle "<strong>traverses</strong>".
+Ainsi, les sondages obtenus permettront de visualiser une "coupe" du sous-sol le long de cet axe.</p>
+<p>Afin d'ajouter une 3ème dimension à l'étude d'un site donné, il est également prévu que WISDOM réalise jusqu'à <strong>3 traverses en parallèle</strong>, une opération que l'on appelle "<strong>grid</strong>".
+Les 3 vues en "coupe" obtenues permettront alors d'obtenir une visualisation quasi-3D du sous-sol.</p>
+<p><img alt="Animation WISDOM" src="../img/WISDOM_animation.gif" /></p>
+<p>WISDOM est un radar <strong>SFCW</strong> ("Stepped Frequency Continuous Wave"), ce qui signifie qu'il n'émet pas une impulsion comme ROXI, mais des <strong>signaux harmoniques continus de fréquences croissantes</strong>, avec un pas régulier.</p>
+<p>Pour chaque fréquence, le radar reçoit en retour un signal de même fréquence, résultant de l'interférence des différents échos aux différentes interfaces dans le sous-sol.
+Son amplitude et sa phase seront enregistrés par l'instrument.</p>
+<p>Ce type de radar fonctionne donc en <strong>domaine fréquentiel</strong> : avec ses mesures, il reconstruit l'<strong>équivalent fréquentiel</strong> de la <strong>réponse impulsionnelle</strong> du milieu sondé.
+La <strong>transformée de Fourier</strong> des amplitudes et phases obtenues pour les différentes les fréquences permet de reconstituer la <strong>série temporelle</strong> qu'aurait obtenu un <strong>radar impulsionnel équivalent</strong> en sondant le même sous-sol.</p>
+<p>C'est pourquoi on parle de "<strong>spectres</strong>" pour désigner les acquisitions de WISDOM pour un sondage donné.
+La série temporelle obtenue après transformée de Fourier correspondra aux <strong>échos</strong> reçus pour différents <strong>temps de retards</strong>.</p>
+<p>Cette méthode permet d'obtenir un radar nécessitant <strong>moins de puissance</strong>, avec des <strong>signaux plus simples</strong> à générer, ayant un <strong>rapport signal / bruit</strong> et une <strong>dynamique meilleure</strong> qu'un radar impulsionnel de résolution équivalente.
+Bref, un instrument <strong>plus compact</strong> et <strong>moins consommateur</strong> en puissance : de gros avantages pour un instrument spatial !</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Un radar SFCW classique construit un complexe I/Q contenant les informations d'amplitude et de phase des signaux reçus pour chaque fréquence.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mais ceci nécessite 2 chaînes d'acquisitions distinctes.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Par soucis de compacité de l'instrument, WISDOM ne mesure que la partie réelle I du signal.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nous verrons dans la suite comment faire une analyse spectrale d'un signal réel.</td>
+</tr>
+</tbody>
+</table>
+<p>Les données WISDOM consistent donc en des spectres acquis à intervalles réguliers de distance, pour former une matrice 2D appellée "<strong>spectrogramme</strong>".</p>
+<p>Après transformation de chaque spectre en série temporelle, on obtient une représentation des échos reçus en fonction du temps pour les différents sondages d'un traverse, appelé "<strong>radargramme</strong>".
+Comme mentionné précédemment, l'axe des temps de retards pourra être converti en <strong>profondeurs</strong>, afin d'obtenir une vue en "coupe" du sous-sol.</p>
+<p>3 radargrammes acquis en parallèle constitueront une <strong>grid</strong> WISDOM.</p>
+<p><img alt="Génération d'un radargramme" src="../img/Radargram_generation_schematic.png" /></p>
+<p>Lors de la mission ExoMars, il est prévu qu'une opération <strong>grid</strong> WISDOM soit réalisée à proximité d'un <strong>affleurement</strong> rocheux d'intérêt : une <strong>roche sédimentaire argileuse</strong> qui semble ressortir du régolith de surface.
+Une telle roche, formée à l'époque où Mars était encore habitable, pourrait renfermer des <strong>traces d'une hypothétique vie passée</strong>.</p>
+<p>Les 3 vues en coupes obtenues grâce à WISDOM pourront confirmer si cet affleurement rocheux <strong>s'enfonce jusqu'à 2 m</strong> dans le sous-sol, profondeur nécessaire à la <strong>préservation de bio-marqueurs</strong>.
+Si tel est le cas, l'équipe WISDOM pourra indiquer <strong>où creuser</strong> pour récupérer <strong>un échantillon</strong> de cette roche.</p>
+<p>Voici les caractéristiques du radar WISDOM :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Caractéristique</th>
+<th style="text-align: center;">Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Fréquences d'émission</td>
+<td style="text-align: center;">0.5 à 3 GHz</td>
+</tr>
+<tr>
+<td style="text-align: center;">Pas de fréquence d'émission</td>
+<td style="text-align: center;">2.5 MHz</td>
+</tr>
+<tr>
+<td style="text-align: center;">Nombre de pas de fréquence</td>
+<td style="text-align: center;">1001</td>
+</tr>
+<tr>
+<td style="text-align: center;">Durée d'un pas de fréquence</td>
+<td style="text-align: center;">200 µs</td>
+</tr>
+<tr>
+<td style="text-align: center;">Puissance d'émission</td>
+<td style="text-align: center;">1 mW typique</td>
+</tr>
+<tr>
+<td style="text-align: center;">Gain des antennes</td>
+<td style="text-align: center;">0 dBi minimum</td>
+</tr>
+<tr>
+<td style="text-align: center;">Résolution en distance dans le vide</td>
+<td style="text-align: center;">6 cm</td>
+</tr>
+<tr>
+<td style="text-align: center;">Distance ambiguë dans le vide</td>
+<td style="text-align: center;">30 m</td>
+</tr>
+<tr>
+<td style="text-align: center;">Résolution en distance typique dans le sous-sol</td>
+<td style="text-align: center;">3 cm</td>
+</tr>
+<tr>
+<td style="text-align: center;">Portée typique dans le sous-sol</td>
+<td style="text-align: center;">3 m</td>
+</tr>
+</tbody>
+</table>
+<p>Pour plus d'informations : <a href="https://www.wisdom-radar.eu">site de WISDOM</a>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Une particularité de WISDOM est qu'il s'agit d'un radar <strong>polarimétrique</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">En réalité, il ne possède non pas 2 mais 4 antennes, lui permettant d'émettre et de recevoir dans <strong>2 polarisations linéaires</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cette information supplémentaire permettra entre autre d'étudier la rugosité des interfaces dans le sous-sol.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pour les besoins de ce TP, nous avons simplifié le contenu des données en ne laissant qu'une seule des 4 configurations polarimétriques possibles.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="objectifs">Objectifs</h2>
+<p>Lors de ce tutoriel, nous allons programmer une <strong>chaîne de traitement des données de WISDOM</strong> sous la forme d'un <strong>projet Python</strong>, que nous utiliserons pour obtenir une <strong>interprétation géophysique</strong> classique.</p>
+<p>Ce projet Python devra contenir des fonctions pour :</p>
+<ul>
+<li>
+<p>Importer des données WISDOM à partir d'un fichier HDF5 tel que celui qui vous sera fourni.</p>
+</li>
+<li>
+<p>Convertir en radargrammes les traverses de spectres (spectrogrammes) acquis par le radar, en compensant les effets instrumentaux.</p>
+</li>
+<li>
+<p>Filtrer les échos parasites horizontaux.</p>
+</li>
+<li>
+<p>Appliquer un gain vertical pour compenser les pertes dans le sous-sol.</p>
+</li>
+<li>
+<p>Estimer la permittivité diélectrique de la 1ère couche du sous-sol à partir de la calibration du radar, et en déduire la conversion des temps de retard en profondeurs.</p>
+</li>
+<li>
+<p>Exporter les radargrammes obtenus sous la forme d'un fichier HDF5.</p>
+</li>
+</ul>
+<p>Créez le dossier de votre projet, et structurez-le avec des sous-dossiers et des fichiers vides pour l'instant.</p>
+<p><strong>Pour faire simple, n'ajouterons pas de tests ou de documentation à notre projet Python.</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Il est à noter que notre exemple ici a été grandement simplifié pour les besoins de ce TP.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Certains traitements, tels que la correction de l'effet de la température, ont déjà été appliqués aux données fournies.</td>
+</tr>
+<tr>
+<td style="text-align: left;">De plus, lors de l'interprétation, nous allons faire des hypothèses simplificatrices sur les propriétés électriques du sous-sol, et la propagation des signaux WISDOM à travers celui-ci.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="importation-des-donnees">Importation des données</h2>
+<h3 id="exemple-de-donnees-wisdom">Exemple de données WISDOM</h3>
+<p>Vous trouverez un exemple de fichier de <strong>données WISDOM</strong> au format <strong>HDF5</strong> <a href="https://github.com/NicOudart/UVSQ_M2_NewSpace_TP_signal/blob/master/example/WISDOM_20220315.h5">ici</a>.</p>
+<p>On considérera qu'un fichier de données WISDOM issu d'une opération de "<strong>grid</strong>" contient toujours :</p>
+<ul>
+<li>
+<p><code>frequency_axis</code> : un "Dataset", vecteur de dimension 1001, contenant l'<strong>axe des fréquences</strong> (Hz) associé aux spectres WISDOM.</p>
+</li>
+<li>
+<p><code>free_space</code> : un "Dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis dans une situation de "d'<strong>espace libre</strong>".
+Cette acquisition nous servira lors du traitement de nos données.</p>
+</li>
+<li>
+<p><code>calibration</code> : un "Dataset", vecteur de dimension 1001, contenant un spectre réel (homogène à des volts) acquis lors d'un <strong>étalonnage</strong> sur plaque métallique.
+Cette acquisition nous servira lors de l'interprétation de nos données.</p>
+</li>
+<li>
+<p><code>traverse_1</code>, <code>traverse_2</code> et <code>traverse_3</code> : 3 "Groups" pour les <strong>3 "traverses"</strong> de la "grid", contenant chacun un "Dataset" nommé <code>horizontal_distance_axis</code>, vecteur correspondant à l'axe des <strong>distances horizontales</strong> parcourues par WISDOM (m) pour ce "traverse", et un "Dataset" nommé <code>data</code>, matrice 2D correspondant au <strong>spectrogramme</strong> acquis pour ce "traverse". </p>
+</li>
+</ul>
+<p>Ces données ont été acquises le <strong>15/03/2022</strong>, sur un <strong>terrain polygonal</strong> de la vallée d'<strong>Adventdalen</strong>, lors d'une campagne de test de WISDOM au <strong>Svalbard</strong>.</p>
+<p><img alt="Illustration de la campagne au Svalbard de 2022" src="../img/Svalbard_map_illustration.png" /></p>
+<p>Les terrains <strong>polygonaux</strong> sont une formation géologique classique des plaines arctiques.</p>
+<p>Le processus de gel / dégel du proche sous-sol (la zone dite "active") provoque des contraction / décontraction de celui-ci, entrainant des fissures dessinant des "polygones" irrégulier à sa surface.
+Ces "polygones" sont clairement visibles sur les images aériennes du terrain, prises pendant l'été.</p>
+<p>De l'eau peut s'infiltrer dans ces fissures, jusqu'à atteindre le pergélisol où elle se retrouve piégée sous forme de glace.
+Se forme alors au fil des gels / dégels un cône appelé "<strong>coin de glace</strong>".</p>
+<p>Si des terrains polygonaux ont déjà été détectés sur Mars, la présence de coins de glace reste débattue.
+Dans le cas où de tels formations existeraient sur Mars, elles seraient une <strong>cible de choix pour la recherche de traces de vie</strong>.</p>
+<p><img alt="campagne au Svalbard de 2022" src="../img/Svalbard_campaign_illustration.png" /></p>
+<p>Lors de la campagne au Svalbard de 2022, notre terrain polygonal d'étude était <strong>entièrement recouvert de neige</strong>, d'une épaisseur de 10 cm au milieu des polygones.</p>
+<p>Une opération de "<strong>grid</strong>" a été réalisé avec une copie de secours ("flight spare") de WISDOM. 
+3 traverses parallèles d'environ <strong>25 m</strong> ont été acquis avec un pas de <strong>20 cm</strong> en travers d'un "polygone", de manière à passer au-dessus des sillons le délimitant.</p>
+<p>Nous espérons ainsi observer les sillons sous la neige, et potentiellement détecter un "<strong>coin de glace</strong>" en-dessous. </p>
+<p>Ce fichier nous servira d'exemple pour construire notre <strong>chaîne de traitement des données WISDOM</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">En réalité, les données WISDOM sont enregistrées spectre par spectre dans des fichiers binaires séparés, et non pas rassemblées dans un seul fichier HDF5.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Chaque fichier contient également des métadonnées qui ne vous sont pas fournies ici.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pour les besoins de ce TP, nous avons donc fait en sorte de vous faire manipuler un format utile, et simplifié le contenu des données WISDOM.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lecture-du-fichier">Lecture du fichier</h3>
+<p>La 1ère étape de notre de chaîne traitement sera d'importer les données WISDOM d'un fichier HDF5.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>read</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées :  le chemin d'un fichier HDF5.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 9 matrices <code>numpy</code>, correspondant aux 9 "Datasets" contenus dans le fichier.</td>
+</tr>
+</tbody>
+</table>
+<p>Pour lire et écrire un fichier HDF5, nous utiliserons la bibliothèque Python <code>h5py</code>.</p>
+<p>Nous convertirons les "Datasets" contenus dans un fichier en matrices <code>numpy</code>.</p>
+<p>N'oubliez donc pas d'importer ces 2 bibliothèques avec les commandes suivantes :</p>
+<pre><code>import h5py
+import numpy as np
+</code></pre>
+<p>Pour importer un fichier HDF5 avec <code>h5py</code>, on crée un objet <code>File</code>.</p>
+<p>Voici ce que cela donnerait sur notre exemple :</p>
+<pre><code>hf = h5py.File(&quot;.../WISDOM_20220315.h5&quot;,'r')
+</code></pre>
+<p>On peut alors récupérer les différents "Datasets" contenus dans le fichier avec la méthode <code>get</code> et leurs noms.
+Pour les "Datasets" contenus dans des "Groups", il faudra utiliser <code>get</code> pour récupérer chaque "Group", puis à nouveau <code>get</code> pour récupérer les "Datasets" de chaque "Group".
+On oubliera pas de convertir en matrices <code>numpy</code> les "Datasets" récupérés.</p>
+<p>Voici ce que pourrait donner la récupération des 9 "Datasets" d'un fichier WISDOM :</p>
+<pre><code>frequency_axis = np.array(hf.get(&quot;frequency_axis&quot;))
+
+vect_free_space = np.array(hf.get(&quot;free_space&quot;))
+vect_calibration = np.array(hf.get(&quot;calibration&quot;))
+
+group1 = hf.get(&quot;traverse_1&quot;)
+group2 = hf.get(&quot;traverse_2&quot;)
+group3 = hf.get(&quot;traverse_3&quot;)
+
+mat_traverse_1 = np.array(group1.get(&quot;data&quot;))
+mat_traverse_2 = np.array(group2.get(&quot;data&quot;))
+mat_traverse_3 = np.array(group3.get(&quot;data&quot;))
+
+distance_axis_1 = np.array(group1.get(&quot;horizontal_distance_axis&quot;))
+distance_axis_2 = np.array(group2.get(&quot;horizontal_distance_axis&quot;))
+distance_axis_3 = np.array(group3.get(&quot;horizontal_distance_axis&quot;))
+</code></pre>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>read</code></strong>.</p>
+<p>Appliquez votre fonction à notre fichier exemple.</p>
+<p><em>Les dimensions des matrices récupérées sont-elles bien celles attendues ? Le type des données également ? Quelle est la longueur de chaque traverse ?</em></p>
+<p>Petite question pour voir si vous avez bien compris le fonctionnement du format HDF5 :</p>
+<p><em>A votre avis, pourquoi avoir rangé l'axe des distances horizontale dans le "Group" de chaque traverse, et pas l'axe des fréquences ?</em></p>
+<h2 id="analyse-spectrale">Analyse spectrale</h2>
+<p>La 2nde étape de notre de chaîne traitement sera de générer des radargrammes pour chaque traverse contenu dans les données WISDOM récupérées.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>FFT</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 4 matrices <code>numpy</code> contenant les 3 spectrogrammes des 3 "traverses" et l'axe des fréquences, telles que retournées par la fonction <code>read</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 4 matrices <code>numpy</code>, contenant les 3 radargrammes des 3 "traverses", et l'axe des temps de retard correspondant.</td>
+</tr>
+</tbody>
+</table>
+<p>Afin d'obtenir des radargrammes interprétables, nous appliquerons dans cette fonction 3 techniques en amont de la  transformée de Fourier :</p>
+<ul>
+<li>
+<p>Le retrait d'une mesure d'<strong>espace libre</strong>, afin de réduire les échos parasites provenant de l'instrument et son support.</p>
+</li>
+<li>
+<p>Le <strong>zero-padding</strong>, afin d'avoir des radargrammes interpolés verticalement.</p>
+</li>
+<li>
+<p>Le <strong>fenêtrage</strong>, afin d'éviter les problèmes liés aux "lobes secondaires".</p>
+</li>
+</ul>
+<h3 id="nature-des-donnees">Nature des données</h3>
+<p>Dans un 1er temps, nous allons nous intéresser à la nature des données dont nous disposons.</p>
+<p>Importez la bibliothèque <code>matplotlib</code>, qui va nous servir à faire des affichages graphiques :</p>
+<pre><code>import matplotlib.pyplot as plt
+</code></pre>
+<p>Essayons tout d'abord d'afficher un spectre issu de nos données.</p>
+<p>Prenons le 103ème sondage du 1er "traverse", et regardons le spectre mesuré.
+Affichons ce signal avec des commandes Python de ce genre :</p>
+<pre><code>plt.figure()
+plt.plot(frequency_axis,mat_traverse_1[102],'r-')
+plt.xlabel('Frequency (Hz)',fontsize=12)
+plt.ylabel('Unicalibrated voltage (V)',fontsize=12)
+plt.title('Spectrum - Traverse 1 - Sounding 102',fontsize=12)
+plt.grid()
+plt.show()
+</code></pre>
+<p>On obtient alors la courbe suivante :</p>
+<p><img alt="Exemple de spectre WISDOM" src="../img/WISDOM_spectrum_example.png" /></p>
+<p>On voit nettement qu'un spectre WISDOM est un signal réel <strong>périodique</strong>.</p>
+<p>Un spectre WISDOM correspond dans le domaine temporel à une serie d'impulsions renvoyées par les différentes interfaces du sous-sol, reçues pour différents temps de retard par rapport à l'émission.
+On s'attend donc à obtenir une <strong>somme de sinusoïdes</strong>, dont la fréquence est d'autant plus élevée que le temps de retard de l'écho est grand.</p>
+<p>D'où l'intérêt de vouloir réaliser une <strong>analyse spectrale</strong> de ce signal, afin de séparer temporellement les différents échos reçus par le radar.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Considérer les spectres WISDOM comme une somme de sinusoïdes est en réalité une approximation de la réalité.</td>
+</tr>
+<tr>
+<td style="text-align: left;">En effet, des limitations techniques font que WISDOM n'émet pas tout à fait les différentes fréquences avec la même puissance.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ensuite, les pertes dans le sous-sol (absorption et diffusion) dépendent de la fréquence.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tout ceci explique le fait que les basses fréquences ont l'air d'avoir une amplitude plus élevée que les hautes fréquences.</td>
+</tr>
+</tbody>
+</table>
+<p>Pour vérifier que l'on retrouve bien un signal périodique pour chaque spectre du 1er traverse, nous pouvons aussi afficher le spectrogramme.</p>
+<p>Vous pouvez réaliser cet affichage avec des commandes Python de ce genre :</p>
+<pre><code>plt.figure()
+plt.pcolormesh(distance_axis_1,frequency_axis,mat_traverse_1.T,cmap='bwr',vmin=-np.percentile(np.abs(mat_traverse_1),99.9),vmax=np.percentile(np.abs(mat_traverse_1),99.9))
+plt.xlabel('Horizontal distance (m)',fontsize=12)
+plt.ylabel('Frequency (Hz)',fontsize=12)
+plt.colorbar(label='Uncalibrated voltage (V)')
+plt.title('Spectrogram - Traverse 1',fontsize=12)
+plt.grid()
+plt.show()
+</code></pre>
+<p>On obtient alors l'affichage graphique suivant, qui confirme ce que nous avions observé sur le 103ème sondage :</p>
+<p><img alt="Exemple de spectrogramme WISDOM" src="../img/WISDOM_spectrogram_example.png" /></p>
+<p>On voit que la somme de sinusoïdes n'est pas tout à fait la même pour chaque sondage, signe que la pronfondeur des différentes interfaces détectées varie avec la distance horizontale.</p>
+<p>Avant de réaliser les conversions en domaine temporel, posez-vous les questions suivantes :</p>
+<p><em>Quel temps de retard maximal pourra mesurer WISDOM ? Retrouvez-vous bien la distance ambiguë dans le vide donnée précédemment ? A votre avis, d'où vient la différence ?</em></p>
+<p><em>Quel sera la résolution temporelle de WISDOM ? Retrouvez-vous bien la résolution dans le vide donnée précédemment ?</em></p>
+<p><em>Que risque-t-il de se passer si WISDOM détecte un écho d'une interface plus lointaine que sa distance ambiguë ?</em></p>
+<h3 id="fft-reelle-avec-numpy">FFT réelle avec Numpy</h3>
+<p>Comme pour le TP précédent, nous allons utiliser la "<strong>Fast Fourier Transform</strong>" (FFT).
+Cependant, à la différence des données ROXI qui étaient complexes, les spectres WISDOM sont <strong>réels</strong>.</p>
+<p>Hors, la transformée de Fourier d'un signal réel donne un signal complexe <strong>symétrique autour de 0</strong> : la moitié du signal est <strong>redondante</strong>.
+Dans notre cas, un sondage en domaine temporel contiendrait les mêmes échos pour des temps de retard positifs et négatifs, ce qui n'a pas de sens physique.</p>
+<p>Pour éviter ce problème, la bibliothèque <code>numpy</code> propose une implémentation spéciale de la FFT nommée <code>rfft</code>, <strong>adaptée à l'analyse spectrale de signaux réels</strong>.
+Elle ne retourne que la partie positive du signal après FFT, évitant ainsi la redondance.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">On en déduit facilement que la distance ambiguë de WISDOM dans le vide est 2 fois plus courte que si WISDOM mesurait des spectres complexes.</td>
+</tr>
+</tbody>
+</table>
+<p>N'oubliez pas d'importer la bibliothèque :</p>
+<pre><code>import numpy as np
+</code></pre>
+<p>Pour déterminer l'axe des temps de retard qui ira avec nos sondages WISDOM, on peut utiliser la méthode <code>fft.rfftfreq</code> de <code>numpy</code>, qui est l'adaptation pour les signaux réels de <code>fft.fftfreq</code> vue au TP précédent.</p>
+<p>On pourra donc utiliser des commandes Python de ce genre pour générer notre axe :</p>
+<pre><code>df = frequency_axis[1]-frequency_axis[0]
+time_axis = np.fft.rfftfreq(len(frequency_axis),d=df)
+</code></pre>
+<p>On rappelle que la sortie d'une transformée de Fourier est une série de <strong>nombres complexes</strong>, contenant les informations d'<strong>amplitude</strong> et de <strong>phase</strong> des échos reçus.</p>
+<ul>
+<li>
+<p>Les amplitudes des échos sont d'autant plus grandes que le <strong>contraste de permittivité diélectrique</strong> à une interface est fort.</p>
+</li>
+<li>
+<p>Les décalages de phase des échos indique si l'on passe d'<strong>un milieu de permittivité diélectrique plus faible à un milieu de permittivité diélectrique plus haute</strong>, ou l'<strong>inverse</strong>.</p>
+</li>
+</ul>
+<p>C'est pourquoi on choisi en général d'afficher la <strong>partie réelle</strong> du radargramme d'un radar à pénétration de sol, afin de visualiser à la fois les variations d'amplitude et de phase.
+Le <strong>module</strong> pourra être utilisé pour les mesures de réflectivité.</p>
+<p>L'amplitude du spectre en sortie de la FFT sera homogène à une tension.</p>
+<p>On utilisera la méthode <code>fft.rfft</code> de <code>numpy</code>, avec une commande similaire à celle-ci :</p>
+<pre><code>sounding_1_132 = np.fft.rfft(spectrum_1_132)
+</code></pre>
+<p>Pour obtenir la partie réelle de la série temporelle, il suffira d'utiliser la commande :</p>
+<pre><code>sounding_1_132_real = np.real(sounding_1_132)
+</code></pre>
+<p>Et pour le module :</p>
+<pre><code>sounding_1_132_real = np.abs(sounding_1_132)
+</code></pre>
+<p><strong>Sauf mentionné autrement, nous considèrerons dans la suite de ce TP que nous récupérons la partie réelle du signal</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Les tensions obtenues ici ne sont pas calibrées.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nous nous servirons d'une mesure de calibration de l'amplitudes des échos de surface, pour l'interprétation.</td>
+</tr>
+</tbody>
+</table>
+<p>Si vous appliquez la FFT au 103ème sondage du 1er "traverse", vous obtiendrez la série temporelle suivante :</p>
+<p><img alt="Exemple de sondage WISDOM brut" src="../img/WISDOM_raw_time_series_example.png" /></p>
+<p>On observe clairement des échos dès le début du sondage, entre 0 et 2.5 ns, ce qui est étrange étant donné que les antennes radar sont à 38 cm de la surface.
+Ensuite, on voit un écho intense à environ 12 ns, que l'on pourrait identifier comme étant l'écho de surface.
+Enfin, on devine des échos entre 15 et 30 ns, correspondant probablement à des échos du sous-sol.</p>
+<p>Afin d'aider à identifier ces échos, affichons le radargramme complet du 1er "traverse".</p>
+<p>Pour ce faire, une fois le radargramme du "traverse" récupéré dans une matrice <code>numpy</code> nommée <code>mat_radargram_1</code>, vous pouvez utiliser des commandes de ce genre :</p>
+<pre><code>plt.figure()
+plt.pcolormesh(distance_axis_1,time_axis,mat_radargram_1.T,cmap='binary',vmin=-np.percentile(np.abs(mat_radargram_1),99.9),vmax=np.percentile(np.abs(mat_radargram_1),99.9))
+plt.gca().invert_yaxis()
+plt.xlabel('Horizontal distance (m)',fontsize=12)
+plt.ylabel('Time (s)',fontsize=12)
+plt.colorbar(label='Uncalibrated voltage (V)')
+plt.title('Radargram - Traverse 1',fontsize=12)
+plt.grid()
+plt.show()
+</code></pre>
+<p>Vous obtiendrez alors un affichage graphique similaire à celui-ci :</p>
+<p><img alt="Exemple de radargramme WISDOM brut" src="../img/WISDOM_raw_radargram_example.png" /></p>
+<p>On observe alors que les échos de début de sondage entre 0 et 2.5 ns, ainsi que l'écho intense à 12 ns sont constants tout le long du radargramme.
+On en déduit qu'il s'agit d'<strong>effets instrumentaux</strong> : </p>
+<ul>
+<li>
+<p>Les échos entre 0 et 2.5 ns correspondent au "<strong>couplage interne</strong>" : des échos liés à des problèmes d'aptation d'impédance au sein des circuits / câbles de l'instrument.</p>
+</li>
+<li>
+<p>L'écho intense à 12 ns correspond au "<strong>couplage direct</strong>" : le signal émis est quasi-directement capté par l'antenne de réception.</p>
+</li>
+</ul>
+<p>Des traits horizontaux, correspondant à des <strong>réflexions multiples</strong> des couplages interne et direct, dérangent la visualisation des échos provenant du sous-sol entre 15 et 30 ns.</p>
+<p>Afin de réduire ces effets, nous allons compenser une <strong>mesure d'espace libre</strong>, <strong>en amont</strong> de la FFT.</p>
+<h3 id="mesure-despace-libre">Mesure d'espace libre</h3>
+<p>Lorsque l'on veut compenser les effets instrumentaux d'une mesure, on utilise classiquement ce que l'on appelle un "blanc".</p>
+<p>Pour un radar, il s'agit d'une mesure "d'<strong>espace libre</strong>", c'est-à-dire sans aucune cible devant les antennes.
+Le sondage obtenu ne contiendra alors que les échos provenant du <strong>couplage interne</strong> et du <strong>couplage direct</strong>.</p>
+<p>En soustrayant cette mesure d'espace libre notre 103ème spectre du 1er "traverse", nous obtenons après FFT la série temporelle suivante :</p>
+<p><img alt="Exemple de sondage WISDOM après retrait du free-space" src="../img/WISDOM_freespace_removal_time_series_example.png" /></p>
+<p>On voit que le <strong>couplage interne</strong> a totalement disparu.
+Le <strong>couplage direct</strong> a été fortement réduit, mais n'a pas été complètement supprimé.</p>
+<p>Ceci est lié au fait que le couplage interne est très stable d'une mesure à l'autre, le rendant facilement compensable.
+Le couplage direct quant à lui varie légèrement avec la température (qui n'est jamais parfaitement compensée) et peut être influencé par la surface, ce qui rend sa compensation plus difficile.</p>
+<p>Néanmoins, <strong>les échos provenant de la sous-surface ressortent plus clairement</strong>.</p>
+<p>Si on soustrait la mesure d'espace libre à tous les spectres du 1er "traverse", on obtient après FFT le radargramme suivant :</p>
+<p><img alt="Exemple de radargramme WISDOM après retrait du free-space" src="../img/WISDOM_freespace_removal_radargram_example.png" /></p>
+<p>Des structures de la sous-surface commencent à apparaitre, mais des parasites horizontaux perturbent toujours un peu la lecture du radargramme.
+Nous verrons dans la suite du TP comment les compenser.</p>
+<p>Le radargramme a un aspect "pixélisé", qui est lié au fait qu'ici la <strong>durée de l'impulsion équivalente</strong> en domaine temporel de WISDOM est <strong>exactement égale à 1 pixel</strong>.</p>
+<p>Nous allons voir comment faire pour obtenir des sondages un peu plus "lissés", afin d'améliorer leur lisibilité.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">La durée de l'impulsion équivalente d'un radar fonctionnant en domaine fréquentiel est égale à l'inverse de la bande de fréquences de l'instrument.</td>
+</tr>
+<tr>
+<td style="text-align: left;">WISDOM fonctionnant entre 0.5 et 3 GHz, sa largeur de bande est de 2.5 GHz, et donc la durée de son impulsion équivalente est de 0.4 ns.</td>
+</tr>
+<tr>
+<td style="text-align: left;">La résolution d'un signal obtenu en sortie de la FFT dépend du nombre d'échantillons fournis en entrée.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zero-padding">Zero-padding</h3>
+<p>Si nous appliquons la FFT à un spectrum WISDOM contenant <strong>1001 échantillons</strong>, la série temporelle obtenue contiendra <strong>également 1001 échantillons</strong>.
+Le spectre mesuré faisant 2.5 GHz de large, on en déduit que cette série temporelle aura un pas de 0.4 ns.</p>
+<p>Pour augmenter le nombre d'échantillons renvoyés par la FFT, on peut augmenter le nombre d'échantillons dans un spectre WISDOM <strong>en ajoutant des zéros à la fin</strong>.
+C'est ce que l'on appelle le "<strong>zero-padding</strong>".</p>
+<p>Par exemple, si on complète un spectre WISDOM de 1001 échantillon, en ajoutant 1001 zéros à la fin, on obtient 2002 échantillons en sortie de la FFT.
+Le pas de la série temporelle obtenue sera alors de 0.2 ns.</p>
+<p>Par contre, en ajoutant des zéros nous n'avons ajouté aucune information au spectre : la largeur de bande de WISDOM reste de 2.5 GHz.
+La largeur de l'impulsion équivalente reste donc de 0.4 ns.</p>
+<p>Le pas de la série temporelle a donc été <strong>divisé par 2</strong>, mais la <strong>résolution</strong> des sondages WISDOM (c'est-à-dire leur capacité à séparer 2 impulsions) <strong>reste la même</strong>.</p>
+<p>On en déduit que le "<strong>zero-padding</strong>" agit comme une <strong>interpolation verticale</strong> des radargrammes : il permet de lire plus facilement le temps de retard des échos reçus, mais ne permet pas de mieux les séparer.</p>
+<p>Avec l'implémentation <code>numpy</code> de la FFT, il n'est pas nécessaire d'ajouter des zéros à la fin de notre spectre pour faire du zero-padding.
+Il suffit d'ajouter un second paramètre en entrée pour définir le nombre d'échantillons que l'on veut en sortie de la FFT.</p>
+<p>Pour obtenir une série temporelle contenant 10 fois plus d'échantillons que notre spectre, il suffit donc d'adapter votre commande Python de la manière suivante :</p>
+<pre><code>sounding_1_132 = np.fft.rfft(spectrum_1_132,10*len(spectrum_1_132))
+</code></pre>
+<p><strong>Attention ! Il faut aussi adapter l'axe temporel qui va avec !</strong></p>
+<p><em>Quel sera le pas de cette série temporelle ?</em></p>
+<p><strong>Pour votre fonction <code>FFT</code>, vous pouvez soit ajouter le nombre d'échantillons désiré comme une entrée de la fonction.</strong></p>
+<p>En appliquant la FFT avec "zero-padding" au 103ème sondage du 1er traverse, vous devriez obtenir la série temporelle suivante :</p>
+<p><img alt="Exemple de sondage WISDOM après zero-padding" src="../img/WISDOM_zeropadding_time_series_example.png" /></p>
+<p>On observe bien ce que l'on attendait : le temps de retard des "pics" correspondant aux impulsions reçues sont beaucoup plus facile à lire.</p>
+<p>Mais il est clair que ces pics étaient déjà visibles sur le spectre à 1001 échantillons, et que nous n'en avons pas fait apparaitre de nouveaux.
+Nous n'avons donc apporté aucune information spectrale, juste interpolé le spectre.</p>
+<p>Par contre, apparaissent des petits échos parasites, qui sont le plus nettement visibles entre 0 et 11 ns.</p>
+<p>Vous pouvez appliquer le "zero-padding" à l'intégralité du radargramme du 1er traverse, pour voir si on retrouve cet artefact dans d'autres sondages.
+Vous devriez alors obtenir le graphique suivant :</p>
+<p><img alt="Exemple de radargramme WISDOM après zero-padding" src="../img/WISDOM_zeropadding_radargram_example.png" /></p>
+<p>On observe bien cet effet sur l'intégralité du radargramme.
+Il s'agit de ce que l'on appelle des "<strong>lobes secondaires</strong>", un effet classique lorsque l'on réalise une analyse spectral d'un signal fini.</p>
+<p>Nous allons voir comment compenser cet effet.</p>
+<h3 id="fenetrage">Fenêtrage</h3>
+<p>En théorie, la transformée de Fourier d'une <strong>sinusoïde complexe</strong> donne un spectre contenant <strong>un unique pic</strong> (ou "Dirac"), à la fréquence correspondante.</p>
+<p>Dans la réalité, nous ne pouvons traiter que des signaux <strong>finis</strong> et <strong>discrets</strong>.</p>
+<p>Lorsque l'on applique une FFT à un signal, 2 phénomènes apparaissent alors :</p>
+<ul>
+<li>
+<p>"<strong>Aliasing</strong>" (ou "repliement de spectre): échantillonner revient dans le domaine fréquentiel à une convolution par un "peigne de Dirac", où chaque "Dirac" est espacé de la fréquence d'échantillonnage <span class="arithmatex">\(F_e\)</span>.
+On obtient donc un spectre répétant les composantes fréquentielles du signal tous les <span class="arithmatex">\(F_e\)</span>.
+Si le signal temporel contient des fréquences supérieures à <span class="arithmatex">\(F_e/2\)</span>, il y aura chevauchement entre ces répétitions dans le spectre.</p>
+</li>
+<li>
+<p>"<strong>Spectral leakage</strong>" : avoir un signal fini revient à multiplier un signal infini par une fenêtre rectangulaire.
+La transformée de Fourier d'une fenêtre rectangulaire étant un sinus cardinal, ceci revient dans le domaine fréquentiel à une convolution par un sinus cardinal.
+Pour chaque composante fréquentielle du signal, nous obtenons donc un sinus cardinal, avec un "lobe principal" et des "<strong>lobes secondaires</strong>".</p>
+</li>
+</ul>
+<p>C'est ce 2nd phénomène qui cause l'artefact que nous observons dans notre radargramme.</p>
+<p>Il est particulièrement problématique ici, car un "lobe secondaire" pourrait être pris par erreur pour un écho provenant du sous-sol.</p>
+<p>C'est pourquoi on doit appliquer un "<strong>fenêtrage</strong>" à un spectre WISDOM <strong>avant FFT</strong>.</p>
+<p>L'idée est d'adoucir les discontinuités sur les bord de notre spectre fini, en le multipliant par un type de fonction appelée "<strong>fenêtre d'apodisation</strong>".
+Parmi les fenêtres connues, on peut citer Hann, Hamming et Blackman.</p>
+<p>Le choix d'une fenêtre est toujours un compromis entre <strong>résolution</strong> et réduction des "<strong>lobes secondaires</strong>" :</p>
+<ul>
+<li>
+<p>Trop "adoucir" les bords du spectre revient à réduire la bande de fréquences effective de l'instrument, et donc à <strong>dégrader sa résolution</strong>.</p>
+</li>
+<li>
+<p>Ne pas assez "adoucir" les bords du spectre revient à prendre le risque d'avoir de <strong>confondre des lobes secondaires avec des échos</strong>.</p>
+</li>
+</ul>
+<p>Il existe des implémentations <code>numpy</code> des différentes fenêtres d'aposation.
+Elle portent en général simplement le nom de la fenêtre, et prennent en entrée le nombre d'échantillons dans le spectre.</p>
+<p>Voici comment adapter notre commande pour appliquer la <strong>fenêtre de Hann</strong> à notre spectre WISDOM avant FFT :</p>
+<pre><code>sounding_1_132 = np.fft.rfft(spectrum_1_132*np.hanning(len(spectrum_1_132)),10*len(spectrum_1_132))
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Vous avez peut-être remarqué que la fenêtre de "Hann" est nommée "Hanning" par <code>numpy</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Il s'agit d'une erreur classique : comme il existe une fenêtre de "Hamming", et que beaucoup d'anglophones pensent qu'il s'agit d'un verbe au gérondif, le fenêtrage de "Hann" est parfois nommé "Hanning".</td>
+</tr>
+<tr>
+<td style="text-align: left;">En réalité, "Hamming" est le nom d'un mathématicien américain : il n'existe pas de fenêtre de "Ham".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pour votre fonction <code>FFT</code>, vous pouvez aussi utiliser la fenêtre de Hann, qui est souvent la fenêtre choisie par défaut.</strong></p>
+<p>En appliquant la FFT avec fenêtrage de Hann au 103ème sondage du 1er traverse, vous devriez obtenir la série temporelle suivante :</p>
+<p><img alt="Exemple de sondage WISDOM après fenêtrage" src="../img/WISDOM_windowing_time_series_example.png" /></p>
+<p>Comme attendu, on voit que les "lobes secondaires" ont quasiment disparu.</p>
+<p>Par contre, la durée des impulsions reçue a clairement augmenté, et donc la résolution temporelle du radar a été dégradée.
+Encore une fois, il s'agit d'un compromis.</p>
+<p>Si vous affichez le radargramme complet du 1er traverse, vous pourrez apprécier l'amélioration : </p>
+<p><img alt="Exemple de radargramme WISDOM après fenêtrage" src="../img/WISDOM_windowing_radargram_example.png" /></p>
+<p>On distingue à présent plutôt bien la surface entre 13 et 14 ns, puis des structures du sous-sol jusqu'à presque 30 ns.
+Nous discuterons plus tard de leur interprétation.</p>
+<p><strong>Vous pouvez enfin compléter votre fonction <code>FFT</code></strong>.</p>
+<p><em>Nous remarquons encore quelques lignes horizontales dans le radargramme, que le retrait de la mesure d'espace libre n'a pas éliminé. A votre avis, quelle est leur origine ?</em></p>
+<p>En théorie, nous pourrions arrêter notre chaîne de traitement ici, et passer à l'interprétation.</p>
+<p>Cependant, pour améliorer la <strong>lisibilité</strong> d'un radargramme WISDOM, on ajoute souvent quelques traitements supplémentaires à la chaîne : filtrage horizontal, gain vertical et interpolation horizontale.</p>
+<p>Si ces traitements améliorent grandement notre capacité à interpréter visuellement les radargrammes, ils peuvent empêcher certaines interprétations physiques.
+Nous pourrons donc choisir ou non de les appliquer suivant notre objectif.</p>
+<h2 id="amelioration-de-la-lisibilite">Amélioration de la lisibilité</h2>
+<p>Nous allons ajouter 3 traitements optionnels à notre chaîne de traitement des données WISDOM, afin d'améliorer la lisibilité des radargrammes.</p>
+<p>Nous les implémenterons sous la forme de 3 fonctions : <code>horizontal_filter</code>, <code>vertical_gain</code> et <code>horizontal_interpolation</code>.</p>
+<p>Ces traitements arrivant après la génération du radargramme par <code>FFT</code>, ils s'appliquent donc dans le <strong>domaine temporel</strong>.</p>
+<h3 id="filtrage-horizontal">Filtrage horizontal</h3>
+<p>En regardant le radargramme obtenu pour le 1er traverse, nous voyons que de nombreuses lignes horizontales gênent toujours la lecture, malgré le retrait d'une mesure d'espace libre.</p>
+<p>Ces "échos parasites" sont donc probablement issus de réflexions multiples entre entre les antennes et le sol, ou entre les antennes et le moyen de transport du radar.</p>
+<p>Plusieurs méthodes ont été envisagées par l'équipe WISDOM pour compenser ces parasites.
+Dans le cadre de ce TP, nous implémenterons la plus simple d'entre elles : <strong>le retrait d'une moyenne horizontale</strong>.</p>
+<p>Il s'agit simplement de calculer la moyenne des amplitudes pour les différentes lignes du radaragramme, et de soustraire le vecteur obtenu à chaque colonne.</p>
+<p><em>Quelle hypothèse faisons-nous ici sur les échos parasites par rapport aux échos du sous-sol ?</em></p>
+<p><em>Que risque-t-il de se passer si nous avons une interface horizontale dans le sous-sol ?</em></p>
+<p><em>Cette méthode fonctionne-t-elle d'autant plus que le traverse est long ou court ?</em></p>
+<p>La prochaine étape de notre chaîne de traitement sera donc de soustraire sa moyenne horizontale au radargramme.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>horizontal_filter</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 3 matrices <code>numpy</code> contenant les 3 radargrammes des 3 "traverses", tels que retournés par la fonction <code>FFT</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 3 matrices <code>numpy</code>, contenant les 3 radargrammes des 3 "traverses", après retrait d'une moyenne horizontale.</td>
+</tr>
+</tbody>
+</table>
+<p>Pour calculer la moyenne d'une matrice selon l'axe horizontal, on peut utiliser une méthode de <code>numpy</code> nommée <code>mean</code>, avec le paramètre <code>axis</code> égal à 0.</p>
+<p>Si nous appliquons ce traitement au 103ème sondage du 1er traverse, nous obtenons la série temporelle suivante :</p>
+<p><img alt="Exemple de sondage WISDOM après retrait de la moyenne" src="../img/WISDOM_mean_removal_time_series_example.png" /></p>
+<p>On observe que les échos parasites on presque disparu.
+Par exemple, un petit peu avant 20 ns.</p>
+<p>Mais on voit aussi que l'écho de la surface semble avoir été un peu déformé.</p>
+<p>Si nous appliquons le retrait d'une moyenne horizontale à l'intégralité du radargramme du 1er traverse, nous obtenons le résultat suivant :</p>
+<p><img alt="Exemple de radargramme WISDOM après retrait de la moyenne" src="../img/WISDOM_mean_removal_radargram_example.png" /></p>
+<p>On voit en effet que la forme et l'intensité de l'écho de surface semblent avoir été plus ou moins impactées selon les sondages.</p>
+<p>On pouvait le deviner : WISDOM se déplaçant à une distance quasi-constante au-dessus de la surface, l'écho de surface est très constant avec la distance parcourue.
+On s'attend donc à ce que <strong>l'écho de surface soit impacté par le retrait d'une moyenne horizontale</strong>.</p>
+<p>Ceci n'est pas très problématique lorsque l'on n'est intéressé que par les échos de la sous-surface.
+Mais dans la suite, nous utiliserons l'intensité de l'écho de surface pour notre interprétation.</p>
+<p>Il faudra alors faire attention de réaliser notre interprétation de l'écho de surface <strong>avant le retrait de la moyenne horizontale !</strong></p>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>horizontal_filter</code></strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Il est a noté que ce traitement est assez spécifique à WISDOM.</td>
+</tr>
+<tr>
+<td style="text-align: left;">En effet, la plupart des géoradars terrestres ont leur antennes collées au sol, et donc leur radargrammes ne présentent ni réflexion au niveau du sol, ni réflexions multiples entre les antennes et le sol.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Les antennes de WISDOM sont à 38 cm au-dessus de la surface pour des raisons pratiques de déplacement du rover.</td>
+</tr>
+</tbody>
+</table>
+<p>Maintenant que les échos parasites ne gênent plus la lecture de notre radargramme du 1er traverse, on distingue bien mieux la structure du sous-sol.</p>
+<p>Par contre, plus les échos viennent de loin dans le sous-sol, plus ils sont faibles comparés à l'écho de surface...</p>
+<h3 id="gain-vertical">Gain vertical</h3>
+<p>Lorsque les ondes électromagnétiques émises par un géoradar se propagent dans le sous-sol, elles sont atténuées par 3 phénomènes différents :</p>
+<ul>
+<li>
+<p>La <strong>divergence géométrique</strong> du faisceau émit, qui fait diminuer l'amplitude du signal proportionnellement à la distance parcourue.</p>
+</li>
+<li>
+<p>L'<strong>absportion</strong> du matériau liée aux pertes diélectriques et de conductivité, qui fait diminuer diminuer l'amplitude du signal exponentiellement.</p>
+</li>
+<li>
+<p>La <strong>diffusion</strong> par les hétérogénéités du sous-sol, qui fait aussi diminuer l'amplitude du signal exponentiellement.</p>
+</li>
+</ul>
+<p>Tout ceci fait que les échos seront avec une amplitude d'autant plus faible que leur profondeur d'origine est élevée.</p>
+<p>La dynamique nécessaire pour représenter les différents échos d'un radargramme est donc souvent très grande, et il est donc difficile de trouver une échelle de couleur permettant de visualiser tous les échos sans saturation.</p>
+<p>C'est pourquoi il est commun pour les radars à pénétration de sol d'appliquer <strong>un gain le long de l'axe vertical des radargrammes</strong>, afin de compenser les pertes, et de faire ressortir les échos profonds.</p>
+<p>Nous allons ajouter à notre chaîne de traitement un gain vertical pour compenser les pertes dans le sous-sol.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>vertical_gain</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 3 matrices <code>numpy</code> contenant les 3 radargrammes des 3 "traverses" tels que retournés par la fonction <code>FFT</code>, et les 3 paramètres nécessaires à la fonction de gain que nous voulons implémenter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 3 matrices <code>numpy</code>, contenant les 3 radargrammes des 3 "traverses", après application d'un gain selon l'axe vertical.</td>
+</tr>
+</tbody>
+</table>
+<p>En tout rigueur, il faudrait utiliser pour le gain une fonction qui combine compensations linéaire (pertes par divergence) et exponentielle (absorption et diffusion) avec la profondeur, en se basant sur les propriétés du sous-sol.
+Malheureusement, nous n'avons pas toujours accès à la composition du sol.</p>
+<p>Pour simplifier, dans le cadre de ce TP nous allons utiliser une fonction exponentielle <span class="arithmatex">\(G\)</span> du temps de retard des échos <span class="arithmatex">\(t\)</span> :</p>
+<p><span class="arithmatex">\(G(t) = \left\{
+    \begin{array}{ll}
+        exp(\alpha \frac{t-t_{min}}{t_{max}-t_{min}}) &amp; \mbox{si } t \in [t_{min},t_{max}] \\
+        1 &amp; \mbox{sinon.}
+    \end{array}
+\right.\)</span></p>
+<p>avec <span class="arithmatex">\(t_{min}\)</span> le temps de retard à partir duquel appliquer le gain (pour compenser les pertes dans le sous-sol, on choisira celui de l'écho de surface), <span class="arithmatex">\(t_{max}\)</span> le temps de retard au-dela duquel on arrête d'appliquer le gain, et <span class="arithmatex">\(\alpha\)</span> un coefficient à ajuster.</p>
+<p>Pour chaque colonne du radargramme, on multipliera les amplitudes reçues par le radar par le gain <span class="arithmatex">\(G(t)\)</span>.</p>
+<p><em>A votre avis, pourquoi choisir le temps de retard de l'écho de surface pour <span class="arithmatex">\(t_{min}\)</span> ?</em></p>
+<p><em>Pourquoi avoir définit un <span class="arithmatex">\(t_{max}\)</span> ?</em></p>
+<p><em>Que représente physiquement <span class="arithmatex">\(\alpha\)</span> ?</em></p>
+<p>Si vous appliquez au 103ème sondage du 1er traverse un tel gain avec <span class="arithmatex">\(t_{min} = 13 ns\)</span>, <span class="arithmatex">\(t_{max} = 35 ns\)</span> et <span class="arithmatex">\(\alpha = 1.3\)</span>, vous devriez obtenir la série temporelle suivante :</p>
+<p><img alt="Exemple de sondage WISDOM après application d'un gain vertical" src="../img/WISDOM_vertical_gain_time_series_example.png" /></p>
+<p>Les échos du sous-sol situés entre 25 et 30 ns ont été fortement amplifiés !</p>
+<p>On peut afficher le radargramme complet du 1er traverse, pour apprécier l'amélioration de la lisibilité :</p>
+<p><img alt="Exemple de radargramme WISDOM après application d'un gain vertical" src="../img/WISDOM_vertical_gain_radargram_example.png" /></p>
+<p>On discerne à présent très bien une interface qui a l'air de plonger entre 15 et 20 m, et de remonter entre 20 et 23 m de distance horizontale.
+Nous discuterons plus tard de son interprétation.</p>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>vertical_gain</code></strong>.</p>
+<p>Vous pouvez jouer sur la valeur du coefficient <span class="arithmatex">\(\alpha\)</span> pour tester son effet.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Avec ce traitement, nous avons fait l'hypothèse implicite que les 3 effets de pertes que nous cherchons à compenser sont indépendants de la fréquence du signal.</td>
+</tr>
+<tr>
+<td style="text-align: left;">C'est en réalité une approximation, qui n'est pas toujours valide !</td>
+</tr>
+<tr>
+<td style="text-align: left;">De manière générale, les hautes fréquences sont plus fortement atténuées que les basses.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Notre fonction de gain ne dépendant pas de la fréquence, elle ne pourra jamais compenser parfaitement les pertes dans le sous-sol.</td>
+</tr>
+</tbody>
+</table>
+<p>Vous l'avez sûrement remarqué, notre radargramme a toujours un aspect "pixélisé" selon l'axe horizontal.</p>
+<p>Pour atténuer cet effet visuel, nous allons dans la suite appliquer une interpolation horizontale aux radargrammes de WISDOM.</p>
+<h3 id="interpolation-horizontale">Interpolation horizontale</h3>
+<p>Lors de la mission ExoMars, il est prévu que les sondages WISDOM soient acquis avec <strong>un pas horizontal de 10 cm</strong>.
+Dans le cas des 3 traverses effectués le 15/03/2022 au Svalbard, les sondages ont été acquis avec <strong>un pas horizontal de 20 cm</strong>.</p>
+<p>Dans un proche sous-sol martien typique, on s'attend à ce que les sondages WISDOM aient <strong>une résolution en de l'ordre de 3 cm</strong>.</p>
+<p>Sur Mars le pas horizontal des traverses WISDOM sera donc environ <strong>3 fois plus grand</strong> que la résolution des sondages, et au Svalbard il était même presque <strong>7 fois plus grand</strong>.</p>
+<p>Ceci explique l'aspect "pixélisé" des radargrammes WISDOM selon l'axe horizontal, qui peut gêner leur lecture.</p>
+<p>C'est pourquoi l'équipe WISDOM ajoute en général à la chaîne de traitement de l'instrument une <strong>interpolation horizontale</strong> des radargrammes.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>horizontal_interpolation</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 3 matrices <code>numpy</code> contenant les 3 radargrammes des 3 "traverses" tels que retournés par la fonction <code>FFT</code>, et les 3 axes de distances horizontales correspondant.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : 3 matrices <code>numpy</code> contenant les 3 radargrammes des 3 "traverses" après interpolation horizontale, et les 3 axes de distances horizontales correspodants.</td>
+</tr>
+</tbody>
+</table>
+<p>Pour réaliser cette interpolation, nous allons utiliser la très classique méthode des "<strong>splines cubiques</strong>".</p>
+<p>Il s'agit d'une méthode d'interpolation "<strong>par morceaux</strong>" approximant l'intervalle entre 2 points de mesure par un <strong>polynôme de degré 3</strong>.</p>
+<p>Il existe une implémentation des "splines cubiques" dans le module <code>scipy.interpolate</code>, du nom de <code>CubicSpline</code>.
+C'est cette implémentation que nous utiliserons ici.</p>
+<p>N'oubliez donc pas de l'importer avec la commande suivante :</p>
+<pre><code>from scipy.interpolate import CubicSpline
+</code></pre>
+<p>Par exemple, pour appliquer une interpolation horizontale à la 10ème ligne du radargramme du 1er "traverse", on peut utiliser les commandes suivantes :</p>
+<pre><code>cubic_spline_model = CubicSpline(distance_axis_1,mat_radargram_1[:,9])
+
+mat_radargram_interp_1[:,9] = cubic_spline_model(distance_axis_interp_1)
+</code></pre>
+<p>avec <code>mat_radargram_interp_1</code> la matrice interpolée et <code>distance_axis_interp_1</code> l'axe de distance correspondant.</p>
+<p>La 1ère ligne sert à définir le modèle d'interpolation "splines cubiques", à partir de la ligne du radargramme et de l'axe de distance horizontal correspondant.
+La 2nde ligne sert à réaliser l'interpolation, en se basant sur un nouvel axe de distances horizontales plus grand, et à stocker le résultat dans une nouvelle matrice <code>numpy</code> ayant un nombre de colonnes égal à la taille du nouvel axe de distances horizontales.</p>
+<p>Il faut donc définir un nouvel axe de distance horizontale <code>distance_axis_interp_1</code> et initialiser une nouvelle matrice <code>mat_radargram_interp_1</code> en amont.</p>
+<p>En interpolant horizontalement 3 fois le radargramme du 1er "traverse", vous obtiendrez le résultat suivant :</p>
+<p><img alt="Exemple de radargramme WISDOM après interpolation horizontale" src="../img/WISDOM_horizontal_interpolation_radargram_example.png" /></p>
+<p>On peut apprécier le gain en lisibilité du radargramme.
+Cependant, il faut garder à l'esprit que ceci n'est qu'une interpolation : <strong>nous n'avons apporté aucune information ici</strong>.</p>
+<p><strong>Vous pouvez à présent compléter votre fonction <code>horizontal_interpolation</code></strong>.</p>
+<h2 id="interpretation-geophysique">Interprétation géophysique</h2>
+<p>Notre chaîne de traitement des données WISDOM est à présent assez avancée pour pouvoir afficher un <strong>radargramme</strong> interprétable.</p>
+<p>Essayons donc d'<strong>interpréter les échos</strong> que nous observons dans le radargramme du 1er traverse, et d'estimer la <strong>profondeur</strong> des interfaces correspondantes.</p>
+<p>Nous allons ajouter à notre chaîne de traitement 2 fonctions d'interprétation : </p>
+<ul>
+<li>
+<p><code>surface_permittivity</code> pour estimer la permittivité diélectrique de la 1ère couche du sous-sol.</p>
+</li>
+<li>
+<p><code>subsurface_depth</code> pour estimer un axe de profondeurs à partir d'une estimation de la constante diélectrique du sous-sol.</p>
+</li>
+</ul>
+<h3 id="coin-de-glace">Coin de glace ?</h3>
+<p>Voici l'interprétation qui a été faites par l'équipe WISDOM du radagramme du 1er traverse.</p>
+<p>Nous savons que le 15/03/2022 la surface était recouverte de <strong>neige</strong>.
+Cette neige est visiblement <strong>stratifiée</strong>, puisque nous voyons quelques échos juste après la surface.</p>
+<p>Ensuite, nous distinguons les <strong>sillons</strong> de chaque côté du <strong>polygone</strong>, au alentours de 6 et de 20 m de distance horizontale.
+Celui à 20 m est le plus visible, avec echos plongeants de 15 à 20 m, puis remontant de 20 à 23 m.</p>
+<p>Le <strong>fond du sillon</strong> ressort particulièrement à 20 m de distance horizontale, comme un écho à un temps de retard d'environ 26 ns.
+Pour le sillon à 6 m, l'écho de fond existe mais est plus dur à visualiser, il faut augmenter le contraste du radargramme pour le distinguer.</p>
+<p>On peut facilement montrer par simulation numérique que l'on s'attend à ce que WISDOM observe un tel écho quasi "ponctuel" au fond d'un sillon.
+Ceci est lié à la concavité du fond du sillon.</p>
+<p>Nous ne distinguons pas clairement ici l'interface entre la <strong>couche active</strong> (zone du sous-sol qui dégèle en été) et le <strong>pergélisol</strong> (zone du sous-sol gelée en permanence), ce qui tend à indiquer qu'il n'y a pas d'interface claire entre les deux.
+Ceci est plausible à cette période de l'année, où la couche active est encore gelée.</p>
+<p>Enfin, en-dessous de l'écho du fond du sillon à 20 m de distance horizontale, on observe un 2nd écho intense.
+Cet écho a été interprété comme correspondant au sommet d'un <strong>coin de glace</strong>.</p>
+<p><img alt="Interprétation du radargramme du traverse 1" src="../img/Ice_wedge_polygon_interpretation.png" /></p>
+<p>Cette théorie est cohérente avec le contexte géologique, a été étayée par des simulations numériques, et est compatible avec les changements de phases des échos observés.</p>
+<p>En effet, on voit que le pic de l'écho du fond du sillon est négatif, ce qui correspond au déphasage attendu pour le passage d'un milieu de permittivité diélectrique plus faible à plus élevée.
+Ceci est cohérent avec <strong>le passage de la neige à la couche active</strong> (de <span class="arithmatex">\(\epsilon \approx 2\)</span> à <span class="arithmatex">\(\epsilon \approx 7\)</span>).</p>
+<p>On voit que le pic de l'écho en dessous est positif, ce qui correspond au déphasage attendu pour le passage d'un milieu de permittivité diélectrique plus élevée à plus faible.
+Ceci est cohérent avec <strong>le passage de la couche active à la glace</strong> (de <span class="arithmatex">\(\epsilon \approx 7\)</span> à <span class="arithmatex">\(\epsilon \approx 3\)</span>).</p>
+<p>Comme nous l'avions mentionné plus tôt, un <strong>coin de glace</strong> est une cible d'intérêt pour WISDOM.</p>
+<p>Si nous connaissons sa position horizontale, nous ne connaissons pas encore sa <strong>profondeur</strong>, donnée essentielle pour guider un hypothétique forage.</p>
+<p>Comme nous l'avons mentionné plus tôt, pour estimer la distance parcourue par les ondes électromagnétiques dans le sous-sol, nous avons besoin de connaitre la vitesse de la lumière dans les milieux sondés.
+Et en 1ère approximation, cette vitesse est liée à la <strong>permittivité diélectrique</strong> des milieux.</p>
+<p>Pour estimer la profondeur de notre <strong>coin de glace</strong>, nous allons essayer d'estimer la <strong>permittivité diélectrique de la neige</strong> qui recouvrait le terrain polygonal.</p>
+<h3 id="mesure-de-la-permittivite-de-surface">Mesure de la permittivité de surface</h3>
+<p>Nous savons que l'<strong>écho de surface</strong> correspond à la réflexion au niveau de l'<strong>interface air-neige</strong>.</p>
+<p>Dans l'hypothèse d'une interface air-neige lisse et infiniment grande à l'échelle du radar, avec 2 matériaux homogènes de <strong>permittivité diélectrique</strong> <span class="arithmatex">\(\epsilon_{air}\)</span> et <span class="arithmatex">\(\epsilon_{neige}\)</span>, vers laquelle une onde électromagnétique plane est émise perpendiculairement, le <strong>ratio</strong> <span class="arithmatex">\(\Gamma_{surface}\)</span> entre l'<strong>amplitude réfléchie</strong> et l'<strong>amplitude incidente</strong>  sera égal à :</p>
+<p><span class="arithmatex">\(\Gamma_{surface} = \lvert\frac{\sqrt{\epsilon_{neige}}-\sqrt{\epsilon_{air}}}{\sqrt{\epsilon_{neige}}+\sqrt{\epsilon_{air}}}\rvert\)</span></p>
+<p>Nous savons que <span class="arithmatex">\(\epsilon_{air} \approx 1\)</span>.
+D'où le ratio :</p>
+<p><span class="arithmatex">\(\Gamma_{surface} = \frac{\sqrt{\epsilon_{neige}}-1}{\sqrt{\epsilon_{neige}}+1}\)</span></p>
+<p>On en déduit aisément que :</p>
+<p><span class="arithmatex">\(\epsilon_{neige} = \left( \frac{1+\Gamma_{surface}}{1-\Gamma_{surface}} \right)^2\)</span></p>
+<p>Problème : nous ne mesurons pas directement <span class="arithmatex">\(\Gamma_{surface}\)</span>, mais l'amplitude réfléchie par la surface.</p>
+<p>Pour déterminer le ratio amplitude réfléchie / amplitude incidente, il nous faudrait connaitre l'amplitude qui serait réfléchie à la surface si elle était <strong>parfaitement réfléchissante</strong>, c'est-à-dire si <span class="arithmatex">\(\Gamma_{surface} = 1\)</span>.</p>
+<p>Or, nous disposons des données nécessaires pour obtenir cette information : nous avons une mesure d'<strong>étalonnage</strong> sur plaque métallique !</p>
+<p>Il suffira alors de mesurer le ratio entre l'amplitude <strong>en module</strong> de l'écho de surface et l'amplitude <strong>en module</strong> de l'écho sur plaque métallique pour obtenir <span class="arithmatex">\(\Gamma_{surface}\)</span>.</p>
+<p>Ajoutons donc ce traitement à notre chaîne.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>surface_permittivity</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donne les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 4 matrices <code>numpy</code> contenant les 3 radargrammes des 3 "traverses" et la mesure de calibration tels que retournés par la fonction <code>FFT</code>, et l'axe de temps de retard correspondant.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : les 3 valeurs permittivité diélectrique moyenne de surface, estimées pour chacun des 3 "traverses", ainsi que leurs écart-types.</td>
+</tr>
+</tbody>
+</table>
+<p>Pour venir récupérer les amplitudes (en module) des échos de surface, ainsi que de la plaque métallique, vous pourrez utiliser le fait que cet écho se trouve toujours dans une même fenêtre temporelle, dont il est le maximum local.</p>
+<p><strong>Vous pouvez complétez votre fonction <code>surface_permittivity</code>.</strong></p>
+<p><strong>Lorsque vous utiliserez cette fonction, il ne faudra appliquer aucun des 3 traitements d'amélioration de la lisibilité (filtrage horizontal, gain vertical, interpolation horizontale) !</strong></p>
+<p>Si vous appliquez votre fonction <code>surface_permittivity</code> à notre exemple, pour le 1er "traverse" vous devriez obtenir une permittivité diélectrique moyenne autour de <span class="arithmatex">\(\epsilon_{neige} \approx 2.6\)</span>, avec un écart-type d'environ 1.</p>
+<p>Cette valeur est cohérente avec de la <strong>neige sèche</strong>.</p>
+<p><em>Retrouvez-vous des estimations similaires pour les 2 autres "traverses" ?</em>
+<em>A votre avis, d'où peut provenir la différence ? Tracez l'estimation de <span class="arithmatex">\(\epsilon_{neige}\)</span> en fonction de la distance horizontale pour vérifier.$</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Nota Bene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Nous pouvons utiliser la mesure d'étalonnage telle quelle, car la plaque métallique a été disposée à la même distance des antennes de WISDOM que l'interface air-neige.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Si ce n'était pas le cas, il faudrait appliquer un correctif pour compenser les pertes liées à la distance.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="estimation-de-la-profondeur">Estimation de la profondeur</h3>
+<p>Maintenant que nous disposons d'une estimation de la <strong>permittivité diélectrique</strong> de la couche de neige, nous pouvons essayer d'estimer <strong>la profondeur du coin de glace</strong>.</p>
+<p>Pour simplifier, nous considèrerons qu'entre la surface et le sommet du <strong>coin de glace</strong>, les ondes électromagnétique ne traversent <strong>que de la neige</strong>, dont la permittivité diélectrique est celle estimée plus tôt : <span class="arithmatex">\(\epsilon_{neige} \approx 2.6\)</span>.</p>
+<p>Dans le cas d'un matériau non-magnétique avec de faibles pertes par absorption tel que la neige sèche, on peut approximer la vitesse de propagation des ondes électromagnétiques <span class="arithmatex">\(v_{neige}\)</span> par :</p>
+<p><span class="arithmatex">\(v_{neige} = \frac{c}{\sqrt{\epsilon_{neige}}}\)</span></p>
+<p>Pour une cible située dans la neige, la profondeur <span class="arithmatex">\(z\)</span> associée à son écho de temps de retard <span class="arithmatex">\(t\)</span> peut être approximée par :</p>
+<p><span class="arithmatex">\(z = \frac{v_{neige} (t-t_{surface})}{2}\)</span></p>
+<p>avec <span class="arithmatex">\(t_{surface}\)</span> le temps de retard associé à l'écho de surface.</p>
+<p>Ajoutons une fonction à notre chaîne de traitement afin de déterminer un axe de profondeurs allant avec nos radargrammes.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>subsurface_depth</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donne les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : la matrice <code>numpy</code> contenant l'axe des temps de retards, la permittivité diélectrique du sous-sol, et le temps de retard de l'écho de surface.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Sorties : la matrice <code>numpy</code> contenant l'axe des profondeurs estimées à partir des temps de retard.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vous pouvez complétez directement votre fonction <code>subsurface_depth</code> !</strong></p>
+<p>Si vous l'appliquez à l'axe des temps pour le 1er "traverse", puis que vous appliquez la chaîne de traitement complète pour obtenir le radargramme, vous pourrez réaliser l'affichage suivant :</p>
+<p><img alt="Exemple de radargramme WISDOM avec estimation des profondeurs" src="../img/WISDOM_depth_radargram_example.png" /></p>
+<p>On en déduit que le sommet du <strong>coin de glace</strong> se trouve entre 1.3 et 1.4 m de profondeur.</p>
+<p><em>Avec l'écart-type sur la permittivité diélectrique que vous avez mesurée pour le 1er "traverse", pouvez-vous donner une barre d'erreur à cette profondeur estimée ?</em></p>
+<p>En utilisant <span class="arithmatex">\(\epsilon_{neige} = 2.6\)</span> pour les 3 "traverses" de l'opération de "grid" WISDOM de notre exemple, on obtient les 3 radargrammes suivants, avec estimations de profondeur :</p>
+<p><img alt="Exemple de radargrammes d'une &quot;grid&quot; WISDOM" src="../img/WISDOM_radargrams_grid_example.png" /></p>
+<p>On voit que la pronfondeur des 2 sillons visibles du polygone varie assez peu d'un "traverse" à l'autre.
+Par contre, le <strong>coin de glace</strong> n'est clairement visible que sur le 1er traverse.</p>
+<p>Si nous devions choisir un <strong>site de forage</strong>, nous choisirions donc le 1er "traverse", à environ 20 m de distance horizontale.
+Il faudrait forer jusqu'à environ 1.3 m de profondeur pour atteindre le sommet du <strong>coin de glace</strong>, ce qui est largement atteignable par la foreuse d'ExoMars qui pourra atteindre 2 m de profondeur.</p>
+<h2 id="exportation-du-resultat">Exportation du résultat</h2>
+<p>Pour terminer notre chaîne de traitement, nous allons ajouter une fonction pour l'<strong>export</strong> des données traitées, sous la forme d'un <strong>fichier HDF5</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Ajoutez à votre projet Python une fonction <code>save</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Cette section vous donnera les éléments nécessaires pour la compléter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Entrées : 3 matrices <code>numpy</code> contenant les 3 radargrammes de la "grid", 3 matrices <code>numpy</code> contenant les axes de distance correspondant, 3 matrices <code>numpy</code> contenant les axes de profondeur correspondant.</td>
+</tr>
+<tr>
+<td style="text-align: left;">- Elle enregistrera un fichier HDF5 contenant 3 "Groups" (un par "traverse"), chacun contenant un radargramme et ses axes sous la forme de "Datasets".</td>
+</tr>
+</tbody>
+</table>
+<p>Pour enregistrer un fichier HDF5 contenant les sorties de notre chaîne de traitement, nous utiliserons encore une fois <code>h5py</code>.
+N'oubliez donc pas de l'importer :</p>
+<pre><code>import h5py
+</code></pre>
+<p>Ensuite, vous pouvez créer un fichier HDF5 avec <code>h5py</code>, en initialisant un objet <code>File</code>.
+Par exemple :</p>
+<pre><code>hf = h5py.File(&quot;.../Level2_WISDOM_20220315.h5&quot;,'w')
+</code></pre>
+<p>On peut alors ajouter à notre fichier des "Groups" avec la méthode <code>create_group</code>.
+Elle prend en entrée le nom du "Group" à créer.</p>
+<p>Ensuite, on peut ajouter à nos "Groups" des "Datasets" avec la méthode <code>create_dataset</code> que nous avons déjà vue au TP précédent.</p>
+<p>Voici un exemple de commandes Python pour sauvegarder les sorties du 1er "traverse" :</p>
+<pre><code>group1 = hf.create_group(&quot;traverse_1&quot;)
+group1.create_dataset(&quot;radargram&quot;,data=mat_radargram_1)
+group1.create_dataset(&quot;horizontal_distance_axis&quot;,data=distance_axis_1)
+group1.create_dataset(&quot;depth_axis&quot;,data=depth_axis_1)
+</code></pre>
+<p>avec <code>depth_axis_1</code> l'axe des profondeurs déterminé pour le 1er "traverse".</p>
+<p><strong>Vous pouvez compléter votre fonction <code>save</code> !</strong></p>
+<p>Appliquez-la à notre exemple de données, et essayez d'importer dans Python le fichier HDF5 que vous avez créé, afin de vérifier que votre fonction marche bien.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p><strong>Vous disposez à présent d'une chaîne de traitement complète pour les données de WISDOM !</strong></p>
+<p><em>Pourriez-vous tracer un schéma-bloc de la chaîne de traitement que vous venez de programmer en Python ?</em></p>
+<p>Servez-vous de ce schéma pour ajouter à votre projet Python un <strong>script d'exemple</strong>, appliquant toute votre chaîne de traitement à un fichier HDF5 de données WISDOM.</p>
+<hr />
+<p>Cet exemple était encore une fois un prétexte pour vous faire découvrir des outils de traitement de données, et les appliquer à un exemple réalistes de données instrumentales.</p>
+<p>Lors des TP suivants nous verrons des outils d'<strong>analyse de données</strong>, pour de la classification supervisée et non-supervisée.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../TP_ROXI/" class="btn btn-neutral float-left" title="TP ROXI"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../TP_ROXI/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/mathjax.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
