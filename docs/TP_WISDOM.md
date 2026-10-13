@@ -389,22 +389,24 @@ Le **module** pourra être utilisé pour les mesures de réflectivité.
 
 L'amplitude du spectre en sortie de la FFT sera homogène à une tension.
 
+Mettons que nous ayons récupéré le 103ème sondage du 1er traverse sous la forme d'une variable `spectrum_1_103`.
+
 On utilisera la méthode `fft.rfft` de `numpy`, avec une commande similaire à celle-ci :
 
 ~~~
-sounding_1_132 = np.fft.rfft(spectrum_1_132)
+sounding_1_103 = np.fft.rfft(spectrum_1_103)
 ~~~
 
 Pour obtenir la partie réelle de la série temporelle, il suffira d'utiliser la commande :
 
 ~~~
-sounding_1_132_real = np.real(sounding_1_132)
+sounding_1_103_real = np.real(sounding_1_103)
 ~~~
 
 Et pour le module :
 
 ~~~
-sounding_1_132_real = np.abs(sounding_1_132)
+sounding_1_103_module = np.abs(sounding_1_103)
 ~~~
 
 **Sauf mentionné autrement, nous considèrerons dans la suite de ce TP que nous récupérons la partie réelle du signal**.
